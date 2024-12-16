@@ -1,0 +1,1 @@
+{"order_index":{"mappings":{"properties":{"customerId":{"type":"long"},"orderId":{"type":"long"},"orderItems":{"type":"nested","properties":{"orderItemId":{"type":"long"},"productNameId":{"type":"long"}}},"orderSn":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}}

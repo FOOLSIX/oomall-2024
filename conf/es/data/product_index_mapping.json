@@ -1,0 +1,1 @@
+{"product_index":{"mappings":{"properties":{"_class":{"type":"keyword","index":false,"doc_values":false},"barcode":{"type":"keyword"},"id":{"type":"long"},"name":{"type":"text","analyzer":"ik_smart"},"shopId":{"type":"long"}}}}}

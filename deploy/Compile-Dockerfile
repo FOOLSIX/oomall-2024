@@ -1,0 +1,25 @@
+FROM ubuntu:20.04
+MAINTAINER mingqiu mingqiu@xmu.edu.cn
+
+# 设置环境变量
+ENV JDK_HOME /opt/jdk
+
+# 安装JDK17
+RUN apt-get update
+RUN apt-get install -y wget vim git
+RUN wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
+RUN tar -xzf jdk-17_linux-x64_bin.tar.gz -C /opt
+RUN rm -f jdk-17_linux-x64_bin.tar.gz
+RUN mv /opt/jdk-17.0.9 /opt/jdk
+
+ENV MAVEN /opt/apache-maven-3.9.5
+
+RUN wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+RUN tar -xzf apache-maven-3.9.5-bin.tar.gz -C /opt
+RUN rm -f apache-maven-3.9.5-bin.tar.gz
+
+ENV PATH $JDK_HOME/bin:$MAVEN/bin:$PATH
+
+# 配置Java环境变量
+RUN echo "export JAVA_HOME=$JDK_HOME" >> /etc/profile && \
+    echo "export PATH=$JDK_HOME/bin:$MAVEN/bin:$PATH" >> /etc/profile

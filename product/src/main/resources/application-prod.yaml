@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      database: oomall
+      username: demouser
+      password: '123456'
+      authentication-database: oomall
+# MongoDB 的副本集配置
+replicaset:
+  mongodb:
+    replica-set: rs0
+    read-preference: nearest
+    hosts: mongo1:27017,mongo2:27017,mongo3:27017

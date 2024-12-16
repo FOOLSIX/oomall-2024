@@ -1,0 +1,11 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+path.repo: ["/usr/share/elasticsearch/backups"]
+
+xpack.security.enabled: false
+xpack.security.transport.ssl.enabled: false

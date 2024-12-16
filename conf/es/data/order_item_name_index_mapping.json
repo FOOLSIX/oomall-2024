@@ -1,0 +1,1 @@
+{"order_item_name_index":{"mappings":{"properties":{"name":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}},"analyzer":"ik_smart"},"productNameId":{"type":"long"}}}}}

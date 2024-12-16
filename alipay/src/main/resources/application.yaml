@@ -1,0 +1,80 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 2000
+      min-spare: 100
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+#  main:
+#    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/alipay?serverTimezone=GMT%2B8
+    username: demouser
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 3
+      min-idle: 3
+      max-active: 10
+      max-wait: 60000
+
+      stat-view-servlet:
+        login-username: admin
+        login-password: 123456
+        enabled: true
+        url-pattern: /druid/*
+
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 100
+      validation-query: select 1
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    time-zone: GMT+8
+
+mybatis:
+  type-aliases-package: cn.edu.xmu.oomall.alipay.model.po
+  mapper-locations: classpath*:cn.edu.xmu.oomall.alipay.mapper/*.xml
+  configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+
+rocketmq:
+  name-server: rocketmq-namesrv:9876
+  producer:
+    group: alipay_callback_group
+    max-message-size: 4096
+    send-message-timeout: 3000
+
+
+oomall:
+  alipay:
+    downloadurl: https://dwbillcenter.alipay.com/downloadBillFile
+  core:
+    page-size:
+      max: 1000
+      default: 10
+
+

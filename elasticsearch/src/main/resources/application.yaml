@@ -1,0 +1,58 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos
+  jackson:
+    time-zone: GMT+8
+  # ElasticSearch配置
+  elasticsearch:
+    uris:
+      - "http://es:9200"
+    connection-timeout: 3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#rocketmq:
+#  name-server: rocketmq-namesrv:9876
+
+logging:
+  level:
+    org.springframework.data.elasticsearch.core.ElasticsearchTemplate: DEBUG
+    org.elasticsearch.client.transport: DEBUG
+
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 100
+    uri-encoding: UTF-8
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+oomall:
+  core:
+    page-size:
+      max: 1000
+      default: 10
+  product:
+    timeout: 3600
+  activity:
+    timeout: 3600
+  category:
+    timeout: 3600
+  onsale:
+    timeout: 3600
+  data-center: 1
+
