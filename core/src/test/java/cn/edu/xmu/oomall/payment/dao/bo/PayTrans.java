@@ -2,8 +2,12 @@
 
 package cn.edu.xmu.oomall.payment.dao.bo;
 
+import cn.edu.xmu.javaee.core.aop.CopyFromTest;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.oomall.payment.mapper.generator.po.PayTransPo;
 import lombok.*;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Copy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +20,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@CopyTo(PayTransPo.class)
 public class PayTrans extends Transaction{
     private static Logger logger = LoggerFactory.getLogger(PayTrans.class);
 
@@ -68,6 +73,7 @@ public class PayTrans extends Transaction{
      */
     @Setter
     @Getter
+    @CopyTo.Of(PayTrans.class)
     private LocalDateTime timeBegin;
 
     /**

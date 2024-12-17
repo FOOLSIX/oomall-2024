@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.payment.mapper.generator.po;
 
+import cn.edu.xmu.oomall.payment.dao.bo.PayTrans;
+
 import java.time.LocalDateTime;
 
 public class PayTransPo {
