@@ -21,7 +21,7 @@ spring:
     #JDBC drivers
     driver-class-name: com.mysql.cj.jdbc.Driver
     #database url
-    url: jdbc:mysql://mysql:3306/region?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql:3306/customer?serverTimezone=Asia/Shanghai
     #database username and password
     username: demouser
     password: 123456
@@ -63,5 +63,5 @@ oomall:
     page-size:
       max: 1000
       default: 10
-  region:
+  customer:
     timeout: 3600
