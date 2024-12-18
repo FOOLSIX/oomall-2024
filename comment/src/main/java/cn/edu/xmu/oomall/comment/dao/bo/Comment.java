@@ -35,6 +35,10 @@ public class Comment extends OOMallObject implements Serializable {
     @Setter
     private CommentDao commentDao;
 
+    @ToString.Exclude
+    @JsonIgnore
+    public static final Long ROOT_ID = -1L;
+
     /**
      * 共三种状态
      */
@@ -117,5 +121,6 @@ public class Comment extends OOMallObject implements Serializable {
         }
         return relatedComments;
     }
+
 
 }

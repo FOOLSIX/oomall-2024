@@ -19,4 +19,5 @@ public class CommentDto {
     String content;
     Long shopId;
     Long productId;
+    Long orderId;
 }

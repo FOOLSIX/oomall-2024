@@ -18,4 +18,10 @@ public class CommentService {
     public void deleteById(Long id) {
 
     }
+
+    public void approve(Long id) {}
+
+    public void ban(Long id) {}
+
+
 }
