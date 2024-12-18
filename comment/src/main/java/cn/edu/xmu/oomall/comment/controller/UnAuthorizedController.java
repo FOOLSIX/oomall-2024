@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UnAuthorizedController {
 
+    /**
+     * 获取商品的评论
+     * @param productId
+     * @param page
+     * @param pageSize
+     * @param userDto
+     * @return
+     */
     @GetMapping("/products/{productId}/comments")
     public ReturnObject retrieveCommentsByProductId(@PathVariable("productId") Long productId,
                                                     @RequestParam(required = false, defaultValue = "1") Integer page,

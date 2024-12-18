@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.comment.dao.bo;
 
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
@@ -18,6 +19,7 @@ import java.util.*;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CopyTo(CommentPo.class)
+@CopyFrom(CommentPo.class)
 public class Comment extends OOMallObject implements Serializable {
 
     Long id;
@@ -117,10 +119,29 @@ public class Comment extends OOMallObject implements Serializable {
 
     public List<Comment> getRelatedComments() {
         if (Objects.isNull(relatedComments) && Objects.nonNull(commentDao)) {
-            this.relatedComments = commentDao.retrieveRelatedCommentsById(id);
+            this.relatedComments = commentDao.retrieveCommentsByPid(id);
         }
         return relatedComments;
     }
 
+    public void delete() {
+
+    }
+
+    public void approve() {
+
+    }
+
+    public void ban() {
+
+    }
+
+    public void addAdditionalComment(Comment comment) {
+
+    }
+
+    public void addReplyComment(Comment comment) {
+
+    }
 
 }

@@ -1,7 +1,5 @@
 package cn.edu.xmu.oomall.comment.mapper.po;
 
-import cn.edu.xmu.javaee.core.aop.CopyFrom;
-import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "comment_comment")
 @AllArgsConstructor
 @NoArgsConstructor
-@CopyFrom(Comment.class)
 public class CommentPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
