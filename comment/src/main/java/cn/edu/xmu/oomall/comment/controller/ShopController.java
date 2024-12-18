@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.comment.controller;
 
+import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -19,6 +20,7 @@ public class ShopController {
      * @return
      */
     @PostMapping("comments/{id}/reply")
+    @Audit(departName = "shops")
     public ReturnObject createReply(@PathVariable Long shopId,
                                     @PathVariable Long id,
                                     @LoginUser UserDto userDto) {
@@ -32,6 +34,7 @@ public class ShopController {
      * @return
      */
     @PostMapping("comments/{id}")
+    @Audit(departName = "shops")
     public ReturnObject updateReply(@PathVariable Long id,
                                     @LoginUser UserDto userDto) {
 
@@ -46,6 +49,7 @@ public class ShopController {
      */
 
     @DeleteMapping("comments/{id}")
+    @Audit(departName = "shops")
     public ReturnObject deleteReply(@PathVariable Long id,
                                     @LoginUser UserDto userDto) {
         return new ReturnObject();//todo
@@ -53,6 +57,7 @@ public class ShopController {
 
 
     @PostMapping("comments/{id}/block")
+    @Audit(departName = "shops")
     public ReturnObject blockComment(@PathVariable Long id,
                                     @LoginUser UserDto userDto) {
         return new ReturnObject();//todo

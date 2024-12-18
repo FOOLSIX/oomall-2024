@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.comment.controller;
 
+import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
@@ -18,28 +19,22 @@ public class AdminCommentController {
     private final CommentService commentService;
 
     @DeleteMapping("/comments/{id}")
+    @Audit(departName = "platforms")
     public ReturnObject deleteComment(@PathVariable Long id, @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(userDto.getDepartId())) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT, "平台管理员才可以删除评论");
-        }
         commentService.deleteById(id);
         //todo
         return null;
     }
 
     @PostMapping("/comments/{id}/approve")
+    @Audit(departName = "platforms")
     public ReturnObject approveComment(@PathVariable Long id, @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(userDto.getDepartId())) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT, "平台管理员才可以通过评论审核");
-        }
         return new ReturnObject();//todo
     }
 
     @PostMapping("/comments/{id}/ban")
+    @Audit(departName = "platforms")
     public ReturnObject banComment(@PathVariable Long id, @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(userDto.getDepartId())) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT, "平台管理员才可以通过封禁评论");
-        }
         return new ReturnObject();//todo
     }
 }
