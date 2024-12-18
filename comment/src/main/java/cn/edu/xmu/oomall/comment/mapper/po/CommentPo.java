@@ -21,7 +21,7 @@ public class CommentPo {
     Long uid;
     Byte status;
     String content;
-    String createTime;
+    String updateTime;
     Long shopId;
     Long productId;
 }

@@ -1,7 +1,9 @@
 package cn.edu.xmu.oomall.comment.dao.bo;
 
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
+import cn.edu.xmu.oomall.comment.mapper.po.CommentPo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -15,6 +17,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyTo(CommentPo.class)
 public class Comment extends OOMallObject implements Serializable {
 
     Long id;
@@ -22,7 +25,7 @@ public class Comment extends OOMallObject implements Serializable {
     Long uid;
     Byte status;
     String content;
-    String createTime;
+    String updateTime;
     Long shopId;
     Long productId;
     List<Comment> relatedComments;

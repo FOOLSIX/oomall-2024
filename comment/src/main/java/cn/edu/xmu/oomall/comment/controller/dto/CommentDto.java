@@ -1,27 +1,22 @@
-package cn.edu.xmu.oomall.comment.controller.vo;
+package cn.edu.xmu.oomall.comment.controller.dto;
 
-import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
+import cn.edu.xmu.javaee.core.validation.NewGroup;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@CopyFrom(Comment.class)
-public class CommentVo {
-    Long id;
-    Long pid;
-    Long uid;
-    Byte status;
+@CopyTo(Comment.class)
+public class CommentDto {
+    @NotNull(message = "评论不能为空", groups = {NewGroup.class})
     String content;
-    String updateTime;
     Long shopId;
     Long productId;
-    List<Comment> relatedComments;
 }
