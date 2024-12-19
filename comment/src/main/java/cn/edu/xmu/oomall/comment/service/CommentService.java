@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.comment.service;
 
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,9 @@ public class CommentService {
 
     }
 
-    public void approve(Long id) {}
+    public void approve(Long id, UserDto userDto) {}
 
-    public void ban(Long id) {}
+    public void ban(Long id, UserDto userDto) {}
 
 
 }
