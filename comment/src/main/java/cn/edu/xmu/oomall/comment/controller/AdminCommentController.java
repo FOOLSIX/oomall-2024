@@ -2,15 +2,11 @@ package cn.edu.xmu.oomall.comment.controller;
 
 import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
-import cn.edu.xmu.javaee.core.exception.BusinessException;
-import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 
 @RestController
 @RequestMapping(value = "/platforms", produces = "application/json;charset=UTF-8")

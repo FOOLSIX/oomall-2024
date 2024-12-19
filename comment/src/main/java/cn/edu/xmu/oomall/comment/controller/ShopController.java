@@ -33,7 +33,7 @@ public class ShopController {
      * @param userDto
      * @return
      */
-    @PostMapping("comments/{id}")
+    @PutMapping("comments/{id}")
     @Audit(departName = "shops")
     public ReturnObject updateReply(@PathVariable Long id,
                                     @LoginUser UserDto userDto) {
@@ -56,7 +56,7 @@ public class ShopController {
     }
 
 
-    @PostMapping("comments/{id}/block")
+    @PutMapping("comments/{id}/block")
     @Audit(departName = "shops")
     public ReturnObject blockComment(@PathVariable Long id,
                                     @LoginUser UserDto userDto) {
