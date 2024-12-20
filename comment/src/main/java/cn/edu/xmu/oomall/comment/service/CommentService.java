@@ -23,13 +23,27 @@ public class CommentService {
         return commentDao.retrieveReviewedByProductId(productId, page, pageSize);
     }
 
+    public List<Comment> retrieveCommentsByStatus(Byte status, Integer page, Integer pageSize) {
+        return commentDao.retrieveCommentsByStatus(status, page, pageSize);
+    }
+
     public void deleteById(Long id) {
 
     }
 
-    public void approve(Long id, UserDto userDto) {}
+    public void approve(Long id, UserDto userDto) {
+        Comment comment = commentDao.findById(id);
+        comment.approve(userDto);
+    }
 
-    public void ban(Long id, UserDto userDto) {}
+    public void ban(Long id, UserDto userDto) {
+        Comment comment = commentDao.findById(id);
+        comment.ban(userDto);
+    }
 
+    public void requestBlock(Long id, UserDto userDto) {
+        Comment comment = commentDao.findById(id);
+        comment.requestBlock(userDto);
+    }
 
 }

@@ -177,6 +177,18 @@ public class Comment extends OOMallObject implements Serializable {
     }
 
     /**
+     * 申请屏蔽
+     * @param userDto
+     */
+    public void requestBlock(UserDto userDto) {
+        if (!allowTransitStatus(REQUESTING_BLOCK)) {
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "评论", this.id, STATUSNAMES.get(this.status)));
+        }
+        setStatus(REQUESTING_BLOCK);
+        commentDao.save(this, userDto);
+    }
+
+    /**
      * 增加追评
      * @param comment
      * @param userDto

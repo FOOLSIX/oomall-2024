@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.comment.dao;
 
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RefreshScope
@@ -29,8 +32,7 @@ public class CommentDao {
      */
 
     public Comment build(CommentPo po) {
-        Comment bo = new Comment();
-        CloneFactory.copy(bo, po);
+        Comment bo = CloneFactory.copy(new Comment(), po);
         bo.setCommentDao(this);
         return bo;
     }
@@ -75,7 +77,15 @@ public class CommentDao {
      */
 
     public List<Comment> retrieveReviewedByProductId(Long productId, Integer page, Integer pageSize) throws RuntimeException {
+        log.debug("retrieveReviewedByProductId: productId = {}", productId);
         return retrieveByProductIdAndStatus(productId, Comment.REVIEWED, page, pageSize);
+    }
+
+    public List<Comment> retrieveCommentsByStatus(Byte status, Integer page, Integer pageSize) throws RuntimeException {
+        log.debug("retrieveCommentsByStatus: status = {}", status);
+        List<CommentPo> commentPos = commentMapper.findByStatus(status, PageRequest.of(page, pageSize));
+        log.debug("retrieveCommentsByStatus: commentPosSize = {}", commentPos.size());
+        return commentPos.stream().map(this::build).toList();
     }
 
     /**
@@ -115,5 +125,14 @@ public class CommentDao {
         List<CommentPo> commentPos = commentMapper.findByPid(id);
         log.debug("retrieveCommentsByPid: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
+    }
+
+    public Comment findById(Long id) throws RuntimeException {
+        log.debug("findById: id = {}", id);
+        Optional<CommentPo> po = commentMapper.findById(id);
+        if (po.isPresent()) {
+            return build(po.get());
+        }
+        throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "评论", id));
     }
 }
