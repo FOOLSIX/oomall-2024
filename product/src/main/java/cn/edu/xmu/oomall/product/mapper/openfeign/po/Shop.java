@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
-public class Shop {
+public class Shop implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
