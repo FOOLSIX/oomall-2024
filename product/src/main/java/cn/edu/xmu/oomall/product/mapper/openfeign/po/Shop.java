@@ -2,13 +2,18 @@
 
 package cn.edu.xmu.oomall.product.mapper.openfeign.po;
 
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.product.mapper.po.ShopPo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 public class Shop {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Byte status;
@@ -35,10 +40,6 @@ public class Shop {
 
     public void setStatus(Byte status) {
         this.status = status;
-    }
-
-    public Consignee getConsignee() {
-        return consignee;
     }
 
     public void setConsignee(Consignee consignee) {

@@ -1,0 +1,7 @@
+shop:
+  mapper:
+    type: local
+
+template:
+  mapper:
+    type: local
