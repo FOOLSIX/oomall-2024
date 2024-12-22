@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Data
+@CopyFrom({Customer.class})
 public class CustomerPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
