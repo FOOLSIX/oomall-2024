@@ -5,13 +5,23 @@ import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.model.vo.IdNameTypeVo;
+import cn.edu.xmu.javaee.core.model.vo.PageVo;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
+import cn.edu.xmu.oomall.customer.controller.vo.CustomerVo;
+import cn.edu.xmu.oomall.customer.controller.vo.SimpleCustomerVo;
+import cn.edu.xmu.oomall.customer.dao.bo.Customer;
 import cn.edu.xmu.oomall.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -26,6 +36,7 @@ public class CustomerController {
 
     /**
      * 用户获取优惠券
+     *
      * @param userDto
      * @param used
      * @param page
@@ -37,18 +48,80 @@ public class CustomerController {
     public ReturnObject getCoupons(@LoginUser UserDto userDto,
                                    @RequestParam(required = false) Integer used,
                                    @RequestParam(required = false) Integer page,
-                                   @RequestParam(required = false) Integer pageSize){
+                                   @RequestParam(required = false) Integer pageSize) {
         return new ReturnObject();
     }
 
     /**
-     *
      * @param id
      * @return
      */
     @GetMapping("/coupons/{id}")
     @Transactional(propagation = Propagation.REQUIRED)
-    public ReturnObject getCouponById(@PathVariable Long id){
+    public ReturnObject getCouponById(@PathVariable Long id) {
+        return new ReturnObject();
+    }
+
+    /**
+     * 管理员获取指定用户信息
+     *
+     * @param id
+     * @param shopId
+     * @return
+     */
+    @GetMapping("shops/{shopId}/customers/{id}")
+    @Audit(departName = "customer")
+    public ReturnObject getUserById(@PathVariable Long id,
+                                    @PathVariable Long shopId) {
+        if (!shopId.equals(0)) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        Customer customer = this.customerService.getUserById(id);
+        CustomerVo customerVo = CloneFactory.copy(new CustomerVo(), customer);
+        return new ReturnObject(customerVo);
+    }
+
+    /**
+     * 管理员获取所有用户信息
+     *
+     * @param shopId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/shops/{shopId}/customers")
+    @Audit(departName = "customer")
+    public ReturnObject getAllUsers(@PathVariable Long shopId,
+                                    @RequestParam(required = false, defaultValue = "1") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer pageSize
+    ) {
+        if (!shopId.equals(0)) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        List<Customer> customers = this.customerService.getAllUsers(page, pageSize);
+        List<SimpleCustomerVo> simpleCustomerVos = customers.stream().
+                map(customer -> CloneFactory.copy(new SimpleCustomerVo(), customer)).collect(Collectors.toList());
+        return new ReturnObject(new PageVo<>(simpleCustomerVos, page, pageSize));
+
+    }
+
+    /**
+     * 管理员删除顾客
+     *
+     * @param id
+     * @param shopId
+     * @param userDto
+     * @return
+     */
+    @DeleteMapping("/shops/{shopId}/customers/{id}")
+    @Audit(departName = "customer")
+    public ReturnObject delUserById(@PathVariable Long id,
+                                    @PathVariable Long shopId,
+                                    @LoginUser UserDto userDto) {
+        if (!shopId.equals(0)) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        this.customerService.delUserById(id, userDto);
         return new ReturnObject();
     }
 
@@ -56,19 +129,19 @@ public class CustomerController {
      * 封禁顾客
      *
      * @param id
-     * @param did
+     * @param shopId
      * @param userDto
      * @return
      */
-    @PutMapping("/shops/{did}/customers/{id}/ban")
+    @PutMapping("/shops/{shopId}/customers/{id}/ban")
     @Audit(departName = "customers")
     public ReturnObject banUser(@PathVariable Long id,
-                                @PathVariable Long did,
-                                @LoginUser UserDto userDto){
-        if (!did.equals(0)){
+                                @PathVariable Long shopId,
+                                @LoginUser UserDto userDto) {
+        if (!shopId.equals(0)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
-        this.customerService.banUser(id,userDto);
+        this.customerService.banUser(id, userDto);
         return new ReturnObject();
     }
 
@@ -76,22 +149,21 @@ public class CustomerController {
      * 解禁顾客
      *
      * @param id
-     * @param did
+     * @param shopId
      * @param userDto
      * @return
      */
-    @PutMapping("/shops/{did}/customers/{id}/release")
+    @PutMapping("/shops/{shopId}/customers/{id}/release")
     @Audit(departName = "customers")
     public ReturnObject releaseUser(@PathVariable Long id,
-                                @PathVariable Long did,
-                                @LoginUser UserDto userDto){
-        if (!did.equals(0)){
+                                    @PathVariable Long shopId,
+                                    @LoginUser UserDto userDto) {
+        if (!shopId.equals(0)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
-        this.customerService.releaseUser(id,userDto);
+        this.customerService.releaseUser(id, userDto);
         return new ReturnObject();
     }
-
 
 
 }

@@ -10,10 +10,18 @@ import cn.edu.xmu.oomall.customer.mapper.jpa.CustomerPoMapper;
 import cn.edu.xmu.oomall.customer.mapper.po.CustomerPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -37,7 +45,7 @@ public class CustomerDao {
      * @param id shop id
      * @return Shop
      */
-    public Customer findById(Long id){
+    public Customer findById(Long id) {
         if (id.equals(null)) {
             throw new IllegalArgumentException("findById: id is null");
         }
@@ -46,20 +54,42 @@ public class CustomerDao {
         return customer;
     }
 
+    /**
+     * 分页获取用户信息
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public List<Customer> getAllUsers(Integer page, Integer pageSize) {
+        List<Customer> ret = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "id");
+        List<CustomerPo> customerPos;
+        Page<CustomerPo> pageCustomer = this.customerPoMapper.findAll(pageable);
+        customerPos = pageCustomer.toList();
+        if (Objects.nonNull(customerPos)) {
+            ret = customerPos.stream().map(po -> CloneFactory.copy(new Customer(), po)).collect(Collectors.toList());
+        }
+        return ret;
+    }
+
 
     /**
      * 保存用户状态
+     *
      * @param customer
      * @param userDto
      * @return
      * @throws RuntimeException
      */
-    public String save(Customer customer, UserDto userDto) throws RuntimeException{
-        if (customer.getId().equals(null)){
+    public String save(Customer customer, UserDto userDto) throws RuntimeException {
+        if (customer.getId().equals(null)) {
             throw new IllegalArgumentException("save: customer id is null");
         }
+        customer.setModifier(userDto);
+        customer.setGmtModified(LocalDateTime.now());
         String key = String.format(KEY, customer.getId());
-        CustomerPo po = CloneFactory.copy(new CustomerPo(),customer);
+        CustomerPo po = CloneFactory.copy(new CustomerPo(), customer);
+        log.debug("save: po = {}", po);
         this.customerPoMapper.save(po);
         return key;
     }

@@ -69,6 +69,21 @@ public class Customer extends OOMallObject {
     }
 
     /**
+     * 逻辑删除顾客
+     * @param user
+     */
+    public void delUserById(UserDto user){
+        if (this.invalid==0){
+            this.changeInvalid((byte) 2,user);
+        }
+        else
+        {
+            //抛出异常
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "顾客", this.getId(), user.getDepartId()));
+        }
+    }
+
+    /**
      * 变更顾客状态
      * @param invalid
      * @param user
