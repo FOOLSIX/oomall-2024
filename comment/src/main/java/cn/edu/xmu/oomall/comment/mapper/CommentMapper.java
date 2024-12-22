@@ -12,4 +12,5 @@ public interface CommentMapper extends JpaRepository<CommentPo, Long> {
     List<CommentPo> findByProductIdEqualsAndStatusEqualsAndPidEquals(Long productId, Byte status, Long pid,Pageable pageable);
     List<CommentPo> findByPid(Long Pid);
     List<CommentPo> findByStatus(Byte status, Pageable pageable);
+    List<CommentPo> findByUidEqualsAndStatusEquals(Long pid, Byte status, Pageable pageable);
 }

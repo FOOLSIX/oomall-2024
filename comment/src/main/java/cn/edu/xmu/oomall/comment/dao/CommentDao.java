@@ -81,6 +81,15 @@ public class CommentDao {
         return retrieveByProductIdAndStatus(productId, Comment.REVIEWED, page, pageSize);
     }
 
+    /**
+     * 根据状态查找评论
+     * @param status
+     * @param page
+     * @param pageSize
+     * @return
+     * @throws RuntimeException
+     */
+
     public List<Comment> retrieveCommentsByStatus(Byte status, Integer page, Integer pageSize) throws RuntimeException {
         log.debug("retrieveCommentsByStatus: status = {}", status);
         List<CommentPo> commentPos = commentMapper.findByStatus(status, PageRequest.of(page, pageSize));
@@ -101,6 +110,23 @@ public class CommentDao {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         List<CommentPo> commentPos = commentMapper.findByProductIdEqualsAndStatusEqualsAndPidEquals(productId, status, Comment.ROOT_ID, pageable);
         log.debug("retrieveByProductIdAndStatus: commentPosSize = {}", commentPos.size());
+        return commentPos.stream().map(this::build).toList();
+    }
+
+    /**
+     * 根据用户id和状态查找
+     * @param uid
+     * @param status
+     * @param page
+     * @param pageSize
+     * @return
+     * @throws RuntimeException
+     */
+
+    public List<Comment> retrieveByUidAndStatus(Long uid, Byte status, Integer page, Integer pageSize) throws RuntimeException {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        List<CommentPo> commentPos = commentMapper.findByUidEqualsAndStatusEquals(uid, status, pageable);
+        log.debug("retrieveByUidAndStatus: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
     }
 

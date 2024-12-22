@@ -32,7 +32,10 @@ public class ShopController {
                                     @PathVariable Long id,
                                     @RequestBody CommentDto commentDto,
                                     @LoginUser UserDto userDto) {
-        return new ReturnObject();//todo
+        //todo verify auth
+        Comment comment = CloneFactory.copy(new Comment(), commentDto);
+        commentService.createReply(id, comment, shopId, userDto);
+        return new ReturnObject(ReturnNo.OK);
     }
 
     /**

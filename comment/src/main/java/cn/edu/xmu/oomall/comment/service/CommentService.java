@@ -26,6 +26,14 @@ public class CommentService {
     public List<Comment> retrieveCommentsByStatus(Byte status, Integer page, Integer pageSize) {
         return commentDao.retrieveCommentsByStatus(status, page, pageSize);
     }
+    
+    public List<Comment> retrieveCommentsByUserIdAndStatus(Long userId, Byte status,Integer page, Integer pageSize) {
+        return commentDao.retrieveByUidAndStatus(userId, status, page, pageSize);
+    }
+
+    public Comment findCommentById(Long id) {
+        return commentDao.findById(id);
+    }
 
     public void deleteById(Long id) {
 
@@ -46,19 +54,19 @@ public class CommentService {
         comment.ban(user);
     }
 
-    public void requestBlock(Long id, UserDto userDto) {
+    public void requestBlock(Long id, UserDto user) {
         Comment comment = commentDao.findById(id);
-        comment.requestBlock(userDto);
+        comment.requestBlock(user);
     }
 
-    public void createReply(Long id, Comment comment, Long shopId, UserDto userDto) {
+    public void createReply(Long id, Comment comment, Long shopId, UserDto user) {
         Comment parentComment = commentDao.findById(id);
-        parentComment.addReplyComment(comment, shopId, userDto);
+        parentComment.addReplyComment(comment, shopId, user);
     }
 
-    public void createAdditionalComment(Long id, Comment comment, Long shopId, UserDto userDto) {
+    public void createAdditionalComment(Long id, Comment comment, UserDto user) {
         Comment parentComment = commentDao.findById(id);
-        parentComment.addReplyComment(comment, shopId, userDto);
+        parentComment.addAdditionalComment(comment, user);
     }
 
 }
