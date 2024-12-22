@@ -14,19 +14,16 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartPo {
+public class CartItemPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long creatorId;
+    private Long cartId;
 
-    private String creatorName;
-
-    private LocalDateTime gmtCreate;
-
-    private LocalDateTime gmtModified;
-
+    private Long productId;
+    private Long price;
     private Long quantity;
-
+    private LocalDateTime gmtCreate;
+    private LocalDateTime gmtModified;
 }
