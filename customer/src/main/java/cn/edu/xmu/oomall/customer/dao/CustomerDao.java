@@ -1,19 +1,19 @@
 package cn.edu.xmu.oomall.customer.dao;
 
-import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
-import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.customer.dao.bo.Customer;
 import cn.edu.xmu.oomall.customer.mapper.jpa.CustomerPoMapper;
 import cn.edu.xmu.oomall.customer.mapper.po.CustomerPo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -23,8 +23,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
 @Slf4j
+@Repository
+@Component
+@RefreshScope
+@RequiredArgsConstructor
 public class CustomerDao {
 
     public static final String KEY = "S%d";
@@ -33,12 +36,6 @@ public class CustomerDao {
 
     private final CustomerPoMapper customerPoMapper;
 
-    @Autowired
-    public CustomerDao(RedisUtil redisUtil, CustomerPoMapper customerPoMapper) {
-        this.redisUtil = redisUtil;
-        this.customerPoMapper = customerPoMapper;
-    }
-
     /**
      * 按照id获得对象
      *
@@ -46,7 +43,8 @@ public class CustomerDao {
      * @return Shop
      */
     public Customer findById(Long id) {
-        if (id.equals(null)) {
+        if (id == null) {
+            log.info("id 为 null");
             throw new IllegalArgumentException("findById: id is null");
         }
         Optional<CustomerPo> customerPo = customerPoMapper.findById(id);
@@ -78,19 +76,16 @@ public class CustomerDao {
      *
      * @param customer
      * @param userDto
-     * @return
      * @throws RuntimeException
      */
-    public String save(Customer customer, UserDto userDto) throws RuntimeException {
-        if (customer.getId().equals(null)) {
+    public void save(Customer customer, UserDto userDto) throws RuntimeException {
+        if (customer.getId() == null) {
             throw new IllegalArgumentException("save: customer id is null");
         }
         customer.setModifier(userDto);
         customer.setGmtModified(LocalDateTime.now());
-        String key = String.format(KEY, customer.getId());
         CustomerPo po = CloneFactory.copy(new CustomerPo(), customer);
         log.debug("save: po = {}", po);
         this.customerPoMapper.save(po);
-        return key;
     }
 }

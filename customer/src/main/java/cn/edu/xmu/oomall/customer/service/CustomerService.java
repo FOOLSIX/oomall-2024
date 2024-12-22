@@ -4,6 +4,7 @@ import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.customer.dao.CustomerDao;
 import cn.edu.xmu.oomall.customer.dao.bo.Customer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,10 @@ public class CustomerService {
 
     private CustomerDao customerDao;
 
+    @Autowired
+    public CustomerService(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
 
     /**

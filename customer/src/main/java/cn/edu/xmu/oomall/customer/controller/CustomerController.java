@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.customer.controller;
 
 import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -32,7 +34,6 @@ public class CustomerController {
 
     private JwtHelper jwtHelper;
     private final CustomerService customerService;
-
 
     /**
      * 用户获取优惠券
@@ -69,12 +70,15 @@ public class CustomerController {
      * @param shopId
      * @return
      */
-    @GetMapping("shops/{shopId}/customers/{id}")
+    @GetMapping("shops/{shopId}/customer/{id}")
     @Audit(departName = "customer")
-    public ReturnObject getUserById(@PathVariable Long id,
-                                    @PathVariable Long shopId) {
-        if (!shopId.equals(0)) {
+    public ReturnObject getUserById(@PathVariable Long shopId,
+                                    @PathVariable Long id) {
+        if (!shopId.equals(0L)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        if (id == -1L) { // 检查特殊值，模拟 null
+            throw new BusinessException(ReturnNo.FIELD_NOTVALID, "填入的id参数为空");
         }
         Customer customer = this.customerService.getUserById(id);
         CustomerVo customerVo = CloneFactory.copy(new CustomerVo(), customer);
@@ -95,7 +99,7 @@ public class CustomerController {
                                     @RequestParam(required = false, defaultValue = "1") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
-        if (!shopId.equals(0)) {
+        if (!shopId.equals(0L)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
         List<Customer> customers = this.customerService.getAllUsers(page, pageSize);
@@ -118,7 +122,7 @@ public class CustomerController {
     public ReturnObject delUserById(@PathVariable Long id,
                                     @PathVariable Long shopId,
                                     @LoginUser UserDto userDto) {
-        if (!shopId.equals(0)) {
+        if (!shopId.equals(0L)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
         this.customerService.delUserById(id, userDto);
@@ -138,7 +142,7 @@ public class CustomerController {
     public ReturnObject banUser(@PathVariable Long id,
                                 @PathVariable Long shopId,
                                 @LoginUser UserDto userDto) {
-        if (!shopId.equals(0)) {
+        if (!shopId.equals(0L)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
         this.customerService.banUser(id, userDto);
@@ -158,7 +162,7 @@ public class CustomerController {
     public ReturnObject releaseUser(@PathVariable Long id,
                                     @PathVariable Long shopId,
                                     @LoginUser UserDto userDto) {
-        if (!shopId.equals(0)) {
+        if (!shopId.equals(0L)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
         this.customerService.releaseUser(id, userDto);
