@@ -1,7 +1,10 @@
 package cn.edu.xmu.oomall.customer.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.customer.dao.CustomerDao;
 import cn.edu.xmu.oomall.customer.mapper.jpa.OrderPoMapper;
 import cn.edu.xmu.oomall.customer.mapper.po.CustomerPo;
@@ -33,5 +36,32 @@ public class Customer extends OOMallObject {
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    /**
+     * 禁用顾客，职责由Customer对象承担
+     * @param user
+     */
+    public void banUser(UserDto user){
+        if (this.invalid==0){
+            this.changeInvalid((byte) 1,user);
+        }
+        else
+        {
+            //抛出异常
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "顾客", this.getId(), user.getDepartId()));
+        }
+    }
+
+    /**
+     * 变更顾客状态
+     * @param invalid
+     * @param user
+     */
+    private void changeInvalid(byte invalid,UserDto user){
+        Customer customer = new Customer();
+        customer.setInvalid(invalid);
+        customer.setId(this.id);
+        this.customerDao.save(customer, user);
     }
 }

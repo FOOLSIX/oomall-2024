@@ -1,10 +1,10 @@
 package cn.edu.xmu.oomall.customer.controller;
 
+import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.javaee.core.model.vo.PageVo;
-import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
@@ -43,14 +41,36 @@ public class CustomerController {
         return new ReturnObject();
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/coupons/{id}")
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject getCouponById(@PathVariable Long id){
         return new ReturnObject();
     }
 
-
-
-
+    /**
+     * 封禁顾客
+     *
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
+    @PutMapping("/shops/{did}/customers/{id}")
+    @Audit(departName = "customers")
+    public ReturnObject banUser(@PathVariable Long id,
+                                @PathVariable Long did,
+                                @LoginUser UserDto userDto){
+        if (!did.equals(0)){
+            log.error("did错误");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        this.customerService.banUser(id,userDto);
+        return new ReturnObject();
+    }
 
 }
