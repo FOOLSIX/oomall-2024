@@ -43,9 +43,7 @@ public class CartService {
         int toIndex = Math.min(fromIndex + pageSize, cartItems.size());
 
         List<CartItemVo> pagedItems = cartItems.subList(fromIndex, toIndex).stream()
-                .map(item -> {
-                    return CloneFactory.copy(new CartItemVo(), item);
-                })
+                .map(item -> CloneFactory.<CartItemVo>copy(new CartItemVo(), item))
                 .collect(Collectors.toList());
 
         return pagedItems;

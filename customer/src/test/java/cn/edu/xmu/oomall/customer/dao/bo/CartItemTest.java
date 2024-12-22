@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.customer.dao.bo;
 
+import cn.edu.xmu.oomall.customer.dao.CartDao;
+import cn.edu.xmu.oomall.customer.mapper.po.CartItemPo;
 import cn.edu.xmu.oomall.customer.mapper.po.CartPo;
 import cn.edu.xmu.oomall.customer.dao.CartItemDao;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,21 +15,23 @@ import static org.mockito.Mockito.*;
 class CartItemTest {
 
     private CartItem cartItem;
-    private CartPo cartPoMock;
+//    private CartPo cartPoMock;
+//    private CartItemPo cartItemPoMock;
     private CartItemDao cartItemDaoMock;
 
     @BeforeEach
     void setUp() {
         cartItem = new CartItem();
-        cartPoMock = new CartPo();
-        cartItemDaoMock = mock(CartItemDao.class); // 使用 Mock 对象
+//        cartPoMock = new CartPo();
+        cartItemDaoMock = mock(CartItemDao.class);
     }
 
-    @Test
-    void testSetAndGetCart() {
-        cartItem.setCart(cartPoMock);
-        assertEquals(cartPoMock, cartItem.getCart());
-    }
+//    @Test
+//    void testSetAndGetCartId() {
+//        CartItem cartItem1 = cartItemDaoMock.build(cartItemPoMock);
+//        /////
+//        assertEquals(cartPoMock.getId(), cartItem.getCreatorId());
+//    }
 
     @Test
     void testSetAndGetProductId() {

@@ -20,8 +20,9 @@ public class CartItem extends OOMallObject {
     private Long productId;
     private Long price;
     private Long quantity;
-    private CartItemDao cartItemDao;
     private LocalDateTime gmtCreate;
+
+    private CartItemDao cartItemDao;
 
     @Override
     public void setGmtCreate(LocalDateTime gmtCreate) {
@@ -33,4 +34,5 @@ public class CartItem extends OOMallObject {
         this.gmtModified = gmtModified;
     }
 
+    public void setProductId(Long productId) {}
 }

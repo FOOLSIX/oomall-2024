@@ -31,6 +31,17 @@ public class CartItemDao {
         this.cartItemPoMapper = carItemPoMapper;
     }
 
+    public CartItem build(CartItemPo cartItemPo) {
+        CartItem cartItem = CloneFactory.copy(new CartItem(), cartItemPo);
+        this.build(cartItem);
+        return cartItem;
+    }
+
+    private CartItem build(CartItem bo){
+        bo.setCartItemDao(this);
+        return bo;
+    }
+
     public List<CartItem> getCartItemPoByCartId(long id) {
         if (id == 0) {
             throw new IllegalArgumentException("findById: id is 0");
@@ -46,19 +57,19 @@ public class CartItemDao {
                 .collect(Collectors.toList());
         return cartItemList;
     }
-    public List<CartItemVo> getCartItemsByPage(Cart cart, int page , int pagesize){
-
-        if (cart == null) {throw new RuntimeException("Cart not found for user.");}
-
-        Pageable pageable = PageRequest.of(page-1, pagesize);
-
-        List<CartItemPo> paginatedItems = cartItemPoMapper.findByCartIdWithPagination(cart.getId(), pageable);;
-        List<CartItemVo> ret = paginatedItems.stream()
-                .map(item -> CloneFactory.copy(new CartItemVo(), item))
-                .collect(Collectors.toList());
-
-        return ret;
-    }
+//    public List<CartItemVo> getCartItemsByPage(Cart cart, int page , int pagesize){
+//
+//        if (cart == null) {throw new RuntimeException("Cart not found for user.");}
+//
+//        Pageable pageable = PageRequest.of(page-1, pagesize);
+//
+//        List<CartItemPo> paginatedItems = cartItemPoMapper.findByCartIdWithPagination(cart.getId(), pageable);;
+//        List<CartItemVo> ret = paginatedItems.stream()
+//                .map(item -> CloneFactory.copy(new CartItemVo(), item))
+//                .collect(Collectors.toList());
+//
+//        return ret;
+//    }
 
 
 
