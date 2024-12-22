@@ -42,7 +42,7 @@ public class Comment extends OOMallObject implements Serializable {
 
     @ToString.Exclude
     @JsonIgnore
-    public static final Long ROOT_ID = -1L;
+    public static final Long ROOT_ID = 0L;
 
     private static final int MAX_ADDITIONAL_COMMENT = 2;
 

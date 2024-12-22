@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CopyTo(Comment.class)
 public class CommentDto {
+    Long id;
     @NotNull(message = "评论不能为空", groups = {NewGroup.class})
     String content;
     Long shopId;
     Long productId;
-    Long orderId;
 }
