@@ -26,6 +26,7 @@ public class CommentVo {
     private String updateTime;
     private Long shopId;
     private Long productId;
+    @CopyFrom.Exclude(Comment.class)
     private List<CommentVo> relatedComments;
     private IdNameTypeVo creator;
     private IdNameTypeVo modifier;
