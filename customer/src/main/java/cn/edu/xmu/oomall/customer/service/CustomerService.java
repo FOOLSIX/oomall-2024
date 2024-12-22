@@ -24,4 +24,14 @@ public class CustomerService {
         Customer customer = this.customerDao.findById(id);
         customer.banUser(userDto);
     }
+
+    /**
+     * 解禁顾客
+     * @param id
+     * @param userDto
+     */
+    public void releaseUser(Long id, UserDto userDto){
+        Customer customer = this.customerDao.findById(id);
+        customer.releaseUser(userDto);
+    }
 }

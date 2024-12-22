@@ -60,17 +60,38 @@ public class CustomerController {
      * @param userDto
      * @return
      */
-    @PutMapping("/shops/{did}/customers/{id}")
+    @PutMapping("/shops/{did}/customers/{id}/ban")
     @Audit(departName = "customers")
     public ReturnObject banUser(@PathVariable Long id,
                                 @PathVariable Long did,
                                 @LoginUser UserDto userDto){
         if (!did.equals(0)){
-            log.error("did错误");
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
         }
         this.customerService.banUser(id,userDto);
         return new ReturnObject();
     }
+
+    /**
+     * 解禁顾客
+     *
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
+    @PutMapping("/shops/{did}/customers/{id}/release")
+    @Audit(departName = "customers")
+    public ReturnObject releaseUser(@PathVariable Long id,
+                                @PathVariable Long did,
+                                @LoginUser UserDto userDto){
+        if (!did.equals(0)){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
+        }
+        this.customerService.releaseUser(id,userDto);
+        return new ReturnObject();
+    }
+
+
 
 }

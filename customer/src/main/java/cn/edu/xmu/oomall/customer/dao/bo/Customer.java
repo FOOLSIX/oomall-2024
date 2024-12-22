@@ -54,6 +54,21 @@ public class Customer extends OOMallObject {
     }
 
     /**
+     * 解禁顾客，职责由Customer对象承担
+     * @param user
+     */
+    public void releaseUser(UserDto user){
+        if (this.invalid==1){
+            this.changeInvalid((byte) 0,user);
+        }
+        else
+        {
+            //抛出异常
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "顾客", this.getId(), user.getDepartId()));
+        }
+    }
+
+    /**
      * 变更顾客状态
      * @param invalid
      * @param user
