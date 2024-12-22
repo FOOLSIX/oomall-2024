@@ -99,7 +99,7 @@ public class CommentDao {
      */
     public List<Comment> retrieveByProductIdAndStatus(Long productId, Byte status, Integer page, Integer pageSize) throws RuntimeException {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        List<CommentPo> commentPos = commentMapper.findByProductIdEqualsAndStatusEquals(productId, status, pageable);
+        List<CommentPo> commentPos = commentMapper.findByProductIdEqualsAndStatusEqualsAndPidEquals(productId, status, Comment.ROOT_ID, pageable);
         log.debug("retrieveByProductIdAndStatus: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
     }
@@ -126,6 +126,13 @@ public class CommentDao {
         log.debug("retrieveCommentsByPid: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
     }
+
+    /**
+     * 根据id查找评论
+     * @param id
+     * @return
+     * @throws RuntimeException
+     */
 
     public Comment findById(Long id) throws RuntimeException {
         log.debug("findById: id = {}", id);

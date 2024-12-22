@@ -31,19 +31,34 @@ public class CommentService {
 
     }
 
-    public void approve(Long id, UserDto userDto) {
-        Comment comment = commentDao.findById(id);
-        comment.approve(userDto);
+    public void updateComment(Comment comment, UserDto user) {
+        commentDao.findById(comment.getId());
+        commentDao.save(comment, user);
     }
 
-    public void ban(Long id, UserDto userDto) {
+    public void approve(Long id, UserDto user) {
         Comment comment = commentDao.findById(id);
-        comment.ban(userDto);
+        comment.approve(user);
+    }
+
+    public void ban(Long id, UserDto user) {
+        Comment comment = commentDao.findById(id);
+        comment.ban(user);
     }
 
     public void requestBlock(Long id, UserDto userDto) {
         Comment comment = commentDao.findById(id);
         comment.requestBlock(userDto);
+    }
+
+    public void createReply(Long id, Comment comment, Long shopId, UserDto userDto) {
+        Comment parentComment = commentDao.findById(id);
+        parentComment.addReplyComment(comment, shopId, userDto);
+    }
+
+    public void createAdditionalComment(Long id, Comment comment, Long shopId, UserDto userDto) {
+        Comment parentComment = commentDao.findById(id);
+        parentComment.addReplyComment(comment, shopId, userDto);
     }
 
 }

@@ -1,17 +1,25 @@
 package cn.edu.xmu.oomall.comment.controller;
 
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.comment.controller.vo.CommentVo;
+import cn.edu.xmu.oomall.comment.dao.bo.Comment;
+import cn.edu.xmu.oomall.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class UnAuthorizedController {
+
+    private final CommentService commentService;
 
     /**
      * 获取商品的评论
@@ -26,6 +34,7 @@ public class UnAuthorizedController {
                                                     @RequestParam(required = false, defaultValue = "1") Integer page,
                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                                     @LoginUser UserDto userDto) {
-        return new ReturnObject();//todo
+        List<Comment> bos = commentService.retrieveReviewedByProductId(productId, page, pageSize);
+        return new ReturnObject(ReturnNo.OK, bos.stream().map(CommentVo::new).toList());
     }
 }
