@@ -1,22 +1,20 @@
 package cn.edu.xmu.oomall.customer.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
-import cn.edu.xmu.javaee.core.exception.BusinessException;
-import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
-import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.customer.dao.CartDao;
-import cn.edu.xmu.oomall.customer.dao.CustomerDao;
-import cn.edu.xmu.oomall.customer.mapper.jpa.OrderPoMapper;
+import cn.edu.xmu.oomall.customer.mapper.po.CartPo;
 import cn.edu.xmu.oomall.customer.mapper.po.CustomerPo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import java.time.LocalDateTime;
 
 @ToString(callSuper = true, doNotUseGetters = true)
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
-@CopyFrom({CustomerPo.class})
+@CopyFrom({CustomerPo.class, CartPo.class,})
 @Data
 
 public class Cart extends OOMallObject {
@@ -34,5 +32,5 @@ public class Cart extends OOMallObject {
         this.gmtModified = gmtModified;
     }
 
-    public void setquantity(Long quantity) { this.quantity = quantity;}
+    public void setQuantity(Long quantity) { this.quantity = quantity;}
 }
