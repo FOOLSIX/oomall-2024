@@ -8,12 +8,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
 public class CustomerService {
 
     private CustomerDao customerDao;
+
+
+
+    /**
+     * 获取指定id的顾客信息
+     * @param id
+     * @return
+     */
+    public Customer getUserById(Long id){
+        Customer customer = this.customerDao.findById(id);
+        return customer;
+    }
+
+    public List<Customer> getAllUsers(Integer page,Integer pageSize){
+        List<Customer> customers = this.customerDao.getAllUsers(page, pageSize);
+        return customers;
+    }
 
     /**
      * 封禁顾客
@@ -34,4 +53,16 @@ public class CustomerService {
         Customer customer = this.customerDao.findById(id);
         customer.releaseUser(userDto);
     }
+
+    /**
+     * 删除顾客
+     * @param id
+     * @param userDto
+     */
+    public void delUserById(Long id, UserDto userDto){
+        Customer customer = this.customerDao.findById(id);
+        customer.delUserById(userDto);
+    }
+
+
 }
