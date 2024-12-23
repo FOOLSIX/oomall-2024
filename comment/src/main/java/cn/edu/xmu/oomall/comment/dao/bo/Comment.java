@@ -144,7 +144,6 @@ public class Comment extends OOMallObject implements Serializable {
 
     /**
      * 物理删除评论(以及其相关评论)
-     * 限制追评和回复数,递归深度应该不大于3
      */
     public void delete() {
         getRelatedComments().forEach(Comment::delete);
@@ -177,10 +176,13 @@ public class Comment extends OOMallObject implements Serializable {
     }
 
     /**
-     * 申请屏蔽
+     * 申请屏蔽自己商品的恶意评论
      * @param userDto
      */
-    public void requestBlock(UserDto userDto) {
+    public void requestBlock(Long shopId, UserDto userDto) {
+        if (!shopId.equals(this.shopId)) {
+            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "评论", this.id, shopId));
+        }
         if (!allowTransitStatus(REQUESTING_BLOCK)) {
             throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "评论", this.id, STATUSNAMES.get(this.status)));
         }
@@ -195,7 +197,7 @@ public class Comment extends OOMallObject implements Serializable {
      */
     public void addAdditionalComment(Comment comment, UserDto userDto) {
         //是否是该用户自己的评论
-        if (!id.equals(userDto.getId())) {
+        if (!uid.equals(userDto.getId())) {
             throw new BusinessException(ReturnNo.COMMENT_OUTSCOPE);
         }
         //追评数是否超过了上限
@@ -205,6 +207,10 @@ public class Comment extends OOMallObject implements Serializable {
             throw new BusinessException(ReturnNo.ADDITIONAL_COMMENT_OUTLIMIT);
         }
         comment.setPid(this.id);
+        comment.setStatus(PENDING);
+        comment.setUid(uid);
+        comment.setProductId(productId);
+        comment.setShopId(shopId);
         commentDao.insert(comment, userDto);
     }
 
@@ -224,6 +230,10 @@ public class Comment extends OOMallObject implements Serializable {
             throw new BusinessException(ReturnNo.REPLY_COMMENT_OUTLIMITE);
         }
         comment.setPid(this.id);
+        comment.setStatus(PENDING);
+        comment.setUid(userDto.getId());
+        comment.setProductId(productId);
+        comment.setShopId(shopId);
         commentDao.insert(comment, userDto);
     }
 }

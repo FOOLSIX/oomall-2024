@@ -3,7 +3,6 @@ package cn.edu.xmu.oomall.comment.controller;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.comment.CommentTestApplication;
-import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,11 +35,31 @@ public class AdminControllerTest {
 
     @Test
     public void testFindById() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/platforms/0/comments?status=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/platforms/0/comments/1")
                         .header("authorization", adminToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.status").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.status").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1));
+    }
+
+    @Test
+    public void testFindByIdReturnNull() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/platforms/0/comments/100000000")
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+
+    }
+
+    @Test
+    public void testDeleteById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/platforms/0/comments/1")
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
     }
 
     @Test
@@ -71,12 +90,30 @@ public class AdminControllerTest {
     }
 
     @Test
+    public void testApproveStatusNotAllow() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/platforms/0/comments/19/approve")
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
+    }
+
+    @Test
     public void testBan() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/platforms/0/comments/3/ban")
                         .header("authorization", adminToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
+    }
+
+    @Test
+    public void testBanStatusNotAllow() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/platforms/0/comments/19/ban")
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
     }
 
     @Test

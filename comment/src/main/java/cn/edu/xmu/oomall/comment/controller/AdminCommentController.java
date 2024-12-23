@@ -28,9 +28,6 @@ public class AdminCommentController {
     public ReturnObject findCommentById(@PathVariable Long id,
                                       @PathVariable Long did,
                                       @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         CommentVo ret = new CommentVo(commentService.findCommentById(id));
         return new ReturnObject(ReturnNo.OK, ret);
     }
@@ -40,11 +37,8 @@ public class AdminCommentController {
     public ReturnObject deleteComment(@PathVariable Long id,
                                       @PathVariable Long did,
                                       @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.deleteById(id);
-        return null;//todo need del?
+        return new ReturnObject(ReturnNo.OK);
     }
 
     @GetMapping("/comments")
@@ -54,9 +48,6 @@ public class AdminCommentController {
                                     @RequestParam(required = false, defaultValue = "1") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                     @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         if (Objects.isNull(status)) {
             status = Comment.PENDING;
         }
@@ -70,9 +61,6 @@ public class AdminCommentController {
     public ReturnObject approveComment(@PathVariable Long id,
                                        @PathVariable Long did,
                                        @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.approve(id, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
@@ -82,9 +70,6 @@ public class AdminCommentController {
     public ReturnObject banComment(@PathVariable Long id,
                                    @PathVariable Long did,
                                    @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.ban(id, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
