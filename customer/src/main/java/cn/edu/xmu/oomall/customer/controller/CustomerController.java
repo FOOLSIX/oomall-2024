@@ -21,9 +21,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -31,143 +28,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerController {
-
+    // TODO 顾客
     private JwtHelper jwtHelper;
     private final CustomerService customerService;
 
-    /**
-     * 用户获取优惠券
-     *
-     * @param userDto
-     * @param used
-     * @param page
-     * @param pageSize
-     * @return
-     */
-    @GetMapping("/coupons")
-    @Transactional(propagation = Propagation.REQUIRED)
-    public ReturnObject getCoupons(@LoginUser UserDto userDto,
-                                   @RequestParam(required = false) Integer used,
-                                   @RequestParam(required = false) Integer page,
-                                   @RequestParam(required = false) Integer pageSize) {
-        return new ReturnObject();
-    }
 
-    /**
-     * @param id
-     * @return
-     */
-    @GetMapping("/coupons/{id}")
-    @Transactional(propagation = Propagation.REQUIRED)
-    public ReturnObject getCouponById(@PathVariable Long id) {
-        return new ReturnObject();
-    }
 
-    /**
-     * 管理员获取指定用户信息
-     *
-     * @param id
-     * @param shopId
-     * @return
-     */
-    @GetMapping("shops/{shopId}/customer/{id}")
-    @Audit(departName = "customer")
-    public ReturnObject getUserById(@PathVariable Long shopId,
-                                    @PathVariable Long id) {
-        if (!shopId.equals(0L)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
-        }
-        if (id == -1L) { // 检查特殊值，模拟 null
-            throw new BusinessException(ReturnNo.FIELD_NOTVALID, "填入的id参数为空");
-        }
-        Customer customer = this.customerService.getUserById(id);
-        CustomerVo customerVo = CloneFactory.copy(new CustomerVo(), customer);
-        return new ReturnObject(customerVo);
-    }
 
-    /**
-     * 管理员获取所有用户信息
-     *
-     * @param shopId
-     * @param page
-     * @param pageSize
-     * @return
-     */
-    @GetMapping("/shops/{shopId}/customers")
-    @Audit(departName = "customer")
-    public ReturnObject getAllUsers(@PathVariable Long shopId,
-                                    @RequestParam(required = false, defaultValue = "1") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer pageSize
-    ) {
-        if (!shopId.equals(0L)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
-        }
-        List<Customer> customers = this.customerService.getAllUsers(page, pageSize);
-        List<SimpleCustomerVo> simpleCustomerVos = customers.stream().
-                map(customer -> CloneFactory.copy(new SimpleCustomerVo(), customer)).collect(Collectors.toList());
-        return new ReturnObject(new PageVo<>(simpleCustomerVos, page, pageSize));
-
-    }
-
-    /**
-     * 管理员删除顾客
-     *
-     * @param id
-     * @param shopId
-     * @param userDto
-     * @return
-     */
-    @DeleteMapping("/shops/{shopId}/customers/{id}")
-    @Audit(departName = "customer")
-    public ReturnObject delUserById(@PathVariable Long id,
-                                    @PathVariable Long shopId,
-                                    @LoginUser UserDto userDto) {
-        if (!shopId.equals(0L)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
-        }
-        this.customerService.delUserById(id, userDto);
-        return new ReturnObject();
-    }
-
-    /**
-     * 封禁顾客
-     *
-     * @param id
-     * @param shopId
-     * @param userDto
-     * @return
-     */
-    @PutMapping("/shops/{shopId}/customers/{id}/ban")
-    @Audit(departName = "customers")
-    public ReturnObject banUser(@PathVariable Long id,
-                                @PathVariable Long shopId,
-                                @LoginUser UserDto userDto) {
-        if (!shopId.equals(0L)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
-        }
-        this.customerService.banUser(id, userDto);
-        return new ReturnObject();
-    }
-
-    /**
-     * 解禁顾客
-     *
-     * @param id
-     * @param shopId
-     * @param userDto
-     * @return
-     */
-    @PutMapping("/shops/{shopId}/customers/{id}/release")
-    @Audit(departName = "customers")
-    public ReturnObject releaseUser(@PathVariable Long id,
-                                    @PathVariable Long shopId,
-                                    @LoginUser UserDto userDto) {
-        if (!shopId.equals(0L)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE);
-        }
-        this.customerService.releaseUser(id, userDto);
-        return new ReturnObject();
-    }
 
 
 }
