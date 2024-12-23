@@ -36,7 +36,7 @@ public class CommentService {
     }
 
     public void deleteById(Long id) {
-
+        commentDao.findById(id).delete();
     }
 
     public void updateComment(Comment comment, UserDto user) {
@@ -54,9 +54,9 @@ public class CommentService {
         comment.ban(user);
     }
 
-    public void requestBlock(Long id, UserDto user) {
+    public void requestBlock(Long id, Long shopId, UserDto user) {
         Comment comment = commentDao.findById(id);
-        comment.requestBlock(user);
+        comment.requestBlock(shopId, user);
     }
 
     public void createReply(Long id, Comment comment, Long shopId, UserDto user) {

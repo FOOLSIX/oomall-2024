@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.comment.mapper;
+package cn.edu.xmu.oomall.comment.mapper.jpa;
 
 import cn.edu.xmu.oomall.comment.mapper.po.CommentPo;
 import org.springframework.data.domain.Pageable;

@@ -5,7 +5,7 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
-import cn.edu.xmu.oomall.comment.mapper.CommentMapper;
+import cn.edu.xmu.oomall.comment.mapper.jpa.CommentMapper;
 import cn.edu.xmu.oomall.comment.mapper.po.CommentPo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
