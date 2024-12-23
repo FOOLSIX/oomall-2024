@@ -41,7 +41,7 @@ public class CommentDaoTest {
     public void testRetrieveReviewedByProductId() {
         List<Comment> comments = commentDao.retrieveReviewedByProductId(1001L, 1, 10);
         assertThat(comments).isNotNull();
-        assertThat(comments).allMatch(comment -> comment.getProductId() == 1001L);
+        assertThat(comments).allMatch(comment -> comment.getProductId() == 1001L && Objects.equals(comment.getStatus(), Comment.REVIEWED));
     }
 
     @Test
