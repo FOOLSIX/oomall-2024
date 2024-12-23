@@ -23,7 +23,7 @@ public class CommentVo {
     private Long uid;
     private Byte status;
     private String content;
-    private String updateTime;
+    private LocalDateTime updateTime;
     private Long shopId;
     private Long productId;
     @CopyFrom.Exclude(Comment.class)

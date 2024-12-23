@@ -23,6 +23,13 @@ import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 public class AdminCommentController {
     private final CommentService commentService;
 
+    /**
+     * 用id查找评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @GetMapping("/comments/{id}")
     @Audit(departName = "platforms")
     public ReturnObject findCommentById(@PathVariable Long id,
@@ -31,6 +38,14 @@ public class AdminCommentController {
         CommentVo ret = new CommentVo(commentService.findCommentById(id));
         return new ReturnObject(ReturnNo.OK, ret);
     }
+
+    /**
+     * 据id删除评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
 
     @DeleteMapping("/comments/{id}")
     @Audit(departName = "platforms")
@@ -41,6 +56,15 @@ public class AdminCommentController {
         return new ReturnObject(ReturnNo.OK);
     }
 
+    /**
+     * 以状态获得评论
+     * @param did
+     * @param status
+     * @param page
+     * @param pageSize
+     * @param userDto
+     * @return
+     */
     @GetMapping("/comments")
     @Audit(departName = "platforms")
     public ReturnObject getComments(@PathVariable Long did,
@@ -56,6 +80,13 @@ public class AdminCommentController {
 
     }
 
+    /**
+     * 审核通过评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @PutMapping("/comments/{id}/approve")
     @Audit(departName = "platforms")
     public ReturnObject approveComment(@PathVariable Long id,
@@ -65,6 +96,13 @@ public class AdminCommentController {
         return new ReturnObject(ReturnNo.OK);
     }
 
+    /**
+     * 审核不通过/屏蔽评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @PutMapping("/comments/{id}/ban")
     @Audit(departName = "platforms")
     public ReturnObject banComment(@PathVariable Long id,

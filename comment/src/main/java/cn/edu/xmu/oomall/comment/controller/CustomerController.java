@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.comment.controller;
 
+import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
@@ -7,6 +8,7 @@ import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.comment.controller.dto.CommentDto;
 import cn.edu.xmu.oomall.comment.controller.vo.CommentVo;
+import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +19,11 @@ import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/customers/{cid}")
 public class CustomerController {
 
     private final CommentService commentService;
+    private final CommentDao commentDao;
 
     /**
      * 获得当前用户所有评论
@@ -27,7 +31,7 @@ public class CustomerController {
      * @param pageSize
      * @return
      */
-
+    @Audit(departName = "customers")
     @GetMapping("/comments")
     public ReturnObject retrieveComments(@RequestParam(required = false, defaultValue = "1") Integer page,
                                          @RequestParam(required = false, defaultValue = "10") Integer pageSize,
@@ -47,12 +51,15 @@ public class CustomerController {
      * @param userDto
      * @return
      */
-
-    @PostMapping("/orders/{orderId}/comment")
+    @Audit(departName = "customers")
+    @PostMapping("/orders/{orderId}/products/{productId}/comment")
     public ReturnObject createComment(@PathVariable Long orderId,
+                                      @PathVariable Long productId,
                                       @RequestBody CommentDto commentDto,
                                       @LoginUser UserDto userDto) {
-        return new ReturnObject();//todo
+        Comment newComment = CloneFactory.copy(new Comment(), commentDto);
+        commentService.createComment(newComment, orderId, productId, userDto);
+        return new ReturnObject(ReturnNo.OK);
     }
 
     /**
@@ -60,7 +67,7 @@ public class CustomerController {
      * @param id 评论id
      * @return
      */
-
+    @Audit(departName = "customers")
     @PostMapping("/comments/{id}/additional")
     public ReturnObject createAdditionalComment(@PathVariable Long id,
                                                 @RequestBody CommentDto commentDto,
