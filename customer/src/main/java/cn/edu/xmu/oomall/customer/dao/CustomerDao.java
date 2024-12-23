@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +35,13 @@ public class CustomerDao {
 
     private final CustomerPoMapper customerPoMapper;
 
+
+    public Customer build(CustomerPo po) {
+        Customer bo = CloneFactory.copy(new Customer(), po);
+        bo.setCustomerDao(this);
+        return bo;
+    }
+
     /**
      * 按照id获得对象
      *
@@ -48,8 +54,7 @@ public class CustomerDao {
             throw new IllegalArgumentException("findById: id is null");
         }
         Optional<CustomerPo> customerPo = customerPoMapper.findById(id);
-        Customer customer = customerPo.map(po -> CloneFactory.copy(new Customer(), po)).orElse(null);
-        return customer;
+        return customerPo.map(this::build).orElse(null);
     }
 
     /**
@@ -64,9 +69,7 @@ public class CustomerDao {
         List<CustomerPo> customerPos;
         Page<CustomerPo> pageCustomer = this.customerPoMapper.findAll(pageable);
         customerPos = pageCustomer.toList();
-        if (Objects.nonNull(customerPos)) {
-            ret = customerPos.stream().map(po -> CloneFactory.copy(new Customer(), po)).collect(Collectors.toList());
-        }
+        ret = customerPos.stream().map(po -> CloneFactory.copy(new Customer(), po)).collect(Collectors.toList());
         return ret;
     }
 

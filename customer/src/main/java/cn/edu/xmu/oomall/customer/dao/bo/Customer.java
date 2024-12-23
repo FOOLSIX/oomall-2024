@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.customer.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
@@ -17,16 +18,16 @@ import java.time.LocalDateTime;
 
 @ToString(callSuper = true, doNotUseGetters = true)
 @CopyFrom({CustomerPo.class, SimpleCustomerVo.class})
+@CopyTo({Customer.class})
 @Slf4j
 @NoArgsConstructor
+@Data
 public class Customer extends OOMallObject {
 
-    @Setter
     private Byte invalid;
     private String userName;
     private String name;
 
-    // TODO 解决空指针问题
     @Setter
     @ToString.Exclude
     @JsonIgnore
@@ -96,6 +97,7 @@ public class Customer extends OOMallObject {
     private void changeInvalid(byte invalid,UserDto user){
         Customer customer = new Customer();
         customer.setInvalid(invalid);
+        log.info("customer.invalid = {}",customer.getInvalid());
         customer.setId(this.id);
         this.customerDao.save(customer, user);
     }
