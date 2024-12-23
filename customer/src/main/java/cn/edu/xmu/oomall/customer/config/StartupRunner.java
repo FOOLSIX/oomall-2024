@@ -24,7 +24,7 @@ public class StartupRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         JwtHelper jwtHelper = new JwtHelper();
-        String adminToken = jwtHelper.createToken(1L, "13088admin", 0L, 0, 3600);
+        String adminToken = jwtHelper.createToken(1L, "13088admin", 0L, 1, 3600);
         logger.info("admin token = {}", adminToken);
         String userToken = jwtHelper.createToken(2L, "user1", -100L, 1, 3600);
         logger.info("shop 1 token = {}", userToken);

@@ -32,7 +32,6 @@ public class ProductDraft extends OOMallObject implements Serializable {
 
     @ToString.Exclude
     @JsonIgnore
-
     private final static Long NO_ORIGIN_PRODUCT = 0L;
 
     @Setter

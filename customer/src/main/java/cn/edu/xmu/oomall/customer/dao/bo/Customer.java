@@ -1,32 +1,37 @@
 package cn.edu.xmu.oomall.customer.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.customer.controller.vo.SimpleCustomerVo;
 import cn.edu.xmu.oomall.customer.dao.CustomerDao;
-import cn.edu.xmu.oomall.customer.mapper.jpa.OrderPoMapper;
 import cn.edu.xmu.oomall.customer.mapper.po.CustomerPo;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 
+
 @ToString(callSuper = true, doNotUseGetters = true)
+@CopyFrom({CustomerPo.class, SimpleCustomerVo.class})
+@CopyTo({Customer.class})
+@Slf4j
 @NoArgsConstructor
-@CopyFrom({CustomerPo.class})
 @Data
 public class Customer extends OOMallObject {
 
-    /**
-     * 封禁状态，1为封禁，0为正常，2为注销
-     */
     private Byte invalid;
-    private CustomerDao customerDao;
     private String userName;
     private String name;
-    private OrderPoMapper orderPoMapper;
+
+    @Setter
+    @ToString.Exclude
+    @JsonIgnore
+    private CustomerDao customerDao;
 
     @Override
     public void setGmtCreate(LocalDateTime gmtCreate) {
@@ -37,6 +42,7 @@ public class Customer extends OOMallObject {
     public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
     }
+
 
     /**
      * 禁用顾客，职责由Customer对象承担
@@ -91,7 +97,9 @@ public class Customer extends OOMallObject {
     private void changeInvalid(byte invalid,UserDto user){
         Customer customer = new Customer();
         customer.setInvalid(invalid);
+        log.info("customer.invalid = {}",customer.getInvalid());
         customer.setId(this.id);
         this.customerDao.save(customer, user);
     }
+
 }
