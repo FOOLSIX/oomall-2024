@@ -36,6 +36,11 @@ public class CustomerDao {
     private final CustomerPoMapper customerPoMapper;
 
 
+    /**
+     * 构建bo对象
+     * @param po
+     * @return
+     */
     public Customer build(CustomerPo po) {
         Customer bo = CloneFactory.copy(new Customer(), po);
         bo.setCustomerDao(this);

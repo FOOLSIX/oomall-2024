@@ -114,6 +114,22 @@ public class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errmsg").value("成功"));  // 确认返回的 errmsg 是 "成功"
     }
 
+    /**
+     * 测试管理员解禁顾客
+     * @throws Exception
+     */
+    @Test
+    public void testReleaseUser() throws Exception {
+        Long customerId = 2L;
+        Long shopId = 0L;
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/customers/{id}/release", shopId, customerId)
+                        .header("authorization", adminToken) // 设置认证 token
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))  // 设置请求类型
+                .andExpect(MockMvcResultMatchers.status().isOk())  // 确认返回的 HTTP 状态码是 200
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno").value(ReturnNo.OK.getErrNo()))  // 确认返回的 errno 为 0
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errmsg").value("成功"));  // 确认返回的 errmsg 是 "成功"
+    }
 
 
     /**
@@ -122,7 +138,7 @@ public class CustomerControllerTest {
      */
     @Test
     public void testDelUserById() throws Exception {
-        Long customerId = 1L;
+        Long customerId = 3L;
         Long shopId = 0L;
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/shops/{shopId}/customers/{id}", shopId, customerId)
@@ -133,22 +149,7 @@ public class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errmsg").value("成功"));  // 确认返回的 errmsg 是 "成功"
     }
 
-    /**
-     * 测试管理员解禁顾客
-     * @throws Exception
-     */
-    @Test
-    public void testReleaseUser() throws Exception {
-        Long customerId = 1L;
-        Long shopId = 0L;
 
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/customers/{id}/release", shopId, customerId)
-                        .header("authorization", adminToken) // 设置认证 token
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))  // 设置请求类型
-                .andExpect(MockMvcResultMatchers.status().isOk())  // 确认返回的 HTTP 状态码是 200
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errno").value(ReturnNo.OK.getErrNo()))  // 确认返回的 errno 为 0
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errmsg").value("成功"));  // 确认返回的 errmsg 是 "成功"
-    }
 
 
 
