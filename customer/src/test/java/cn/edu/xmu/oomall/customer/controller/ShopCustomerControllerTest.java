@@ -27,10 +27,10 @@ import static org.hamcrest.CoreMatchers.is;
 @SpringBootTest(classes = CommentApplicationTests.class)
 @AutoConfigureMockMvc
 @Transactional
-public class CustomerControllerTest {
+public class ShopCustomerControllerTest {
 
     @Autowired
-    private CustomerController customerController;
+    private ShopCustomerController shopCustomerController;
 
     @Autowired
     private CustomerPoMapper customerPoMapper;
@@ -94,11 +94,15 @@ public class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.page").value(1)) // 验证分页参数
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.pageSize").value(10)) // 验证分页大小
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.list").isArray()) // 验证列表是数组
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[0].id").value(2)) // 验证第一个用户 ID
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[0].name").value("demouser2")) //  验证第一个用户名称
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[1].id").value(1)) // 验证第二个用户 ID
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[1].name").value("demouser")); // 验证第二个用户名称
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[0].id").value(3)) // 验证第一个用户 ID
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[0].name").value("demouser3")) // 验证第一个用户名称
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[1].id").value(2)) // 验证第二个用户 ID
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[1].name").value("demouser2")) // 验证第二个用户名称
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[2].id").value(1)) // 验证第三个用户 ID
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[2].name").value("demouser")); // 验证第三个用户名称
     }
+
+
 
     /**
      * 测试管理员禁用顾客
