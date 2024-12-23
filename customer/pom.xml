@@ -123,51 +123,49 @@
                 </configuration>
             </plugin>
 
-            <!--TODO 配置sh和dockerfile-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>remove-docker-image</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>clear_image.sh</argument>
+                                <argument>xmu-oomall/${project.name}:${project.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-            <!--<plugin>-->
-            <!--    <groupId>org.codehaus.mojo</groupId>-->
-            <!--    <artifactId>exec-maven-plugin</artifactId>-->
-            <!--    <version>3.1.0</version>-->
-            <!--    <executions>-->
-            <!--        <execution>-->
-            <!--            <id>remove-docker-image</id>-->
-            <!--            <phase>pre-integration-test</phase>-->
-            <!--            <goals>-->
-            <!--                <goal>exec</goal>-->
-            <!--            </goals>-->
-            <!--            <configuration>-->
-            <!--                <executable>sh</executable>-->
-            <!--                <arguments>-->
-            <!--                    <argument>clear_image.sh</argument>-->
-            <!--                    <argument>xmu-oomall/${project.name}:${project.version}</argument>-->
-            <!--                </arguments>-->
-            <!--            </configuration>-->
-            <!--        </execution>-->
-            <!--    </executions>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-            <!--    <groupId>com.spotify</groupId>-->
-            <!--    <artifactId>dockerfile-maven-plugin</artifactId>-->
-            <!--    <version>1.4.13</version>-->
-            <!--    <executions>-->
-            <!--        <execution>-->
-            <!--            <id>build-image</id>-->
-            <!--            <phase>pre-integration-test</phase>-->
-            <!--            <goals>-->
-            <!--                <goal>build</goal>-->
-            <!--            </goals>-->
-            <!--        </execution>-->
-            <!--    </executions>-->
-            <!--    <configuration>-->
-            <!--        <repository>xmu-oomall/${project.name}</repository>-->
-            <!--        <tag>${project.version}</tag>-->
-            <!--        <buildArgs>-->
-            <!--            <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>-->
-            <!--        </buildArgs>-->
-            <!--    </configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.13</version>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>xmu-oomall/${project.name}</repository>
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

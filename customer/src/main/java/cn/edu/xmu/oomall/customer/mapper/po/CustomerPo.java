@@ -10,12 +10,11 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "customer_customer")
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Data
+@NoArgsConstructor
 @CopyFrom({Customer.class})
 public class CustomerPo {
     @Id
