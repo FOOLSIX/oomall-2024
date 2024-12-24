@@ -6,7 +6,6 @@ import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.comment.CommentTestApplication;
 import cn.edu.xmu.oomall.comment.mapper.openfeign.OrderMapper;
 import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
-import cn.edu.xmu.oomall.comment.mapper.openfeign.po.OrderItem;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -58,12 +57,10 @@ public class CustomerControllerTest {
         Order order = new Order();
         order.setId(101L);
         order.setShopId(109L);
-        order.setStatus(Order.FINISH);
-        List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem item = new OrderItem();
-        item.setId(1009L);
-        orderItems.add(item);
-        order.setOrderItems(orderItems);
+        order.setIsCompleted(true);
+        List<Long> productIds = new ArrayList<>();
+        productIds.add(1009L);
+        order.setProductIds(productIds);
 
         Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
 
@@ -81,12 +78,10 @@ public class CustomerControllerTest {
         Order order = new Order();
         order.setId(101L);
         order.setShopId(108L);
-        order.setStatus((byte) 0);
-        List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem item = new OrderItem();
-        item.setId(1008L);
-        orderItems.add(item);
-        order.setOrderItems(orderItems);
+        order.setIsCompleted(false);
+        List<Long> productIds = new ArrayList<>();
+        productIds.add(1008L);
+        order.setProductIds(productIds);
 
         Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
 
@@ -103,13 +98,11 @@ public class CustomerControllerTest {
     public void testCreateCommentProductNotFound() throws Exception {
         Order order = new Order();
         order.setId(101L);
-        order.setShopId(108L);
-        order.setStatus(Order.FINISH);
-        List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem item = new OrderItem();
-        item.setId(1001L);
-        orderItems.add(item);
-        order.setOrderItems(orderItems);
+        order.setShopId(109L);
+        order.setIsCompleted(true);
+        List<Long> productIds = new ArrayList<>();
+        productIds.add(1001L);
+        order.setProductIds(productIds);
 
         Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
 
@@ -127,12 +120,10 @@ public class CustomerControllerTest {
         Order order = new Order();
         order.setId(101L);
         order.setShopId(108L);
-        order.setStatus(Order.FINISH);
-        List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem item = new OrderItem();
-        item.setId(1008L);
-        orderItems.add(item);
-        order.setOrderItems(orderItems);
+        order.setIsCompleted(true);
+        List<Long> productIds = new ArrayList<>();
+        productIds.add(1008L);
+        order.setProductIds(productIds);
 
         Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
 
