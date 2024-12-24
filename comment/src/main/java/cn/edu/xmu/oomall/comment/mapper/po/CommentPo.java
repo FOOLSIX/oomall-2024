@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "comment_comment")
@@ -18,7 +20,7 @@ public class CommentPo {
     Long uid;
     Byte status;
     String content;
-    String updateTime;
+    LocalDateTime updateTime;
     Long shopId;
     Long productId;
 }

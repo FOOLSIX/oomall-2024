@@ -61,6 +61,8 @@ public class CommentDao {
     public void save(Comment comment, UserDto userDto) throws RuntimeException {
         comment.setModifier(userDto);
         comment.setGmtModified(LocalDateTime.now());
+        comment.setUpdateTime(LocalDateTime.now());
+        comment.setStatus(Comment.PENDING);
 
         CommentPo po = CloneFactory.copy(new CommentPo(), comment);
         log.debug("save: po = {}", po);
@@ -128,6 +130,11 @@ public class CommentDao {
         List<CommentPo> commentPos = commentMapper.findByUidEqualsAndStatusEquals(uid, status, pageable);
         log.debug("retrieveByUidAndStatus: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
+    }
+
+    public Optional<Comment> findByUidAndProductId(Long uid, Long productId) throws RuntimeException {
+        Optional<CommentPo> comment = commentMapper.findByUidEqualsAndProductIdEqualsAndPidEquals(uid, productId, Comment.ROOT_ID);
+        return comment.map(this::build);
     }
 
     /**

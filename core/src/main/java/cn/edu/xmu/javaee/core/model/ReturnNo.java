@@ -121,6 +121,7 @@ public enum ReturnNo {
     ADDITIONAL_COMMENT_OUTLIMIT(731, "评论达到追评上限"),
     REPLY_COMMENT_OUTLIMITE(732, "回复达到上限"),
     COMMENT_OUTSCOPE(733, "操作超出评论范围"),
+    COMMENT_CANNOT_CREATE(774, "无法创建评论"),
 
     /***************************************************
      *    订单模块错误码

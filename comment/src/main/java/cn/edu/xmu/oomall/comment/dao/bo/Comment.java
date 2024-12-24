@@ -30,7 +30,7 @@ public class Comment extends OOMallObject implements Serializable {
     Long uid;
     Byte status;
     String content;
-    String updateTime;
+    LocalDateTime updateTime;
     Long shopId;
     Long productId;
     List<Comment> relatedComments;
@@ -211,6 +211,8 @@ public class Comment extends OOMallObject implements Serializable {
         comment.setUid(uid);
         comment.setProductId(productId);
         comment.setShopId(shopId);
+        comment.setGmtCreate(LocalDateTime.now());
+        comment.setUpdateTime(LocalDateTime.now());
         commentDao.insert(comment, userDto);
     }
 
@@ -234,6 +236,8 @@ public class Comment extends OOMallObject implements Serializable {
         comment.setUid(userDto.getId());
         comment.setProductId(productId);
         comment.setShopId(shopId);
+        comment.setGmtCreate(LocalDateTime.now());
+        comment.setUpdateTime(LocalDateTime.now());
         commentDao.insert(comment, userDto);
     }
 }

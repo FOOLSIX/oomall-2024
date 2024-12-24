@@ -3,6 +3,8 @@ package cn.edu.xmu.oomall.comment.service;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
+import cn.edu.xmu.oomall.comment.dao.openfeign.OrderDao;
+import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CommentService {
     private final static Logger logger = LoggerFactory.getLogger(CommentService.class);
     private final CommentDao commentDao;
+    private final OrderDao orderDao;
 
     public List<Comment> retrieveReviewedByProductId(Long productId, Integer page, Integer pageSize) {
         return commentDao.retrieveReviewedByProductId(productId, page, pageSize);
@@ -29,6 +32,11 @@ public class CommentService {
     
     public List<Comment> retrieveCommentsByUserIdAndStatus(Long userId, Byte status,Integer page, Integer pageSize) {
         return commentDao.retrieveByUidAndStatus(userId, status, page, pageSize);
+    }
+
+    public void createComment(Comment comment, Long orderId, Long productId, UserDto user) {
+        Order order = orderDao.findOrderById(orderId);
+        order.createComment(comment, productId, user);
     }
 
     public Comment findCommentById(Long id) {
