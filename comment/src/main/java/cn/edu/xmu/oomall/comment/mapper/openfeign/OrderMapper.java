@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient("order-service")
 public interface OrderMapper {
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/internal/orders/{id}/status")
     InternalReturnObject<Order> getOrderById(@PathVariable Long id);
 
 }
