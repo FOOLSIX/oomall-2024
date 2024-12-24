@@ -2,10 +2,10 @@
 
 package cn.edu.xmu.oomall.order.mapper.po;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.order.dao.bo.Order;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 @Table(name = "order_order")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@CopyFrom({Order.class})
 public class OrderPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +51,8 @@ public class OrderPo {
      */
     private LocalDateTime gmtModified;
 
+    private Byte status;
+
     private Long customerId;
 
     private Long shopId;
@@ -70,5 +74,32 @@ public class OrderPo {
     private Long activityId;
 
     private Long packageId;
+
+    /**
+     * 无效态0
+     * 待接受1
+     * 待发货2
+     * 已发货3
+     * 已完成4
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    public static final Byte INVALID = 0;
+
+    @JsonIgnore
+    @ToString.Exclude
+    public static final Byte PENDING_ACCEPTANCE = 1;
+
+    @JsonIgnore
+    @ToString.Exclude
+    public static final Byte PENDING_DISPATCH = 2;
+
+    @JsonIgnore
+    @ToString.Exclude
+    public static final Byte DISPATCHED = 3;
+
+    @JsonIgnore
+    @ToString.Exclude
+    public static final Byte COMPLETED = 4;
 
 }

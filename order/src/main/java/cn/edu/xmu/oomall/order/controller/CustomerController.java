@@ -2,24 +2,20 @@
 
 package cn.edu.xmu.oomall.order.controller;
 
+import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.order.controller.vo.OrderVo;
-import cn.edu.xmu.oomall.order.mapper.SearchMapper;
+import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
+import cn.edu.xmu.oomall.order.mapper.jpa.SearchMapper;
 import cn.edu.xmu.oomall.order.service.OrderService;
-import cn.edu.xmu.oomall.order.service.dto.ConsigneeDto;
-import cn.edu.xmu.oomall.order.service.dto.OrderItemDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController /*Restful的Controller对象*/
 @RequiredArgsConstructor
@@ -57,6 +53,37 @@ public class CustomerController {
         } catch (Exception e) {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, "Feign 调用失败: " + e.getMessage());
         }
+    }
+
+
+    /**
+     * 买家更改自己名下订单
+     * @param userDto
+     * @param id
+     * @return
+     */
+    @PutMapping("/orders/{id}")
+    @Audit(departName = "order")
+    public ReturnObject updateOrder(@LoginUser UserDto userDto,
+                                    @PathVariable Long id,
+                                    @RequestBody OrderUpdateDto orderUpdateDto){
+        this.orderService.updateOrderById(userDto,id,orderUpdateDto);
+        return new ReturnObject(ReturnNo.OK);
+    }
+
+
+    /**
+     * 买家取消本人名下订单
+     * @param userDto
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/orders/{id}")
+    @Audit(departName = "order")
+    public ReturnObject cancelOrderById(@LoginUser UserDto userDto,
+                                        @PathVariable Long id){
+        this.orderService.cancelOrderById(userDto,id);
+        return new ReturnObject(ReturnNo.OK);
     }
 
 

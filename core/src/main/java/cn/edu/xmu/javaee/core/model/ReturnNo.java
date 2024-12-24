@@ -128,6 +128,9 @@ public enum ReturnNo {
      **************************************************/
     ORDER_CHANGENOTALLOW(801,"订单(id=%d)地址费用变化"),
     ITEM_OVERMAXQUANTITY(802,"销售对象(id=%d)的数量(%d)操过单次可购买数量(%d)"),
+    ORDER_NOTOWNED(803, "订单(id=%d)不属于当前用户，操作被拒绝"),
+
+
 
 
     /**************************************
@@ -142,7 +145,9 @@ public enum ReturnNo {
      ************************************/
     FREIGHT_WAREHOUSEREGION_EXIST(997, "重复设置地区"),
     FREIGHT_WAREHOUSELOGISTIC_EXIST(998, "重复设置物流"),
-    FREIGHT_LOGISTIC_EXIST(999, "商铺已存在物流(id=%d)");
+    FREIGHT_LOGISTIC_EXIST(999, "商铺已存在物流(id=%d)"),
+    ORDER_ALREADY_SHIPPED(1000, "订单已发货，无法取消(id=%d)"),
+    RESOURCE_NOT_FOUND(1001,"物流信息不存在，订单(id=%d)");
 
 
     private int errNo;
