@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.order.controller;
 
 import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -33,9 +34,14 @@ public class ShopController {
      * @return
      */
     @PutMapping("/shops/{shopId}/orders/{id}/confirm")
-    @Audit(departName = "order")
     public ReturnObject confirmOrder(@PathVariable("id") Long id,
                                      @LoginUser UserDto userDto) {
+        if (id == -1 || !orderService.existsOrderById(id)) {
+            throw new BusinessException(
+                    ReturnNo.FIELD_NOTVALID,
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "订单id")
+            );
+        }
         this.orderService.confirmOrder(id, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
@@ -51,7 +57,13 @@ public class ShopController {
     public ReturnObject cancelOrder(@PathVariable("id") Long id,
                                     @PathVariable("shopId") Long shopId,
                                     @LoginUser UserDto userDto) {
-        this.orderService.cancelOrder(id,shopId, userDto);
+        if (id == -1 || !orderService.existsOrderById(id)) {
+            throw new BusinessException(
+                    ReturnNo.FIELD_NOTVALID,
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "订单id")
+            );
+        }
+        this.orderService.cancelOrder(id, shopId, userDto);
         return new ReturnObject();
     }
 }

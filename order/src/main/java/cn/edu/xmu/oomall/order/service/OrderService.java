@@ -25,7 +25,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(GoodsDao goodsDao, OrderDao orderDao
-            //, RocketMQTemplate rocketMQTemplate
+                        //, RocketMQTemplate rocketMQTemplate
     ) {
         this.goodsDao = goodsDao;
         this.orderDao = orderDao;
@@ -85,30 +85,38 @@ public class OrderService {
 //        rocketMQTemplate.sendMessageInTransaction("order-topic:1", msg, null);
 //    }
 
-    public void cancelOrderById(UserDto userDto, Long id){
+    public void cancelOrderById(UserDto userDto, Long id) {
         Order order = this.orderDao.findById(id);
         order.cancel(userDto);
     }
 
-    public void updateOrderById(UserDto userDto, Long id, OrderUpdateDto orderUpdateDto){
+    public void updateOrderById(UserDto userDto, Long id, OrderUpdateDto orderUpdateDto) {
         Order order = this.orderDao.findById(id);
-        order.update(userDto,orderUpdateDto);
+        order.update(userDto, orderUpdateDto);
     }
 
-    public void confirmOrder(Long id,UserDto userDto){
+    public void confirmOrder(Long id, UserDto userDto) {
         Order order = this.orderDao.findById(id);
         order.confirm(userDto);
     }
 
-    public void cancelOrder(Long id ,UserDto userDto){
+    public void cancelOrder(Long id, UserDto userDto) {
         Order order = this.orderDao.findById(id);
         order.cancel(userDto);
     }
-    public void cancelOrder(Long id ,Long shopId,UserDto userDto){
+
+    public void cancelOrder(Long id, Long shopId, UserDto userDto) {
         Order order = this.orderDao.findById(id);
-        order.cancel(shopId,userDto);
+        order.cancel(shopId, userDto);
     }
 
+    public boolean existsOrderById(Long id) {
+        Order order = this.orderDao.findById(id);
+        if (order == null) {
+            return false;
+        }
+        return true;
+    }
 
 
 }

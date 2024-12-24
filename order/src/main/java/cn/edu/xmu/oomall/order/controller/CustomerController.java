@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController /*Restful的Controller对象*/
@@ -74,10 +75,25 @@ public class CustomerController {
      * @return
      */
     @PutMapping("/orders/{id}")
-    @Audit(departName = "order")
+    @Audit(departName = "customers")
     public ReturnObject updateOrder(@LoginUser UserDto userDto,
                                     @PathVariable("id") Long id,
                                     @RequestBody OrderUpdateDto orderUpdateDto){
+        // 修改的参数为空
+        if (orderUpdateDto.getAddress() == null) {
+            throw new BusinessException(
+                    ReturnNo.FIELD_NOTVALID,
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "地址")
+            );
+        }
+
+        // 检查订单 ID 是否有效，假设 -1 是无效的订单 ID
+        if (id == -1 || !orderService.existsOrderById(id)) {
+            throw new BusinessException(
+                    ReturnNo.FIELD_NOTVALID,
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "订单id")
+            );
+        }
         this.orderService.updateOrderById(userDto,id,orderUpdateDto);
         return new ReturnObject(ReturnNo.OK);
     }
@@ -90,9 +106,15 @@ public class CustomerController {
      * @return
      */
     @DeleteMapping("/orders/{id}")
-    @Audit(departName = "order")
+    @Audit(departName = "customers")
     public ReturnObject cancelOrderById(@LoginUser UserDto userDto,
                                         @PathVariable("id") Long id){
+        if (id == -1|| !orderService.existsOrderById(id)){
+            throw new BusinessException(
+                    ReturnNo.FIELD_NOTVALID,
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(),"订单id")
+            );
+        }
         this.orderService.cancelOrderById(userDto,id);
         return new ReturnObject(ReturnNo.OK);
     }
