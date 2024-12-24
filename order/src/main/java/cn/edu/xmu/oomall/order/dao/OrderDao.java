@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,7 +34,6 @@ public class OrderDao {
         this.expressDao = expressDao;
     }
 
-    //TODO 加上后续需要的Dao
     private Order build(OrderPo orderPo){
         Order order = CloneFactory.copy(new Order(),orderPo);
         order.setExpressDao(this.expressDao);
@@ -53,6 +53,10 @@ public class OrderDao {
 //            orderItemPoMapper.save(orderItemPo);
 //        });
 //    }
+
+    public List<OrderPo> retrieveOrderList(UserDto user) {
+        return orderPoMapper.findByCustomerId(user.getId());
+    }
 
     public Order findById(Long id){
         if (id == -1) {

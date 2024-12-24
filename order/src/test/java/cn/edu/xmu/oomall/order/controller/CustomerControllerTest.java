@@ -27,9 +27,6 @@ public class CustomerControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private OrderController orderController;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     private static String adminToken;

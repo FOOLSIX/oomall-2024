@@ -3,10 +3,23 @@
 package cn.edu.xmu.oomall.order.mapper.jpa;
 
 import cn.edu.xmu.oomall.order.mapper.po.OrderPo;
+import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface OrderPoMapper extends JpaRepository<OrderPo, Long> {
+
+
+    /**
+     * 查询顾客名下订单，不返回失效的订单
+     * @param userId
+     * @return
+     */
+    @Query("SELECT po FROM OrderPo po WHERE po.customerId = :userId AND po.status != 0")
+    List<OrderPo> findByCustomerId(@Param("userId") Long userId);
 
 }

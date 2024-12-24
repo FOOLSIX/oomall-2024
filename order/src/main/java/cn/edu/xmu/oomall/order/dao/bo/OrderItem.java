@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString(callSuper = true)
 @NoArgsConstructor
@@ -30,6 +31,10 @@ public class OrderItem extends OOMallObject implements Serializable {
     @Setter
     @Getter
     private Long orderId;
+
+    @Setter
+    @Getter
+    private Long productId;
 
     @Setter
     @Getter
