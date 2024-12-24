@@ -27,56 +27,40 @@ import java.util.List;
 @Data
 public class Order extends OOMallObject {
 
-    private OrderDao orderDao;
-
-    @Setter
-    @Getter
-    private Byte status;
-
     @Setter
     @ToString.Exclude
     @JsonIgnore
     private ExpressDao expressDao;
 
+    @Setter
+    @ToString.Exclude
+    @JsonIgnore
+    private OrderDao orderDao;
+
     private Long customerId;
 
     private Long shopId;
 
-    @Setter
-    @Getter
     private String orderSn;
 
-    @Setter
-    @Getter
+    private Byte status;
+
     private Long pid;
 
-    @Setter
-    @Getter
     private String consignee;
 
-    @Setter
     private Long regionId;
 
-    @Setter
-    @Getter
     private String address;
 
-    @Setter
-    @Getter
     private String mobile;
 
-    @Setter
-    @Getter
     private String message;
 
-    @Setter
     private Long activityId;
 
-    @Setter
     private Long packageId;
 
-    @Setter
-    @Getter
     private List<OrderItem> orderItems;
 
 

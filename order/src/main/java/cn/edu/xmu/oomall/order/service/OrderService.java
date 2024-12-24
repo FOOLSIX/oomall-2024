@@ -3,13 +3,19 @@
 package cn.edu.xmu.oomall.order.service;
 
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
+import cn.edu.xmu.oomall.order.controller.vo.OrderVo;
 import cn.edu.xmu.oomall.order.dao.OrderDao;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.dao.openfeign.GoodsDao;
+import cn.edu.xmu.oomall.order.mapper.po.OrderPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -85,6 +91,13 @@ public class OrderService {
 //        rocketMQTemplate.sendMessageInTransaction("order-topic:1", msg, null);
 //    }
 
+//    public List<Order> retrieveOrderList(UserDto user) {
+//        List<OrderPo> orderPos = orderDao.retrieveOrderList(user);
+//        orderPos.stream()
+//                .map(po -> CloneFactory.copy(new Order(),po))
+//                .collect(Collectors.toList());
+//    }
+
     public void cancelOrderById(UserDto userDto, Long id) {
         Order order = this.orderDao.findById(id);
         order.cancel(userDto);
@@ -118,5 +131,7 @@ public class OrderService {
         return true;
     }
 
-
+    public Order findOrderById(Long id){
+        return this.orderDao.findById(id);
+    }
 }
