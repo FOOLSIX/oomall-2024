@@ -123,15 +123,15 @@ public enum ReturnNo {
     COMMENT_OUTSCOPE(733, "操作超出评论范围"),
     COMMENT_CANNOT_CREATE(774, "无法创建评论"),
 
+
     /***************************************************
      *    订单模块错误码
      **************************************************/
     ORDER_CHANGENOTALLOW(801,"订单(id=%d)地址费用变化"),
     ITEM_OVERMAXQUANTITY(802,"销售对象(id=%d)的数量(%d)操过单次可购买数量(%d)"),
     ORDER_NOTOWNED(803, "订单(id=%d)不属于当前用户，操作被拒绝"),
-
-
-
+    ORDER_CANNOT_BE_CANCELLED(804, "订单(id=%d)已发货或已完成，无法取消"),
+    ORDER_CANNOT_BE_CONFIRMED(805, "订单(id=%d)当前状态(%d)不允许确认"),
 
     /**************************************
      *  地区模块

@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.order.mapper.openfeign.po;
 
 
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.mapper.openfeign.ExpressMapper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -111,7 +112,7 @@ public class Express {
         return STATUSNAMES.get(this.status);
     }
 
-    public void cancel(){
+    public void cancel(UserDto userDto){
         this.changeStatus(CANCELED);
         this.expressMapper.save(this);
     }
@@ -120,7 +121,7 @@ public class Express {
         this.setStatus(status);
     }
 
-    public void changeAddress(String newAddress){
+    public void changeAddress(String newAddress,UserDto userDto){
         this.setAddress(newAddress);
         this.expressMapper.save(this);
     }

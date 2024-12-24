@@ -2,6 +2,7 @@
 
 package cn.edu.xmu.oomall.order.dao;
 
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.dao.openfeign.ExpressDao;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -61,7 +63,12 @@ public class OrderDao {
         return orderPo.map(this::build).orElse(null);
     }
 
-    public void save(Order order){
+    public void save(Order order, UserDto user){
+        if (order.getId().equals(null)){
+            throw new IllegalArgumentException("save: order id is null");
+        }
+        order.setModifier(user);
+        order.setGmtModified(LocalDateTime.now());
         OrderPo orderPo = CloneFactory.copy(new OrderPo(),order);
         this.orderPoMapper.save(orderPo);
     }

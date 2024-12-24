@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.order.dao.openfeign;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.mapper.openfeign.ExpressMapper;
 import cn.edu.xmu.oomall.order.mapper.openfeign.po.Express;
@@ -15,19 +16,18 @@ import static cn.edu.xmu.javaee.core.model.ReturnNo.INTERNAL_SERVER_ERR;
 
 @Repository
 @Slf4j
-@RequiredArgsConstructor
 public class ExpressDao {
 
     private ExpressMapper expressMapper;
 
-    private Express build(Express express){
-        express.setExpressMapper(this.expressMapper);
-        return express;
-    }
-
     @Autowired
     public ExpressDao(ExpressMapper expressMapper) {
         this.expressMapper = expressMapper;
+    }
+
+    private Express build(Express express){
+        express.setExpressMapper(this.expressMapper);
+        return express;
     }
 
     public Express findById(Long id) {

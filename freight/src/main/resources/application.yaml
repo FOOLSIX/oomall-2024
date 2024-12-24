@@ -15,7 +15,7 @@ spring:
         enabled: false
       host: redis
       database: 0
-      password: 123456
+      password: OOADRedis123456
 
   datasource:
     #JDBC drivers
