@@ -2,35 +2,16 @@
 
 package cn.edu.xmu.oomall.order.service;
 
-import cn.edu.xmu.javaee.core.exception.BusinessException;
-import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.javaee.core.util.Common;
-import cn.edu.xmu.javaee.core.util.JacksonUtil;
+import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
 import cn.edu.xmu.oomall.order.dao.OrderDao;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
-import cn.edu.xmu.oomall.order.dao.bo.OrderItem;
 import cn.edu.xmu.oomall.order.dao.openfeign.GoodsDao;
-import cn.edu.xmu.oomall.order.dao.openfeign.dto.OnsaleDto;
-import cn.edu.xmu.oomall.order.service.dto.ConsigneeDto;
-import cn.edu.xmu.oomall.order.service.dto.OrderItemDto;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
-
-@Repository
+@Service
 public class OrderService {
 
     @Value("${oomall.order.server-num}")
@@ -44,7 +25,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(GoodsDao goodsDao, OrderDao orderDao
-            //, RocketMQTemplate rocketMQTemplate
+                        //, RocketMQTemplate rocketMQTemplate
     ) {
         this.goodsDao = goodsDao;
         this.orderDao = orderDao;
@@ -103,5 +84,39 @@ public class OrderService {
 //        Message msg = MessageBuilder.withPayload(packStr).setHeader("consignee", consignee).setHeader("message",message).setHeader("user", customer).build();
 //        rocketMQTemplate.sendMessageInTransaction("order-topic:1", msg, null);
 //    }
+
+    public void cancelOrderById(UserDto userDto, Long id) {
+        Order order = this.orderDao.findById(id);
+        order.cancel(userDto);
+    }
+
+    public void updateOrderById(UserDto userDto, Long id, OrderUpdateDto orderUpdateDto) {
+        Order order = this.orderDao.findById(id);
+        order.update(userDto, orderUpdateDto);
+    }
+
+    public void confirmOrder(Long id, UserDto userDto) {
+        Order order = this.orderDao.findById(id);
+        order.confirm(userDto);
+    }
+
+    public void cancelOrder(Long id, UserDto userDto) {
+        Order order = this.orderDao.findById(id);
+        order.cancel(userDto);
+    }
+
+    public void cancelOrder(Long id, Long shopId, UserDto userDto) {
+        Order order = this.orderDao.findById(id);
+        order.cancel(shopId, userDto);
+    }
+
+    public boolean existsOrderById(Long id) {
+        Order order = this.orderDao.findById(id);
+        if (order == null) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

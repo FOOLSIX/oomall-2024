@@ -5,7 +5,7 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
-import cn.edu.xmu.oomall.comment.mapper.CommentMapper;
+import cn.edu.xmu.oomall.comment.mapper.jpa.CommentMapper;
 import cn.edu.xmu.oomall.comment.mapper.po.CommentPo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +61,8 @@ public class CommentDao {
     public void save(Comment comment, UserDto userDto) throws RuntimeException {
         comment.setModifier(userDto);
         comment.setGmtModified(LocalDateTime.now());
+        comment.setUpdateTime(LocalDateTime.now());
+        comment.setStatus(Comment.PENDING);
 
         CommentPo po = CloneFactory.copy(new CommentPo(), comment);
         log.debug("save: po = {}", po);
@@ -128,6 +130,11 @@ public class CommentDao {
         List<CommentPo> commentPos = commentMapper.findByUidEqualsAndStatusEquals(uid, status, pageable);
         log.debug("retrieveByUidAndStatus: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
+    }
+
+    public Optional<Comment> findByUidAndProductId(Long uid, Long productId) throws RuntimeException {
+        Optional<CommentPo> comment = commentMapper.findByUidEqualsAndProductIdEqualsAndPidEquals(uid, productId, Comment.ROOT_ID);
+        return comment.map(this::build);
     }
 
     /**

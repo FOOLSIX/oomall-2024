@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.comment.mapper;
+package cn.edu.xmu.oomall.comment.mapper.jpa;
 
 import cn.edu.xmu.oomall.comment.mapper.po.CommentPo;
 import org.springframework.data.domain.Pageable;
@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentMapper extends JpaRepository<CommentPo, Long> {
@@ -13,4 +14,5 @@ public interface CommentMapper extends JpaRepository<CommentPo, Long> {
     List<CommentPo> findByPid(Long Pid);
     List<CommentPo> findByStatus(Byte status, Pageable pageable);
     List<CommentPo> findByUidEqualsAndStatusEquals(Long pid, Byte status, Pageable pageable);
+    Optional<CommentPo> findByUidEqualsAndProductIdEqualsAndPidEquals(Long uid, Long productId, Long Pid);
 }

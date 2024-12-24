@@ -2,30 +2,43 @@
 
 package cn.edu.xmu.oomall.order.dao;
 
-import cn.edu.xmu.javaee.core.util.JacksonUtil;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
-import cn.edu.xmu.oomall.order.mapper.OrderItemPoMapper;
-import cn.edu.xmu.oomall.order.mapper.OrderPoMapper;
-import cn.edu.xmu.oomall.order.mapper.po.OrderItemPo;
+import cn.edu.xmu.oomall.order.dao.openfeign.ExpressDao;
+import cn.edu.xmu.oomall.order.mapper.jpa.OrderItemPoMapper;
+import cn.edu.xmu.oomall.order.mapper.jpa.OrderPoMapper;
 import cn.edu.xmu.oomall.order.mapper.po.OrderPo;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Repository
+@Slf4j
 public class OrderDao {
 
     private OrderPoMapper orderPoMapper;
 
+    private ExpressDao expressDao;
+
     private OrderItemPoMapper orderItemPoMapper;
 
-
     @Autowired
-    public OrderDao(OrderPoMapper orderPoMapper, OrderItemPoMapper orderItemPoMapper) {
+    public OrderDao(OrderPoMapper orderPoMapper, OrderItemPoMapper orderItemPoMapper, ExpressDao expressDao) {
         this.orderPoMapper = orderPoMapper;
         this.orderItemPoMapper = orderItemPoMapper;
+        this.expressDao = expressDao;
+    }
+
+    //TODO 加上后续需要的Dao
+    private Order build(OrderPo orderPo){
+        Order order = CloneFactory.copy(new Order(),orderPo);
+        order.setExpressDao(this.expressDao);
+        order.setOrderDao(this);
+        return order;
     }
 
 
@@ -40,4 +53,23 @@ public class OrderDao {
 //            orderItemPoMapper.save(orderItemPo);
 //        });
 //    }
+
+    public Order findById(Long id){
+        if (id == -1) {
+            log.error("id 为 null");
+            throw new IllegalArgumentException("findById: id is null");
+        }
+        Optional<OrderPo> orderPo = orderPoMapper.findById(id);
+        return orderPo.map(this::build).orElse(null);
+    }
+
+    public void save(Order order, UserDto user){
+        if (order.getId().equals(null)){
+            throw new IllegalArgumentException("save: order id is null");
+        }
+        order.setModifier(user);
+        order.setGmtModified(LocalDateTime.now());
+        OrderPo orderPo = CloneFactory.copy(new OrderPo(),order);
+        this.orderPoMapper.save(orderPo);
+    }
 }

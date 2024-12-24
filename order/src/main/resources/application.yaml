@@ -13,6 +13,9 @@ spring:
       repositories:
         #禁用redis扫描repositories
         enabled: false
+      password: OOADRedis123456
+      host: redis
+      database: 0
   datasource:
     #JDBC驱动
     driver-class-name: com.mysql.cj.jdbc.Driver

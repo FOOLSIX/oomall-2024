@@ -23,30 +23,48 @@ import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 public class AdminCommentController {
     private final CommentService commentService;
 
+    /**
+     * 用id查找评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @GetMapping("/comments/{id}")
     @Audit(departName = "platforms")
     public ReturnObject findCommentById(@PathVariable Long id,
                                       @PathVariable Long did,
                                       @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         CommentVo ret = new CommentVo(commentService.findCommentById(id));
         return new ReturnObject(ReturnNo.OK, ret);
     }
+
+    /**
+     * 据id删除评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
 
     @DeleteMapping("/comments/{id}")
     @Audit(departName = "platforms")
     public ReturnObject deleteComment(@PathVariable Long id,
                                       @PathVariable Long did,
                                       @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.deleteById(id);
-        return null;//todo need del?
+        return new ReturnObject(ReturnNo.OK);
     }
 
+    /**
+     * 以状态获得评论
+     * @param did
+     * @param status
+     * @param page
+     * @param pageSize
+     * @param userDto
+     * @return
+     */
     @GetMapping("/comments")
     @Audit(departName = "platforms")
     public ReturnObject getComments(@PathVariable Long did,
@@ -54,9 +72,6 @@ public class AdminCommentController {
                                     @RequestParam(required = false, defaultValue = "1") Integer page,
                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                     @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         if (Objects.isNull(status)) {
             status = Comment.PENDING;
         }
@@ -65,26 +80,34 @@ public class AdminCommentController {
 
     }
 
+    /**
+     * 审核通过评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @PutMapping("/comments/{id}/approve")
     @Audit(departName = "platforms")
     public ReturnObject approveComment(@PathVariable Long id,
                                        @PathVariable Long did,
                                        @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.approve(id, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
 
+    /**
+     * 审核不通过/屏蔽评论
+     * @param id
+     * @param did
+     * @param userDto
+     * @return
+     */
     @PutMapping("/comments/{id}/ban")
     @Audit(departName = "platforms")
     public ReturnObject banComment(@PathVariable Long id,
                                    @PathVariable Long did,
                                    @LoginUser UserDto userDto) {
-        if (!PLATFORM.equals(did)) {
-            throw new BusinessException(ReturnNo.AUTH_NO_RIGHT);
-        }
         commentService.ban(id, userDto);
         return new ReturnObject(ReturnNo.OK);
     }

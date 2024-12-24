@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "comment_comment")
@@ -13,12 +15,18 @@ import lombok.NoArgsConstructor;
 public class CommentPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    Long pid;
-    Long uid;
-    Byte status;
-    String content;
-    String updateTime;
-    Long shopId;
-    Long productId;
+    private Long id;
+    private Long pid;
+    private Long uid;
+    private Byte status;
+    private String content;
+    private LocalDateTime updateTime;
+    private Long shopId;
+    private Long productId;
+    private Long creatorId;
+    private String creatorName;
+    private Long modifierId;
+    private String modifierName;
+    private LocalDateTime gmtCreate;
+    private LocalDateTime gmtModified;
 }

@@ -32,7 +32,6 @@ public class ShopController {
                                     @PathVariable Long id,
                                     @RequestBody CommentDto commentDto,
                                     @LoginUser UserDto userDto) {
-        //todo verify auth
         Comment comment = CloneFactory.copy(new Comment(), commentDto);
         commentService.createReply(id, comment, shopId, userDto);
         return new ReturnObject(ReturnNo.OK);
@@ -50,31 +49,23 @@ public class ShopController {
                                     @RequestBody CommentDto commentDto,
                                     @LoginUser UserDto userDto) {
         Comment comment = CloneFactory.copy(new Comment(), commentDto);
+        comment.setId(id);
         commentService.updateComment(comment, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
 
     /**
-     * 删除回复(不一定需要
+     * 申请屏蔽回复
      * @param id
      * @param userDto
      * @return
      */
-
-    @DeleteMapping("comments/{id}")
-    @Audit(departName = "shops")
-    public ReturnObject deleteReply(@PathVariable Long id,
-                                    @LoginUser UserDto userDto) {
-        commentService.deleteById(id);
-        return new ReturnObject(ReturnNo.OK);
-    }
-
-
     @PutMapping("comments/{id}/block")
     @Audit(departName = "shops")
     public ReturnObject blockComment(@PathVariable Long id,
-                                    @LoginUser UserDto userDto) {
-        commentService.requestBlock(id, userDto);
+                                     @PathVariable Long shopId,
+                                     @LoginUser UserDto userDto) {
+        commentService.requestBlock(id, shopId, userDto);
         return new ReturnObject(ReturnNo.OK);
     }
 }

@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.order.mapper;
+package cn.edu.xmu.oomall.order.mapper.jpa;
 
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;

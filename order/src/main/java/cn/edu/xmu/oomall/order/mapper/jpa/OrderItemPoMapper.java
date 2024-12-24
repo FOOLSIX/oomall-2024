@@ -1,6 +1,6 @@
 //School of Informatics Xiamen University, GPL-3.0 license
 
-package cn.edu.xmu.oomall.order.mapper;
+package cn.edu.xmu.oomall.order.mapper.jpa;
 
 import cn.edu.xmu.oomall.order.mapper.po.OrderItemPo;
 import org.springframework.data.jpa.repository.JpaRepository;
