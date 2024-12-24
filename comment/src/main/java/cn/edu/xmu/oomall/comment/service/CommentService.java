@@ -6,8 +6,6 @@ import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.dao.openfeign.OrderDao;
 import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
 public class CommentService {
-    private final static Logger logger = LoggerFactory.getLogger(CommentService.class);
     private final CommentDao commentDao;
     private final OrderDao orderDao;
 
