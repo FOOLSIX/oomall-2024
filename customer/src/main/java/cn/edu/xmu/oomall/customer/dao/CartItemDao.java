@@ -1,20 +1,25 @@
 package cn.edu.xmu.oomall.customer.dao;
 
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
+import cn.edu.xmu.javaee.core.model.ReturnObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
-import cn.edu.xmu.oomall.customer.controller.vo.CartItemVo;
+import cn.edu.xmu.javaee.core.util.SnowFlakeIdWorker;
+import cn.edu.xmu.oomall.customer.dao.bo.Address;
 import cn.edu.xmu.oomall.customer.dao.bo.Cart;
 import cn.edu.xmu.oomall.customer.dao.bo.CartItem;
 import cn.edu.xmu.oomall.customer.mapper.jpa.CartItemPoMapper;
+import cn.edu.xmu.oomall.customer.mapper.po.AddressPo;
 import cn.edu.xmu.oomall.customer.mapper.po.CartItemPo;
+import cn.edu.xmu.oomall.customer.mapper.po.CartPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -42,35 +47,36 @@ public class CartItemDao {
         return bo;
     }
 
-    public List<CartItem> getCartItemPoByCartId(long id) {
+    public List<CartItem> getAllCartItem(Long id,Integer page, Integer pageSize) {
         if (id == 0) {
             throw new IllegalArgumentException("findById: id is 0");
         }
+        List<CartItem> ret = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "id");
+        List<CartItemPo> cartItemPoPage = this.cartItemPoMapper.findByCartId(id, pageable);
+        ret  = cartItemPoPage.stream().map(po -> CloneFactory.copy(new CartItem(),po)).collect(Collectors.toList());
 
-        List<CartItemPo> cartItemPoList = cartItemPoMapper.findByCartId(id);
-        if (cartItemPoList == null || cartItemPoList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<CartItem> cartItemList = cartItemPoList.stream()
-                .map(po -> CloneFactory.copy(new CartItem(), po))
-                .collect(Collectors.toList());
-        return cartItemList;
+        return ret;
     }
-//    public List<CartItemVo> getCartItemsByPage(Cart cart, int page , int pagesize){
-//
-//        if (cart == null) {throw new RuntimeException("Cart not found for user.");}
-//
-//        Pageable pageable = PageRequest.of(page-1, pagesize);
-//
-//        List<CartItemPo> paginatedItems = cartItemPoMapper.findByCartIdWithPagination(cart.getId(), pageable);;
-//        List<CartItemVo> ret = paginatedItems.stream()
-//                .map(item -> CloneFactory.copy(new CartItemVo(), item))
-//                .collect(Collectors.toList());
-//
-//        return ret;
-//    }
 
+    public List<CartItem> getAllCartItem(Long id) {
+        if (id == 0) {
+            throw new IllegalArgumentException("findById: id is 0");
+        }
+        List<CartItem> ret = new ArrayList<>();
+        List<CartItemPo> cartItemPoPage = this.cartItemPoMapper.findByCartId(id);
+        ret  = cartItemPoPage.stream().map(po -> CloneFactory.copy(new CartItem(),po)).collect(Collectors.toList());
 
+        return ret;
+    }
 
+    public void saveCartItem(CartItem cartItem) {
+        CartItemPo cartItemPo = CloneFactory.copy(new CartItemPo(),cartItem);
+        cartItemPoMapper.save(cartItemPo);
+    }
+
+    public void deleteCartItem(CartItem cartItem){
+        CartItemPo cartItemPo = CloneFactory.copy(new CartItemPo(),cartItem);
+        cartItemPoMapper.delete(cartItemPo);
+    }
 }

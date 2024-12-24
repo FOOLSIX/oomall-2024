@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.customer.mapper.po;
 
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.customer.dao.bo.Cart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@CopyFrom({Cart.class})
+
 public class CartPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +31,9 @@ public class CartPo {
 
     private LocalDateTime gmtModified;
 
-    private Long quantity;
+    /*
+    购物车内商品种类个数，并非购物车商品总数
+     */
+    private int quantity = 0;
 
 }

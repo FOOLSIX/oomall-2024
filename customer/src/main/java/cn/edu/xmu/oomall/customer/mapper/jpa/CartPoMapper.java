@@ -12,6 +12,5 @@ import java.util.Optional;
 @Repository
 public interface CartPoMapper extends JpaRepository<CartPo, Long> {
     Optional<CartPo> findByCreatorId(Long creatorId);
-
 }
 

@@ -21,7 +21,6 @@ public class CartItem extends OOMallObject {
     private Long productId;
     private Long price;
     private Long quantity;
-    private LocalDateTime gmtCreate;
 
     private CartItemDao cartItemDao;
 
@@ -33,14 +32,8 @@ public class CartItem extends OOMallObject {
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {this.gmtModified = gmtModified;}
 
-    @Override
-    public String toString() {
-        return "CartItem{" +
-                "productId=" + productId +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", gmtCreate=" + gmtCreate +
-                ", cartItemDao=" + (cartItemDao != null ? cartItemDao.getClass().getName() : "null") +
-                '}';
+    public void changeQuantity(Long quantity) {
+        this.quantity = quantity;
     }
+
 }

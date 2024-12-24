@@ -4,7 +4,9 @@ import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.customer.dao.bo.Cart;
+import cn.edu.xmu.oomall.customer.dao.bo.CartItem;
 import cn.edu.xmu.oomall.customer.mapper.jpa.CartPoMapper;
+import cn.edu.xmu.oomall.customer.mapper.po.CartItemPo;
 import cn.edu.xmu.oomall.customer.mapper.po.CartPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,28 @@ public class CartDao {
     }
 
     public Cart findById(Long id){
-        if (id.equals(null)) {
+        if (id == null) {
             throw new IllegalArgumentException("findById: id is null");
         }
         Optional<CartPo> cartPo = cartPoMapper.findByCreatorId(id);
-        Cart cart = cartPo.map(po -> CloneFactory.copy(new Cart(), po)).orElse(null);
+        return cartPo.map(this::build).orElse(null);
+    }
+
+    public Cart findByCreatorId(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException("findByCreatorId: id is null");
+        }
+        Optional<CartPo> cartPo = cartPoMapper.findByCreatorId(id);
+        return cartPo.map(this::build).orElse(null);
+    }
+    public Cart build(CartPo cartPo) {
+        Cart cart = CloneFactory.copy(new Cart(), cartPo);
+        this.build(cart);
         return cart;
     }
 
+    private Cart build(Cart bo){
+        bo.setCartDao(this);
+        return bo;
+    }
 }
