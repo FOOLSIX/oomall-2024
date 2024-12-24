@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.order.dao.openfeign;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.mapper.openfeign.ExpressMapper;
 import cn.edu.xmu.oomall.order.mapper.openfeign.po.Express;
@@ -39,8 +40,8 @@ public class ExpressDao {
         }
     }
 
-    public Long createExpress(Order order) {
-        InternalReturnObject<Long> result = expressMapper.create(order);
+    public Long createExpress(Order order, UserDto userDto) {
+        InternalReturnObject<Long> result = expressMapper.create(order,userDto);
         if (!result.getErrno().equals(200)) {
             throw new BusinessException(INTERNAL_SERVER_ERR, "openfeign调用失败");
         } else {

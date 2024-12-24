@@ -9,10 +9,7 @@ import cn.edu.xmu.oomall.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController /*Restful的Controller对象*/
 @RequiredArgsConstructor
@@ -31,15 +28,31 @@ public class ShopController {
 
     /**
      * 商家确认订单
+     *
      * @param id
      * @param userDto
      * @return
      */
     @PutMapping("/shops/{shopId}/orders/{id}/confirm")
     @Audit(departName = "order")
-    public ReturnObject confirmOrder(@PathVariable Long id,
-                                     @LoginUser UserDto userDto){
-        this.orderService.confirmOrder(id,userDto);
+    public ReturnObject confirmOrder(@PathVariable("id") Long id,
+                                     @LoginUser UserDto userDto) {
+        this.orderService.confirmOrder(id, userDto);
         return new ReturnObject(ReturnNo.OK);
+    }
+
+    /**
+     * 商家取消订单
+     *
+     * @param id
+     * @param userDto
+     * @return
+     */
+    @DeleteMapping("/shops/{shopId}/orders/{id}")
+    public ReturnObject cancelOrder(@PathVariable("id") Long id,
+                                    @PathVariable("shopId") Long shopId,
+                                    @LoginUser UserDto userDto) {
+        this.orderService.cancelOrder(id,shopId, userDto);
+        return new ReturnObject();
     }
 }

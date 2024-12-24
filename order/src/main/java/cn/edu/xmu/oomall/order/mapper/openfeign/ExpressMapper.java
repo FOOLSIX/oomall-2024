@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.order.mapper.openfeign;
 
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.mapper.openfeign.po.Express;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,13 +24,13 @@ public interface ExpressMapper {
      * @param express
      * @return
      */
-    InternalReturnObject<Void> save(Express express);
+    InternalReturnObject<Void> save(Express express,UserDto userDto);
 
     /**
      * 创建订单，由于Freight还没有相关API，这里先放空
      * @param order
      * @return
      */
-    InternalReturnObject<Long> create(Order order);
+    InternalReturnObject<Long> create(Order order, UserDto userDto);
 
 }

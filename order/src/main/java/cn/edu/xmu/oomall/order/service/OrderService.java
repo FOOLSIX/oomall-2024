@@ -87,17 +87,26 @@ public class OrderService {
 
     public void cancelOrderById(UserDto userDto, Long id){
         Order order = this.orderDao.findById(id);
-        order.cancelOrder(userDto);
+        order.cancel(userDto);
     }
 
     public void updateOrderById(UserDto userDto, Long id, OrderUpdateDto orderUpdateDto){
         Order order = this.orderDao.findById(id);
-        order.updateOrder(userDto,orderUpdateDto);
+        order.update(userDto,orderUpdateDto);
     }
 
     public void confirmOrder(Long id,UserDto userDto){
         Order order = this.orderDao.findById(id);
         order.confirm(userDto);
+    }
+
+    public void cancelOrder(Long id ,UserDto userDto){
+        Order order = this.orderDao.findById(id);
+        order.cancel(userDto);
+    }
+    public void cancelOrder(Long id ,Long shopId,UserDto userDto){
+        Order order = this.orderDao.findById(id);
+        order.cancel(shopId,userDto);
     }
 
 
