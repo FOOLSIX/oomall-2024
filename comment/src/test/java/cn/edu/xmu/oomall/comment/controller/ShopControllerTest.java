@@ -3,7 +3,6 @@ package cn.edu.xmu.oomall.comment.controller;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.comment.CommentTestApplication;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class ShopControllerTest {
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.REPLY_COMMENT_OUTLIMITE.getErrNo())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.REPLY_COMMENT_OUTLIMIT.getErrNo())));
     }
 
     @Test
