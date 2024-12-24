@@ -75,7 +75,8 @@ public class CustomerController {
      * @param id
      * @return
      */
-    @PutMapping("/orders/{id}")
+    @PutMapping("/customers/orders/{id}")
+    @Audit(departName = "customers")
     public ReturnObject updateOrder(@LoginUser UserDto userDto,
                                     @PathVariable("id") Long id,
                                     @RequestBody OrderUpdateDto orderUpdateDto) {
@@ -106,7 +107,8 @@ public class CustomerController {
      * @param id
      * @return
      */
-    @DeleteMapping("/orders/{id}")
+    @DeleteMapping("customers/orders/{id}")
+    @Audit(departName = "customers")
     public ReturnObject cancelOrderById(@LoginUser UserDto userDto,
                                         @PathVariable("id") Long id) {
         if (id == -1 || !orderService.existsOrderById(id)) {

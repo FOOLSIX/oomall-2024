@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.order.controller;
 
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
-import cn.edu.xmu.oomall.order.OrderApplicationTests;
+import cn.edu.xmu.oomall.order.OrderTestApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @Slf4j
-@SpringBootTest(classes = OrderApplicationTests.class)
+@SpringBootTest(classes = OrderTestApplication.class)
 @AutoConfigureMockMvc
 @Transactional
 public class ShopControllerTest {
@@ -49,9 +49,9 @@ public class ShopControllerTest {
      */
     @Test
     public void testConfirmOrderValidId() throws Exception {
-        Long validOrderId = 1L; // 替换为实际存在的订单 ID
+        Long OrderId = 5L;
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/orders/{id}/confirm", 1L, validOrderId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/orders/{id}/confirm", 3L, OrderId)
                         .header("authorization", shopToken))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno").value(ReturnNo.OK.getErrNo()));

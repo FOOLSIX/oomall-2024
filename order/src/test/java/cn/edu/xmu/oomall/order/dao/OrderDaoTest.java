@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.order.dao;
 
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.order.OrderApplicationTests;
+import cn.edu.xmu.oomall.order.OrderTestApplication;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@SpringBootTest(classes = OrderApplicationTests.class)
+@SpringBootTest(classes = OrderTestApplication.class)
 @Transactional
 public class OrderDaoTest {
 
