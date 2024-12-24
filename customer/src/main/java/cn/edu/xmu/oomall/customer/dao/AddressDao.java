@@ -84,6 +84,4 @@ public class AddressDao {
         po.setBe_default(Boolean.TRUE);
         this.addressPoMapper.save(po);
     }
-
-
 }

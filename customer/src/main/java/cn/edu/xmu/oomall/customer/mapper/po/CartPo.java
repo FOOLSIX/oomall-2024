@@ -34,6 +34,6 @@ public class CartPo {
     /*
     购物车内商品种类个数，并非购物车商品总数
      */
-    private int quantity = 0;
+    private Long quantity  = 0L;
 
 }

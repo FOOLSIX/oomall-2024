@@ -29,23 +29,16 @@ public class AddressController {
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject addAddress(@LoginUser UserDto userDto,
                             @RequestBody Map<String, Object> requestBody) {
-        try {
-            // todo:处理userDto是否存在
+        Integer regionId = (Integer) requestBody.get("regionId");
+        String address = (String) requestBody.get("address");
+        String consignee = (String) requestBody.get("consignee");
+        String mobile = (String) requestBody.get("mobile");
 
-            Integer regionId = (Integer) requestBody.get("regionId");
-            String address = (String) requestBody.get("address");
-            String consignee = (String) requestBody.get("consignee");
-            String mobile = (String) requestBody.get("mobile");
+        if (regionId == null || address == null || consignee == null || mobile == null) {
 
-            if (regionId == null || address == null || consignee == null || mobile == null) {
-
-            }
-            ReturnObject addressResponse = addressService.addAddress(userDto.getId(), regionId, address, consignee, mobile);
-            return addressResponse;
-
-        } catch (ClassCastException e) {
-            return new ReturnObject();
         }
+        ReturnObject addressResponse = addressService.addAddress(userDto.getId(), regionId, address, consignee, mobile);
+        return addressResponse;
     }
 
     /**

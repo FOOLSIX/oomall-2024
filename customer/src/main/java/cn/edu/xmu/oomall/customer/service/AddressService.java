@@ -59,7 +59,7 @@ public class AddressService {
         int toIndex = Math.min(fromIndex + pageSize, addressList.size());
 
         List<AddressVo> pagedItems = addressList.subList(fromIndex, toIndex).stream()
-                .map(item -> CloneFactory.copy(new AddressVo(), item))
+                .map(AddressVo::new)
                 .collect(Collectors.toList());
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("page", page);

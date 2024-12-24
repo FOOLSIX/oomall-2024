@@ -47,7 +47,7 @@ public class CartService {
         }
 
         List<CartItemVo> pagedItems = cartItems.stream()
-                .map(item -> CloneFactory.copy(new CartItemVo(), item))
+                .map(CartItemVo::new)
                 .collect(Collectors.toList());
 
         Map<String, Object> responseMap = new HashMap<>();
