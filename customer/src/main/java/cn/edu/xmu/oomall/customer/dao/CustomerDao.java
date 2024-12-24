@@ -54,7 +54,7 @@ public class CustomerDao {
      * @return Shop
      */
     public Customer findById(Long id) {
-        if (id == null) {
+        if (id == -1) {
             log.info("id 为 null");
             throw new IllegalArgumentException("findById: id is null");
         }
