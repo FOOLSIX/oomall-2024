@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.comment.service;
 
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.model.vo.StatusVo;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.dao.openfeign.OrderDao;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -29,6 +31,10 @@ public class CommentService {
     
     public List<Comment> retrieveCommentsByUserIdAndStatus(Long userId, Byte status,Integer page, Integer pageSize) {
         return commentDao.retrieveByUidAndStatus(userId, status, page, pageSize);
+    }
+
+    public List<StatusVo> retrieveCommentStates() {
+        return Comment.STATUSNAMES.keySet().stream().map(key -> new StatusVo(key, Comment.STATUSNAMES.get(key))).collect(Collectors.toList());
     }
 
     public void createComment(Comment comment, Long orderId, Long productId, UserDto user) {

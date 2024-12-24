@@ -80,7 +80,7 @@ public class CommentDao {
 
     public List<Comment> retrieveReviewedByProductId(Long productId, Integer page, Integer pageSize) throws RuntimeException {
         log.debug("retrieveReviewedByProductId: productId = {}", productId);
-        return retrieveByProductIdAndStatus(productId, Comment.REVIEWED, page, pageSize);
+        return retrieveByProductIdAndPidAndStatusIn(productId, Comment.ROOT_ID, List.of(Comment.REVIEWED, Comment.REQUESTING_BLOCK), page, pageSize);
     }
 
     /**
@@ -100,17 +100,18 @@ public class CommentDao {
     }
 
     /**
-     * 根据ProductId和状态查找评论
+     * 根据productId,pid,状态查找评论
      * @param productId
-     * @param status
+     * @param pid
+     * @param statuses
      * @param page
      * @param pageSize
      * @return
      * @throws RuntimeException
      */
-    public List<Comment> retrieveByProductIdAndStatus(Long productId, Byte status, Integer page, Integer pageSize) throws RuntimeException {
+    public List<Comment> retrieveByProductIdAndPidAndStatusIn(Long productId, Long pid, List<Byte> statuses, Integer page, Integer pageSize) throws RuntimeException {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        List<CommentPo> commentPos = commentMapper.findByProductIdEqualsAndStatusEqualsAndPidEquals(productId, status, Comment.ROOT_ID, pageable);
+        List<CommentPo> commentPos = commentMapper.findByProductIdAndPidAndStatusIn(productId, pid, statuses, pageable);
         log.debug("retrieveByProductIdAndStatus: commentPosSize = {}", commentPos.size());
         return commentPos.stream().map(this::build).toList();
     }
@@ -124,7 +125,6 @@ public class CommentDao {
      * @return
      * @throws RuntimeException
      */
-
     public List<Comment> retrieveByUidAndStatus(Long uid, Byte status, Integer page, Integer pageSize) throws RuntimeException {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         List<CommentPo> commentPos = commentMapper.findByUidEqualsAndStatusEquals(uid, status, pageable);
@@ -132,8 +132,15 @@ public class CommentDao {
         return commentPos.stream().map(this::build).toList();
     }
 
+    /**
+     * 根据uid和productId查找评论
+     * @param uid
+     * @param productId
+     * @return
+     * @throws RuntimeException
+     */
     public Optional<Comment> findByUidAndProductId(Long uid, Long productId) throws RuntimeException {
-        Optional<CommentPo> comment = commentMapper.findByUidEqualsAndProductIdEqualsAndPidEquals(uid, productId, Comment.ROOT_ID);
+        Optional<CommentPo> comment = commentMapper.findByUidEqualsAndProductIdEquals(uid, productId);
         return comment.map(this::build);
     }
 

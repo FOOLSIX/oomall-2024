@@ -46,9 +46,6 @@ public class Comment extends OOMallObject implements Serializable {
 
     private static final int MAX_ADDITIONAL_COMMENT = 2;
 
-    /**
-     * 共三种状态
-     */
     //待审
     @ToString.Exclude
     @JsonIgnore
@@ -58,6 +55,7 @@ public class Comment extends OOMallObject implements Serializable {
     @JsonIgnore
     public static final Byte REVIEWED = 1;
 
+    //请求屏蔽
     @ToString.Exclude
     @JsonIgnore
     public static final Byte REQUESTING_BLOCK = 2;
@@ -143,7 +141,7 @@ public class Comment extends OOMallObject implements Serializable {
     }
 
     /**
-     * 物理删除评论(以及其相关评论)
+     * 物理删除评论
      */
     public void delete() {
         getRelatedComments().forEach(Comment::delete);
@@ -229,7 +227,7 @@ public class Comment extends OOMallObject implements Serializable {
         }
         //评论已有回复则不能再回复(只能修改)
         if (getRelatedComments().stream().anyMatch(bo -> uid.equals(bo.getUid()))) {
-            throw new BusinessException(ReturnNo.REPLY_COMMENT_OUTLIMITE);
+            throw new BusinessException(ReturnNo.REPLY_COMMENT_OUTLIMIT);
         }
         comment.setPid(this.id);
         comment.setStatus(PENDING);

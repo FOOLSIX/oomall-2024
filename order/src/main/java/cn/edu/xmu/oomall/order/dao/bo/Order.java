@@ -27,56 +27,40 @@ import java.util.List;
 @Data
 public class Order extends OOMallObject {
 
-    private OrderDao orderDao;
-
-    @Setter
-    @Getter
-    private Byte status;
-
     @Setter
     @ToString.Exclude
     @JsonIgnore
     private ExpressDao expressDao;
 
+    @Setter
+    @ToString.Exclude
+    @JsonIgnore
+    private OrderDao orderDao;
+
     private Long customerId;
 
     private Long shopId;
 
-    @Setter
-    @Getter
     private String orderSn;
 
-    @Setter
-    @Getter
+    private Byte status;
+
     private Long pid;
 
-    @Setter
-    @Getter
     private String consignee;
 
-    @Setter
     private Long regionId;
 
-    @Setter
-    @Getter
     private String address;
 
-    @Setter
-    @Getter
     private String mobile;
 
-    @Setter
-    @Getter
     private String message;
 
-    @Setter
     private Long activityId;
 
-    @Setter
     private Long packageId;
 
-    @Setter
-    @Getter
     private List<OrderItem> orderItems;
 
 
@@ -110,12 +94,12 @@ public class Order extends OOMallObject {
 
     @Override
     public void setGmtCreate(LocalDateTime gmtCreate) {
-
+        this.gmtCreate = gmtCreate;
     }
 
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {
-
+        this.gmtModified = gmtModified;
     }
 
     @Transactional
@@ -308,12 +292,6 @@ public class Order extends OOMallObject {
         this.setId(this.id);
         log.info("order address = {}", newAddress);
         this.orderDao.save(this, user);
-    }
-
-    private Long createExpress(Order order, UserDto userDto) {
-        Long packageId = this.expressDao.createExpress(order);
-        log.info("creteExpress: packageId = {}", packageId);
-        return packageId;
     }
 
 

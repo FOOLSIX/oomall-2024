@@ -8,7 +8,6 @@ import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.comment.controller.dto.CommentDto;
 import cn.edu.xmu.oomall.comment.controller.vo.CommentVo;
-import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +22,9 @@ import java.util.Objects;
 public class CustomerController {
 
     private final CommentService commentService;
-    private final CommentDao commentDao;
 
     /**
-     * 获得当前用户所有评论
+     * 获得当前用户评论
      * @param page
      * @param pageSize
      * @return

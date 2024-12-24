@@ -4,6 +4,7 @@ import cn.edu.xmu.javaee.core.aop.LoginUser;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.model.vo.StatusVo;
 import cn.edu.xmu.oomall.comment.controller.vo.CommentVo;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.service.CommentService;
@@ -22,7 +23,7 @@ public class UnAuthorizedController {
     private final CommentService commentService;
 
     /**
-     * 获取商品的评论
+     * 获取商品的可见评论
      * @param productId
      * @param page
      * @param pageSize
@@ -36,5 +37,15 @@ public class UnAuthorizedController {
                                                     @LoginUser UserDto userDto) {
         List<Comment> bos = commentService.retrieveReviewedByProductId(productId, page, pageSize);
         return new ReturnObject(ReturnNo.OK, bos.stream().map(CommentVo::new).toList());
+    }
+
+    /**
+     * 获取评论状态
+     * @return
+     */
+    @GetMapping("/comments/states")
+    public ReturnObject getRegionsState() {
+        List<StatusVo> dtoList = this.commentService.retrieveCommentStates();
+        return new ReturnObject(ReturnNo.OK, dtoList);
     }
 }

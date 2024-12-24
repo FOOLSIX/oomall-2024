@@ -34,6 +34,7 @@ public class ShopController {
      * @return
      */
     @PutMapping("/shops/{shopId}/orders/{id}/confirm")
+    @Audit(departName = "shops")
     public ReturnObject confirmOrder(@PathVariable("id") Long id,
                                      @LoginUser UserDto userDto) {
         if (id == -1 || !orderService.existsOrderById(id)) {
@@ -54,6 +55,7 @@ public class ShopController {
      * @return
      */
     @DeleteMapping("/shops/{shopId}/orders/{id}")
+    @Audit(departName = "shops")
     public ReturnObject cancelOrder(@PathVariable("id") Long id,
                                     @PathVariable("shopId") Long shopId,
                                     @LoginUser UserDto userDto) {

@@ -11,6 +11,7 @@ import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
 import cn.edu.xmu.oomall.order.controller.vo.OrderVo;
+import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.mapper.jpa.SearchMapper;
 import cn.edu.xmu.oomall.order.service.OrderService;
 import cn.edu.xmu.oomall.order.service.dto.ConsigneeDto;
@@ -67,18 +68,18 @@ public class CustomerController {
 //        }
 //    }
 
-
     /**
      * 买家更改自己名下订单
+     *
      * @param userDto
      * @param id
      * @return
      */
-    @PutMapping("/orders/{id}")
+    @PutMapping("/customers/orders/{id}")
     @Audit(departName = "customers")
     public ReturnObject updateOrder(@LoginUser UserDto userDto,
                                     @PathVariable("id") Long id,
-                                    @RequestBody OrderUpdateDto orderUpdateDto){
+                                    @RequestBody OrderUpdateDto orderUpdateDto) {
         // 修改的参数为空
         if (orderUpdateDto.getAddress() == null) {
             throw new BusinessException(
@@ -94,28 +95,29 @@ public class CustomerController {
                     String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "订单id")
             );
         }
-        this.orderService.updateOrderById(userDto,id,orderUpdateDto);
+        this.orderService.updateOrderById(userDto, id, orderUpdateDto);
         return new ReturnObject(ReturnNo.OK);
     }
 
 
     /**
      * 买家取消本人名下订单
+     *
      * @param userDto
      * @param id
      * @return
      */
-    @DeleteMapping("/orders/{id}")
+    @DeleteMapping("customers/orders/{id}")
     @Audit(departName = "customers")
     public ReturnObject cancelOrderById(@LoginUser UserDto userDto,
-                                        @PathVariable("id") Long id){
-        if (id == -1|| !orderService.existsOrderById(id)){
+                                        @PathVariable("id") Long id) {
+        if (id == -1 || !orderService.existsOrderById(id)) {
             throw new BusinessException(
                     ReturnNo.FIELD_NOTVALID,
-                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(),"订单id")
+                    String.format(ReturnNo.FIELD_NOTVALID.getMessage(), "订单id")
             );
         }
-        this.orderService.cancelOrderById(userDto,id);
+        this.orderService.cancelOrderById(userDto, id);
         return new ReturnObject(ReturnNo.OK);
     }
 
