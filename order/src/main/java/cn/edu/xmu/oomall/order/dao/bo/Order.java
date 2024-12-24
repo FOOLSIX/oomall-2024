@@ -94,12 +94,12 @@ public class Order extends OOMallObject {
 
     @Override
     public void setGmtCreate(LocalDateTime gmtCreate) {
-
+        this.gmtCreate = gmtCreate;
     }
 
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {
-
+        this.gmtModified = gmtModified;
     }
 
     @Transactional
@@ -292,12 +292,6 @@ public class Order extends OOMallObject {
         this.setId(this.id);
         log.info("order address = {}", newAddress);
         this.orderDao.save(this, user);
-    }
-
-    private Long createExpress(Order order, UserDto userDto) {
-        Long packageId = this.expressDao.createExpress(order);
-        log.info("creteExpress: packageId = {}", packageId);
-        return packageId;
     }
 
 
