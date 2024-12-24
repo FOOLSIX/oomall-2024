@@ -2,7 +2,6 @@ package cn.edu.xmu.oomall.comment.controller;
 
 import cn.edu.xmu.javaee.core.aop.Audit;
 import cn.edu.xmu.javaee.core.aop.LoginUser;
-import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-
-import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 
 @RestController
 @RequestMapping(value = "/platforms/{did}", produces = "application/json;charset=UTF-8")
@@ -67,11 +64,11 @@ public class AdminCommentController {
      */
     @GetMapping("/comments")
     @Audit(departName = "platforms")
-    public ReturnObject getComments(@PathVariable Long did,
-                                    @RequestParam(required = false) Byte status,
-                                    @RequestParam(required = false, defaultValue = "1") Integer page,
-                                    @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                    @LoginUser UserDto userDto) {
+    public ReturnObject retrieveComments(@PathVariable Long did,
+                                         @RequestParam(required = false) Byte status,
+                                         @RequestParam(required = false, defaultValue = "1") Integer page,
+                                         @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                         @LoginUser UserDto userDto) {
         if (Objects.isNull(status)) {
             status = Comment.PENDING;
         }
