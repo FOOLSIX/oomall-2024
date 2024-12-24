@@ -9,9 +9,9 @@ import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.dao.openfeign.GoodsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class OrderService {
 
     @Value("${oomall.order.server-num}")

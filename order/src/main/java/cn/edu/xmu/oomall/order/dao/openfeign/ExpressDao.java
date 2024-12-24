@@ -16,19 +16,18 @@ import static cn.edu.xmu.javaee.core.model.ReturnNo.INTERNAL_SERVER_ERR;
 
 @Repository
 @Slf4j
-@RequiredArgsConstructor
 public class ExpressDao {
 
     private ExpressMapper expressMapper;
 
-    private Express build(Express express){
-        express.setExpressMapper(this.expressMapper);
-        return express;
-    }
-
     @Autowired
     public ExpressDao(ExpressMapper expressMapper) {
         this.expressMapper = expressMapper;
+    }
+
+    private Express build(Express express){
+        express.setExpressMapper(this.expressMapper);
+        return express;
     }
 
     public Express findById(Long id) {
@@ -40,8 +39,8 @@ public class ExpressDao {
         }
     }
 
-    public Long createExpress(Order order, UserDto userDto) {
-        InternalReturnObject<Long> result = expressMapper.create(order,userDto);
+    public Long createExpress(Order order) {
+        InternalReturnObject<Long> result = expressMapper.create(order);
         if (!result.getErrno().equals(200)) {
             throw new BusinessException(INTERNAL_SERVER_ERR, "openfeign调用失败");
         } else {

@@ -120,7 +120,7 @@ public class Order extends OOMallObject {
 
     @Transactional
     public void cancel(UserDto userDto) {
-        // 检查订单是否属于当前用户或者商铺
+        // 检查订单是否属于当前用户
         if (!userDto.getId().equals(this.customerId)) {
             log.debug("订单不属于当前用户...");
             throw new BusinessException(
@@ -129,31 +129,46 @@ public class Order extends OOMallObject {
             );
         }
 
-        // 查询订单的物流信息
-        Express express = expressDao.findById(this.packageId);
-        if (express == null) {
-            log.debug("物流信息不存在，无法取消订单...");
+        // 检查订单状态，只有在待发货状态下才允许取消
+        if (this.getStatus().equals(PENDING_DISPATCH)) {
+            // 允许取消订单
+            log.debug("订单状态为待发货，允许取消...");
+            // 这里是取消订单的具体逻辑
+            // 比如更改订单状态为无效态（INVALID）或者其他处理
+        } else {
+            // 如果订单已经发货或已完成，不允许取消
+            log.debug("订单已经发货或已完成，不允许取消...");
             throw new BusinessException(
-                    ReturnNo.RESOURCE_NOT_FOUND,
-                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
+                    ReturnNo.ORDER_CANNOT_BE_CANCELLED,
+                    String.format(ReturnNo.ORDER_CANNOT_BE_CANCELLED.getMessage(), this.getId())
             );
         }
 
-        // 检查物流状态
-        String statusName = express.getStatusName();
-        if (!statusName.equals("未发货")) {
-            log.debug("订单已发货，无法取消...");
-            throw new BusinessException(
-                    ReturnNo.ORDER_ALREADY_SHIPPED,
-                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
-            );
-        }
+        // 查询订单的物流信息
+//        Express express = expressDao.findById(this.packageId);
+//        if (express == null) {
+//            log.debug("物流信息不存在，无法取消订单...");
+//            throw new BusinessException(
+//                    ReturnNo.RESOURCE_NOT_FOUND,
+//                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
+//            );
+//        }
+//
+//        // 检查物流状态
+//        String statusName = express.getStatusName();
+//        if (!statusName.equals("未发货")) {
+//            log.debug("订单已发货，无法取消...");
+//            throw new BusinessException(
+//                    ReturnNo.ORDER_ALREADY_SHIPPED,
+//                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
+//            );
+//        }
 
         // 修改订单状态
         this.changeStatus(INVALID, userDto);
 
         // 修改运单状态
-        express.cancel();
+        // express.cancel(userDto);
     }
 
     @Transactional
@@ -167,31 +182,46 @@ public class Order extends OOMallObject {
             );
         }
 
-        // 查询订单的物流信息
-        Express express = expressDao.findById(this.packageId);
-        if (express == null) {
-            log.debug("物流信息不存在，无法取消订单...");
+        // 检查订单状态，只有在待发货状态下才允许取消
+        if (this.getStatus().equals(PENDING_DISPATCH)) {
+            // 允许取消订单
+            log.debug("订单状态为待发货，允许取消...");
+            // 这里是取消订单的具体逻辑
+            // 比如更改订单状态为无效态（INVALID）或者其他处理
+        } else {
+            // 如果订单已经发货或已完成，不允许取消
+            log.debug("订单已经发货或已完成，不允许取消...");
             throw new BusinessException(
-                    ReturnNo.RESOURCE_NOT_FOUND,
-                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
+                    ReturnNo.ORDER_CANNOT_BE_CANCELLED,
+                    String.format(ReturnNo.ORDER_CANNOT_BE_CANCELLED.getMessage(), this.getId())
             );
         }
 
-        // 检查物流状态
-        String statusName = express.getStatusName();
-        if (!statusName.equals("未发货")) {
-            log.debug("订单已发货，无法取消...");
-            throw new BusinessException(
-                    ReturnNo.ORDER_ALREADY_SHIPPED,
-                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
-            );
-        }
+        // 查询订单的物流信息
+//        Express express = expressDao.findById(this.packageId);
+//        if (express == null) {
+//            log.debug("物流信息不存在，无法取消订单...");
+//            throw new BusinessException(
+//                    ReturnNo.RESOURCE_NOT_FOUND,
+//                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
+//            );
+//        }
+//
+//        // 检查物流状态
+//        String statusName = express.getStatusName();
+//        if (!statusName.equals("未发货")) {
+//            log.debug("订单已发货，无法取消...");
+//            throw new BusinessException(
+//                    ReturnNo.ORDER_ALREADY_SHIPPED,
+//                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
+//            );
+//        }
 
         // 修改订单状态
         this.changeStatus(INVALID, userDto);
 
         // 修改运单状态
-        express.cancel();
+        // express.cancel(userDto);
     }
 
     @Transactional
@@ -206,30 +236,30 @@ public class Order extends OOMallObject {
         }
 
         // 查询订单的物流信息
-        Express express = expressDao.findById(this.packageId);
-        if (express == null) {
-            log.debug("物流信息不存在，无法取消订单...");
-            throw new BusinessException(
-                    ReturnNo.RESOURCE_NOT_FOUND,
-                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
-            );
-        }
-
-        // 检查物流状态,未发货才可以进行修改
-        String statusName = express.getStatusName();
-        if (!statusName.equals("未发货")) {
-            log.debug("订单已发货，无法取消...");
-            throw new BusinessException(
-                    ReturnNo.ORDER_ALREADY_SHIPPED,
-                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
-            );
-        }
+//        Express express = expressDao.findById(this.packageId);
+//        if (express == null) {
+//            log.debug("物流信息不存在，无法取消订单...");
+//            throw new BusinessException(
+//                    ReturnNo.RESOURCE_NOT_FOUND,
+//                    String.format(ReturnNo.RESOURCE_NOT_FOUND.getMessage(), this.getId())
+//            );
+//        }
+//
+//        // 检查物流状态,未发货才可以进行修改
+//        String statusName = express.getStatusName();
+//        if (!statusName.equals("未发货")) {
+//            log.debug("订单已发货，无法取消...");
+//            throw new BusinessException(
+//                    ReturnNo.ORDER_ALREADY_SHIPPED,
+//                    String.format(ReturnNo.ORDER_ALREADY_SHIPPED.getMessage(), this.getId())
+//            );
+//        }
 
         // 现在仅支持修改订单收货地址
         this.changeAddress(orderUpdateDto.getAddress(), userDto);
 
         // 修改运单的收货地址
-        express.changeAddress(orderUpdateDto.getAddress());
+        // express.changeAddress(orderUpdateDto.getAddress(),userDto);
 
     }
 
@@ -243,16 +273,25 @@ public class Order extends OOMallObject {
             );
         }
 
-        Long packageId = this.createExpress(this, userDto);
-        if (packageId == null) {
-            log.debug("创建快递信息失败, orderId: {}", this.getId());
+        // 检查订单状态是否为待接受
+        if (!this.getStatus().equals(PENDING_ACCEPTANCE)) {
+            log.debug("订单状态不允许确认, 当前状态: {}, 订单ID: {}", this.getStatus(), this.getId());
             throw new BusinessException(
-                    ReturnNo.INTERNAL_SERVER_ERR,
-                    "创建快递信息失败"
+                    ReturnNo.ORDER_CANNOT_BE_CONFIRMED,
+                    String.format(ReturnNo.ORDER_CANNOT_BE_CONFIRMED.getMessage(), this.getId(), this.getStatus())
             );
         }
-        this.setPackageId(packageId);
-        log.debug("快递信息创建成功, orderId: {}, packageId: {}", this.getId(), packageId);
+
+//        Long packageId = this.createExpress(this, userDto);
+//        if (packageId == null) {
+//            log.debug("创建快递信息失败, orderId: {}", this.getId());
+//            throw new BusinessException(
+//                    ReturnNo.INTERNAL_SERVER_ERR,
+//                    "创建快递信息失败"
+//            );
+//        }
+//        this.setPackageId(packageId);
+//        log.debug("快递信息创建成功, orderId: {}, packageId: {}", this.getId(), packageId);
 
         this.changeStatus(PENDING_DISPATCH, userDto);
         log.debug("订单状态修改为待发货, orderId: {}", this.getId());
@@ -260,23 +299,19 @@ public class Order extends OOMallObject {
 
 
     private void changeStatus(Byte status, UserDto user) {
-        Order order = new Order();
-        order.setStatus(status);
-        order.setId(this.id);
+        this.setStatus(status);
         log.info("order status = {}", this.getStatus());
-        this.orderDao.save(order, user);
+        this.orderDao.save(this, user);
     }
 
     private void changeAddress(String newAddress, UserDto user) {
-        Order order = new Order();
-        order.setId(this.id);
-        this.setAddress(newAddress);
+        this.setId(this.id);
         log.info("order address = {}", newAddress);
-        this.orderDao.save(order, user);
+        this.orderDao.save(this, user);
     }
 
     private Long createExpress(Order order, UserDto userDto) {
-        Long packageId = this.expressDao.createExpress(order, userDto);
+        Long packageId = this.expressDao.createExpress(order);
         log.info("creteExpress: packageId = {}", packageId);
         return packageId;
     }

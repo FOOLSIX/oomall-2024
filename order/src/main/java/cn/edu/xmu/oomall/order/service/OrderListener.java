@@ -23,7 +23,7 @@ import java.util.Map;
 public class OrderListener implements RocketMQLocalTransactionListener {
 
 
-    private  OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
     public OrderListener(OrderService orderService) {

@@ -12,19 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController /*Restful的Controller对象*/
-@RequiredArgsConstructor
 @Slf4j
 @RequestMapping(produces = "application/json;charset=UTF-8")
 public class ShopController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @Autowired
     public ShopController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    // 商家-订单相关API
+    // 商铺-订单相关API
 
     /**
      * 商家确认订单

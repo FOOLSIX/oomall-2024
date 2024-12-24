@@ -16,6 +16,7 @@ import cn.edu.xmu.oomall.order.service.OrderService;
 import cn.edu.xmu.oomall.order.service.dto.ConsigneeDto;
 import cn.edu.xmu.oomall.order.service.dto.OrderItemDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +24,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController /*Restful的Controller对象*/
-@RequiredArgsConstructor
 @RequestMapping(produces = "application/json;charset=UTF-8")
 public class CustomerController {
 
     private final OrderService orderService;
 
     private final SearchMapper searchMapper;
+
+    @Autowired
+    public CustomerController(OrderService orderService, SearchMapper searchMapper) {
+        this.orderService = orderService;
+        this.searchMapper = searchMapper;
+    }
 
 
 //    @PostMapping("/orders")
