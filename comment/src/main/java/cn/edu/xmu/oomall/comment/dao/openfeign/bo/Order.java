@@ -1,23 +1,21 @@
-package cn.edu.xmu.oomall.comment.mapper.openfeign.po;
+package cn.edu.xmu.oomall.comment.dao.openfeign.bo;
 
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import cn.edu.xmu.oomall.comment.mapper.openfeign.po.OrderPo;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@NoArgsConstructor
+@CopyFrom(OrderPo.class)
 public class Order {
-
     private Long id;
     private Byte status;
     private Long shopId;
@@ -25,6 +23,7 @@ public class Order {
     private Boolean isCompleted;
 
     private CommentDao commentDao;
+
 
     public void createComment(Comment comment, Long productId, UserDto user) {
         //订单完成,有该商品

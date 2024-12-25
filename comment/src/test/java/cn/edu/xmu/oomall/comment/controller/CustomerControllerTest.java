@@ -5,7 +5,7 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.comment.CommentTestApplication;
 import cn.edu.xmu.oomall.comment.mapper.openfeign.OrderMapper;
-import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
+import cn.edu.xmu.oomall.comment.mapper.openfeign.po.OrderPo;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,15 +54,15 @@ public class CustomerControllerTest {
 
     @Test
     public void testCreateComment() throws Exception {
-        Order order = new Order();
-        order.setId(101L);
-        order.setShopId(109L);
-        order.setIsCompleted(true);
+        OrderPo orderPo = new OrderPo();
+        orderPo.setId(101L);
+        orderPo.setShopId(109L);
+        orderPo.setIsCompleted(true);
         List<Long> productIds = new ArrayList<>();
         productIds.add(1009L);
-        order.setProductIds(productIds);
+        orderPo.setProductIds(productIds);
 
-        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
+        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(orderPo));
 
         String body = "{\"content\":\"评论\", \"shopId\":109, \"productId\":1009}";
         mockMvc.perform(MockMvcRequestBuilders.post("/customers/8/orders/101/products/1009/comment")
@@ -75,15 +75,15 @@ public class CustomerControllerTest {
 
     @Test
     public void testCreateCommentOrderStatusNotAllow() throws Exception {
-        Order order = new Order();
-        order.setId(101L);
-        order.setShopId(108L);
-        order.setIsCompleted(false);
+        OrderPo orderPo = new OrderPo();
+        orderPo.setId(101L);
+        orderPo.setShopId(108L);
+        orderPo.setIsCompleted(false);
         List<Long> productIds = new ArrayList<>();
         productIds.add(1008L);
-        order.setProductIds(productIds);
+        orderPo.setProductIds(productIds);
 
-        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
+        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(orderPo));
 
         String body = "{\"content\":\"评论\", \"shopId\":108, \"productId\":1008}";
         mockMvc.perform(MockMvcRequestBuilders.post("/customers/8/orders/101/products/1008/comment")
@@ -96,15 +96,15 @@ public class CustomerControllerTest {
 
     @Test
     public void testCreateCommentProductNotFound() throws Exception {
-        Order order = new Order();
-        order.setId(101L);
-        order.setShopId(109L);
-        order.setIsCompleted(true);
+        OrderPo orderPo = new OrderPo();
+        orderPo.setId(101L);
+        orderPo.setShopId(109L);
+        orderPo.setIsCompleted(true);
         List<Long> productIds = new ArrayList<>();
         productIds.add(1001L);
-        order.setProductIds(productIds);
+        orderPo.setProductIds(productIds);
 
-        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
+        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(orderPo));
 
         String body = "{\"content\":\"评论\", \"shopId\":108, \"productId\":99999}";
         mockMvc.perform(MockMvcRequestBuilders.post("/customers/8/orders/101/products/99999/comment")
@@ -117,15 +117,15 @@ public class CustomerControllerTest {
 
     @Test
     public void testCreateCommentWithCommented() throws Exception {
-        Order order = new Order();
-        order.setId(101L);
-        order.setShopId(108L);
-        order.setIsCompleted(true);
+        OrderPo orderPo = new OrderPo();
+        orderPo.setId(101L);
+        orderPo.setShopId(108L);
+        orderPo.setIsCompleted(true);
         List<Long> productIds = new ArrayList<>();
         productIds.add(1008L);
-        order.setProductIds(productIds);
+        orderPo.setProductIds(productIds);
 
-        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(order));
+        Mockito.when(orderMapper.getOrderById(101L)).thenReturn(new InternalReturnObject<>(orderPo));
 
         String body = "{\"content\":\"评论\", \"shopId\":108, \"productId\":1008}";
         mockMvc.perform(MockMvcRequestBuilders.post("/customers/8/orders/101/products/1008/comment")
@@ -167,5 +167,16 @@ public class CustomerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.ADDITIONAL_COMMENT_OUTLIMIT.getErrNo())));
+    }
+
+    @Test
+    public void testCreateAdditionalCommentStatusNotAllow() throws Exception {
+        String body = "{\"content\":\"追评\"}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/customers/8/comments/18/additional")
+                        .header("authorization", customerToken2)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.COMMENT_CANNOT_CREATE.getErrNo())));
     }
 }

@@ -198,6 +198,10 @@ public class Comment extends OOMallObject implements Serializable {
         if (!uid.equals(userDto.getId())) {
             throw new BusinessException(ReturnNo.COMMENT_OUTSCOPE);
         }
+        //状态能够评论
+        if (!Objects.equals(status, REVIEWED) && !Objects.equals(status, REQUESTING_BLOCK)) {
+            throw new BusinessException(ReturnNo.COMMENT_CANNOT_CREATE);
+        }
         //追评数是否超过了上限
         if (getRelatedComments().stream()
                 .filter(bo -> uid.equals(bo.getUid()))
@@ -224,6 +228,10 @@ public class Comment extends OOMallObject implements Serializable {
         //是否是自己商铺的评论
         if (!this.shopId.equals(shopId)) {
             throw new BusinessException(ReturnNo.COMMENT_OUTSCOPE);
+        }
+        //状态能够评论
+        if (!Objects.equals(status, REVIEWED) && !Objects.equals(status, REQUESTING_BLOCK)) {
+            throw new BusinessException(ReturnNo.COMMENT_CANNOT_CREATE);
         }
         //评论已有回复则不能再回复(只能修改)
         if (getRelatedComments().stream().anyMatch(bo -> uid.equals(bo.getUid()))) {

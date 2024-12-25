@@ -5,7 +5,7 @@ import cn.edu.xmu.javaee.core.model.vo.StatusVo;
 import cn.edu.xmu.oomall.comment.dao.CommentDao;
 import cn.edu.xmu.oomall.comment.dao.bo.Comment;
 import cn.edu.xmu.oomall.comment.dao.openfeign.OrderDao;
-import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
+import cn.edu.xmu.oomall.comment.dao.openfeign.bo.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
