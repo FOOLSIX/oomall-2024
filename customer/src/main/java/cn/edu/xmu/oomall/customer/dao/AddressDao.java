@@ -1,7 +1,9 @@
 package cn.edu.xmu.oomall.customer.dao;
 
+import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
-import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.customer.dao.bo.Address;
 import cn.edu.xmu.oomall.customer.mapper.jpa.AddressPoMapper;
@@ -28,40 +30,38 @@ public class AddressDao {
 
     private final static Logger logger = LoggerFactory.getLogger(AddressDao.class);
 
-    private final RedisUtil redisUtil;
 
     private final AddressPoMapper addressPoMapper;
 
     @Autowired
-    public AddressDao(RedisUtil redisUtil, AddressPoMapper addressPoMapper) {
-        this.redisUtil = redisUtil;
+    public AddressDao(AddressPoMapper addressPoMapper) {
         this.addressPoMapper = addressPoMapper;
     }
 
-    public Address build(AddressPo po){
-        Address ret = CloneFactory.copy(new Address(),po);
+    public Address build(AddressPo addressPo) {
+        Address ret = CloneFactory.copy(new Address(),addressPo);
         this.build(ret);
         return ret;
     }
 
-    public Address build(Address bo){
-        bo.setAddressDao(this);
-        return bo;
+    public Address build(Address address) {
+        address.setAddressDao(this);
+        return address;
     }
 
-    public Address findById(Long id){
-        logger.debug("findById: id = {}", id);
-        assert (!Objects.isNull(id)): "id can not be null";
+    public Address findById(Long id) throws BusinessException {
+        if (id == null) {
+            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, "id is null");
+        }
         Optional<AddressPo> po = addressPoMapper.findById(id);
         return po.map(this::build).orElse(null);
     }
 
-    public List<Address> getAlladdress(Long customer_id,Integer page, Integer pageSize){
+    public List<Address> getAlladdress(Long customer_id,Integer page, Integer pageSize) {
         List<Address> ret = new ArrayList<>();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "id");
         List<AddressPo> addressPoPage = this.addressPoMapper.findBycustomer_id(customer_id, pageable);
         ret  = addressPoPage.stream().map(po -> CloneFactory.copy(new Address(),po)).collect(Collectors.toList());
-
         return ret;
     }
 

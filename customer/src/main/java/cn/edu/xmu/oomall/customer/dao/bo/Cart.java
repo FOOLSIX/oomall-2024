@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, doNotUseGetters = true)
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
-@CopyFrom({CustomerPo.class, CartPo.class,})
+@CopyFrom({CustomerPo.class, CartPo.class, CartItem.class})
 @Data
 
 public class Cart extends OOMallObject {
-    private  long quantity;
+    private  int quantity;
 
     private CartDao cartDao;
 
@@ -32,5 +32,5 @@ public class Cart extends OOMallObject {
         this.gmtModified = gmtModified;
     }
 
-    public void setQuantity(Long quantity) { this.quantity = quantity;}
+    public void setQuantity(int quantity) { this.quantity = quantity;}
 }

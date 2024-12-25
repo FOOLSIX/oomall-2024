@@ -1,16 +1,26 @@
 package cn.edu.xmu.oomall.customer.controller;
 
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.model.vo.PageVo;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+import cn.edu.xmu.javaee.core.validation.NewGroup;
+import cn.edu.xmu.oomall.customer.controller.dto.AddressDto;
+import cn.edu.xmu.oomall.customer.controller.vo.SimpleAddressVo;
+import cn.edu.xmu.oomall.customer.dao.bo.Address;
 import cn.edu.xmu.oomall.customer.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
@@ -20,7 +30,6 @@ import java.util.Map;
 
 public class AddressController {
     private final AddressService addressService;
-
     /**
      * 买家新增地址
      *
@@ -28,17 +37,12 @@ public class AddressController {
     @PostMapping("/address")
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject addAddress(@LoginUser UserDto userDto,
-                            @RequestBody Map<String, Object> requestBody) {
-        Integer regionId = (Integer) requestBody.get("regionId");
-        String address = (String) requestBody.get("address");
-        String consignee = (String) requestBody.get("consignee");
-        String mobile = (String) requestBody.get("mobile");
+                                   @RequestBody @Validated(NewGroup.class) AddressDto vo) {
 
-        if (regionId == null || address == null || consignee == null || mobile == null) {
-
-        }
-        ReturnObject addressResponse = addressService.addAddress(userDto.getId(), regionId, address, consignee, mobile);
-        return addressResponse;
+        Address address = CloneFactory.copy(new Address(),vo);
+        addressService.addAddress(address);
+        SimpleAddressVo svo = new SimpleAddressVo(address);
+        return new ReturnObject(svo);
     }
 
     /**
@@ -48,11 +52,13 @@ public class AddressController {
     @GetMapping("/address")
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject getAddress(@LoginUser UserDto userDto,
-                                   @RequestParam Integer page,
-                                   @RequestParam Integer pageSize) {
-        Object addressResponse = addressService.queryAddress(userDto.getId(), page, pageSize);
-        ReturnObject returnObject = new ReturnObject(addressResponse);
-        return returnObject;
+                                   @RequestParam (required = false, defaultValue = "1") Integer page,
+                                   @RequestParam (required = false, defaultValue = "10") Integer pageSize) {
+        Long id = userDto.getId();
+        List<Address> addressList = addressService.getCustomerAddress(id,page,pageSize);
+        List<SimpleAddressVo> svo =  addressList.stream().
+                map(address -> CloneFactory.copy(new SimpleAddressVo(), address)).collect(Collectors.toList());
+        return new ReturnObject(new PageVo<>(svo, page, pageSize));
     }
 
     /**
@@ -63,9 +69,10 @@ public class AddressController {
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject setDefaultAddress(@LoginUser UserDto userDto,
                                           @PathVariable Integer id){
+        Long Id = id.longValue();
+        addressService.setDefaultAddress(Id);
 
-        ReturnObject addressResponse = addressService.setDefaultAddress(id.longValue());
-        return addressResponse;
+        return new ReturnObject();
     }
 
     /**
@@ -76,28 +83,34 @@ public class AddressController {
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject changeAddressInfo(@LoginUser UserDto userDto,
                                           @PathVariable Integer id,
-                                          @RequestBody Map<String, Object> requestBody) {
+                                          @RequestBody @Validated(NewGroup.class) AddressDto vo) throws Exception {
         Long Id = id.longValue();
-        Integer regionId = (Integer) requestBody.get("regionId");
-        String address = (String) requestBody.get("address");
-        String consignee = (String) requestBody.get("consignee");
-        String mobile = (String) requestBody.get("mobile");
-        ReturnObject addressResponse = addressService.changeAddressInfo(Id, regionId, address, consignee, mobile);
-        return addressResponse;
+        try {
+            Address address = addressService.findById(Id);
+            if(!Objects.equals(vo.getRegion_id(), address.getRegion_id())){address.setRegion_id(vo.getRegion_id());}
+            if(vo.getAddress()!=null){address.setAddress(vo.getAddress());}
+            if(vo.getConsignee()!=null){address.setConsignee(vo.getConsignee());}
+            if(vo.getMobile()!=null){address.setMobile(vo.getMobile());}
+
+            addressService.addAddress(address);
+            SimpleAddressVo svo = new SimpleAddressVo(address);
+            return new ReturnObject(svo);
+        } catch (Exception e) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST,e.getMessage());
+        }
     }
 
     /**
      * 买家删除地址
-     *
+     * @param id
      */
     @DeleteMapping("/address/{id}")
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject deleteAddress(@LoginUser UserDto userDto,
                                       @PathVariable Integer id) {
         Long Id = id.longValue();
-        ReturnObject addressResponse = addressService.deleteAddress(Id);
-        return addressResponse;
+        addressService.deleteAddress(Id);
+        return new ReturnObject();
     }
-
 
 }

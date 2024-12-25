@@ -27,13 +27,16 @@ public class CartPo {
 
     private String creatorName;
 
+    private Long modifierId;
+
+    private String modifierName;
+
     private LocalDateTime gmtCreate;
 
     private LocalDateTime gmtModified;
-
     /*
     购物车内商品种类个数，并非购物车商品总数
      */
-    private Long quantity  = 0L;
+    private int quantity  = 0;
 
 }
