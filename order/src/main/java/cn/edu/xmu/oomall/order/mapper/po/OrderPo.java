@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@CopyFrom({Order.class,OrderPo.class})
+@CopyFrom({Order.class})
 public class OrderPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

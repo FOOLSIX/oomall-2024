@@ -3,19 +3,14 @@
 package cn.edu.xmu.oomall.order.service;
 
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
-import cn.edu.xmu.oomall.order.controller.vo.OrderVo;
 import cn.edu.xmu.oomall.order.dao.OrderDao;
 import cn.edu.xmu.oomall.order.dao.bo.Order;
 import cn.edu.xmu.oomall.order.dao.openfeign.GoodsDao;
-import cn.edu.xmu.oomall.order.mapper.po.OrderPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {

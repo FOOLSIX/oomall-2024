@@ -10,7 +10,6 @@ import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.order.controller.dto.OrderUpdateDto;
 import cn.edu.xmu.oomall.order.dao.OrderDao;
 import cn.edu.xmu.oomall.order.dao.openfeign.ExpressDao;
-import cn.edu.xmu.oomall.order.mapper.openfeign.po.Express;
 import cn.edu.xmu.oomall.order.mapper.po.OrderPo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -100,6 +99,28 @@ public class Order extends OOMallObject {
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    @Builder
+    public Order(Long id, Long creatorId, String creatorName, Long modifierId, String modifierName, LocalDateTime gmtCreate, LocalDateTime gmtModified,
+                 ExpressDao expressDao, OrderDao orderDao, Long customerId, Long shopId, String orderSn, Byte status, Long pid, String consignee,
+                 Long regionId, String address, String mobile, String message, Long activityId, Long packageId, List<OrderItem> orderItems) {
+        super(id, creatorId, creatorName, modifierId, modifierName, gmtCreate, gmtModified);
+        this.expressDao = expressDao;
+        this.orderDao = orderDao;
+        this.customerId = customerId;
+        this.shopId = shopId;
+        this.orderSn = orderSn;
+        this.status = status;
+        this.pid = pid;
+        this.consignee = consignee;
+        this.regionId = regionId;
+        this.address = address;
+        this.mobile = mobile;
+        this.message = message;
+        this.activityId = activityId;
+        this.packageId = packageId;
+        this.orderItems = orderItems;
     }
 
     @Transactional

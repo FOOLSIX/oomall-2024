@@ -54,10 +54,6 @@ public class OrderDao {
 //        });
 //    }
 
-    public List<OrderPo> retrieveOrderList(UserDto user) {
-        return orderPoMapper.findByCustomerId(user.getId());
-    }
-
     public Order findById(Long id){
         if (id == -1) {
             log.error("id 为 null");
