@@ -57,7 +57,7 @@ public class CustomerController {
                                       @LoginUser UserDto userDto) {
         Comment newComment = CloneFactory.copy(new Comment(), commentDto);
         commentService.createComment(newComment, orderId, productId, userDto);
-        return new ReturnObject(ReturnNo.OK);
+        return new ReturnObject(ReturnNo.CREATED);
     }
 
     /**
@@ -72,6 +72,6 @@ public class CustomerController {
                                                 @LoginUser UserDto userDto) {
         Comment comment = CloneFactory.copy(new Comment(), commentDto);
         commentService.createAdditionalComment(id, comment, userDto);
-        return new ReturnObject(ReturnNo.OK);
+        return new ReturnObject(ReturnNo.CREATED);
     }
 }

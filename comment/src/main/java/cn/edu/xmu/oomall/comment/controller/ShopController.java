@@ -34,7 +34,7 @@ public class ShopController {
                                     @LoginUser UserDto userDto) {
         Comment comment = CloneFactory.copy(new Comment(), commentDto);
         commentService.createReply(id, comment, shopId, userDto);
-        return new ReturnObject(ReturnNo.OK);
+        return new ReturnObject(ReturnNo.CREATED);
     }
 
     /**

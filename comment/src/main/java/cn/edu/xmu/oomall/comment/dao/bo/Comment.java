@@ -150,34 +150,34 @@ public class Comment extends OOMallObject implements Serializable {
 
     /**
      * 管理员审核评论
-     * @param userDto
+     * @param user
      */
-    public void approve(UserDto userDto) {
+    public void approve(UserDto user) {
         if (!allowTransitStatus(REVIEWED)) {
             throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "评论", this.id, STATUSNAMES.get(this.status)));
         }
         setStatus(REVIEWED);
-        commentDao.save(this, userDto);
+        commentDao.save(this, user);
     }
 
     /**
      * 审核不通过或者封禁评论
-     * @param userDto
+     * @param user
      */
-    public void ban(UserDto userDto) {
+    public void ban(UserDto user) {
         if (!allowTransitStatus(BANNED)) {
             throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "评论", this.id, STATUSNAMES.get(this.status)));
         }
         setStatus(BANNED);
         setContent("**该评论被封禁**");
-        commentDao.save(this, userDto);
+        commentDao.save(this, user);
     }
 
     /**
      * 申请屏蔽自己商品的恶意评论
-     * @param userDto
+     * @param user
      */
-    public void requestBlock(Long shopId, UserDto userDto) {
+    public void requestBlock(Long shopId, UserDto user) {
         if (!shopId.equals(this.shopId)) {
             throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "评论", this.id, shopId));
         }
@@ -185,17 +185,17 @@ public class Comment extends OOMallObject implements Serializable {
             throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "评论", this.id, STATUSNAMES.get(this.status)));
         }
         setStatus(REQUESTING_BLOCK);
-        commentDao.save(this, userDto);
+        commentDao.save(this, user);
     }
 
     /**
      * 增加追评
      * @param comment
-     * @param userDto
+     * @param user
      */
-    public void addAdditionalComment(Comment comment, UserDto userDto) {
+    public void addAdditionalComment(Comment comment, UserDto user) {
         //是否是该用户自己的评论
-        if (!uid.equals(userDto.getId())) {
+        if (!uid.equals(user.getId())) {
             throw new BusinessException(ReturnNo.COMMENT_OUTSCOPE);
         }
         //状态能够评论
@@ -215,16 +215,16 @@ public class Comment extends OOMallObject implements Serializable {
         comment.setShopId(shopId);
         comment.setGmtCreate(LocalDateTime.now());
         comment.setUpdateTime(LocalDateTime.now());
-        commentDao.insert(comment, userDto);
+        commentDao.insert(comment, user);
     }
 
     /**
      * 增加回复
      * @param comment
      * @param shopId
-     * @param userDto
+     * @param user
      */
-    public void addReplyComment(Comment comment, Long shopId, UserDto userDto) {
+    public void addReplyComment(Comment comment, Long shopId, UserDto user) {
         //是否是自己商铺的评论
         if (!this.shopId.equals(shopId)) {
             throw new BusinessException(ReturnNo.COMMENT_OUTSCOPE);
@@ -239,11 +239,11 @@ public class Comment extends OOMallObject implements Serializable {
         }
         comment.setPid(this.id);
         comment.setStatus(PENDING);
-        comment.setUid(userDto.getId());
+        comment.setUid(user.getId());
         comment.setProductId(productId);
         comment.setShopId(shopId);
         comment.setGmtCreate(LocalDateTime.now());
         comment.setUpdateTime(LocalDateTime.now());
-        commentDao.insert(comment, userDto);
+        commentDao.insert(comment, user);
     }
 }

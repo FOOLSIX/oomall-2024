@@ -17,7 +17,7 @@ public class OrderDao {
     private final OrderMapper orderMapper;
     private final CommentDao commentDao;
 
-    public Order findOrderById(Long id) {
+    public Order findById(Long id) {
         InternalReturnObject<OrderPo> ret = orderMapper.getOrderById(id);
         Order order = CloneFactory.copy(new Order(), ret.getData());
         order.setCommentDao(commentDao);

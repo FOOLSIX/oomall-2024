@@ -38,7 +38,7 @@ public class CommentService {
     }
 
     public void createComment(Comment comment, Long orderId, Long productId, UserDto user) {
-        Order order = orderDao.findOrderById(orderId);
+        Order order = orderDao.findById(orderId);
         order.createComment(comment, productId, user);
     }
 
