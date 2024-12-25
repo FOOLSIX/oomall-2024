@@ -35,7 +35,7 @@ public class AddressVo {
     public void setId(Long id){this.id = id;}
 
     public Long getRegion_id(){return region_id.longValue();}
-    public void setRegion_id(Long Region_id){this.region_id = region.getId();}
+    public void setRegion_id(Long Region_id){this.region_id = Region_id;}
 
     public String getAddress(){return address;}
     public void setAddress(String address){this.address = address;}
@@ -47,7 +47,8 @@ public class AddressVo {
     public void setMobile(String mobile){this.mobile = mobile;}
 
     public Boolean getBe_default(){return be_default;}
-    public void changeBe_default(){be_default = !be_default;}
+    public void setBe_default(Boolean be_default){this.be_default = be_default;}
+    public void changeBe_default(){this.be_default = !this.be_default;}
 
     public LocalDateTime getGmtModified(){return gmtModified;}
     public void setGmtModified(LocalDateTime gmtModified){this.gmtModified = gmtModified;}

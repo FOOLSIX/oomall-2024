@@ -5,17 +5,19 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.oomall.customer.dao.bo.Cart;
 import cn.edu.xmu.oomall.customer.mapper.jpa.CartPoMapper;
 import cn.edu.xmu.oomall.customer.mapper.po.CartPo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class CartDaoTest {
+public class CartDaoTest {
 
     @Mock
     private CartPoMapper cartPoMapper;
@@ -23,6 +25,10 @@ class CartDaoTest {
     @InjectMocks
     private CartDao cartDao;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void testFindById() {
@@ -35,7 +41,7 @@ class CartDaoTest {
 
         assertNotNull(result, "The result should not be null for a valid id.");
         assertEquals(validId, result.getId(), "The returned Cart id should match the input id.");
-        verify(cartPoMapper, times(1)).findByCreatorId(validId);
+        verify(cartPoMapper, times(1)).findById(validId);
 
         try {
             cartDao.findById(null);

@@ -39,10 +39,10 @@ public class CartItemVo {
     public void setId(Long id){this.id = id;}
 
     public Long getCreatorId(){return creatorId;}
-    public void setCreatorId(Long productId){this.creatorId = creator.getId();}
+    public void setCreatorId(Long creatorId){this.creatorId = creatorId;}
 
     public Long getProductId() {return productId;}
-    public void setProductId(Long productId) {this.productId = product.getId();}
+    public void setProductId(Long productId) {this.productId = productId;}
 
     public int getPrice() {return price;}
     public void setPrice(int price) {this.price = price;}
@@ -65,5 +65,5 @@ public class CartItemVo {
     public void setModifier(IdNameTypeVo modifier) {
         this.modifier = modifier;
     }
-    public IdNameTypeVo getModifier(IdNameTypeVo modifier) {return this.modifier;}
+    public IdNameTypeVo getModifier() {return this.modifier;}
 }

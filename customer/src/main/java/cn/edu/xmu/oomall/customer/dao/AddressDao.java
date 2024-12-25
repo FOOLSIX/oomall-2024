@@ -1,9 +1,7 @@
 package cn.edu.xmu.oomall.customer.dao;
 
 import cn.edu.xmu.javaee.core.exception.BusinessException;
-import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
-import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.customer.dao.bo.Address;
 import cn.edu.xmu.oomall.customer.mapper.jpa.AddressPoMapper;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

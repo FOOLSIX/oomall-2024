@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 public class CartItem extends OOMallObject {
 
+
     @Setter
     private Long productId;
 //    private int price;
@@ -32,6 +33,8 @@ public class CartItem extends OOMallObject {
     public void setGmtCreate(LocalDateTime gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
+
+
 
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {this.gmtModified = gmtModified;}

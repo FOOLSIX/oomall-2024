@@ -23,28 +23,25 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CartItemDao {
 
-    private final RedisUtil redisUtil;
-
     private final static Logger logger = LoggerFactory.getLogger(AddressDao.class);
 
     private final CartItemPoMapper cartItemPoMapper;
 
     @Autowired
-    public CartItemDao(RedisUtil redisUtil, CartItemPoMapper carItemPoMapper) {
-        this.redisUtil = redisUtil;
+    public CartItemDao(CartItemPoMapper carItemPoMapper) {
         this.cartItemPoMapper = carItemPoMapper;
     }
 
     public CartItem build(CartItemPo cartItemPo) {
         CartItem cartItem = CloneFactory.copy(new CartItem(), cartItemPo);
-        this.build(cartItem);
+        cartItem.setCartItemDao(this);
         return cartItem;
     }
 
-    private CartItem build(CartItem bo){
-        bo.setCartItemDao(this);
-        return bo;
-    }
+//    private CartItem build(CartItem bo){
+//        bo.setCartItemDao(this);
+//        return bo;
+//    }
 
     public CartItem findById(Long id) throws BusinessException{
         if (id == null) {
@@ -53,6 +50,7 @@ public class CartItemDao {
         Optional<CartItemPo> po = cartItemPoMapper.findById(id);
         return po.map(this::build).orElse(null);
     }
+
     public List<CartItem> getAllCartItem(Long id,Integer page, Integer pageSize) {
         List<CartItem> ret = new ArrayList<>();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "id");

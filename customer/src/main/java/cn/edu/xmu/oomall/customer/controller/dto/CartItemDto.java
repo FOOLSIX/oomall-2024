@@ -15,5 +15,11 @@ public class CartItemDto {
     @NotNull(message = "数量不能为0", groups = {NewGroup.class})
     private int quantity;
 
+    public void setProductId(@NotNull(message = "productid不能为空", groups = {NewGroup.class}) Long productId) {
+        this.productId = productId;
+    }
+    public Long getProductId() {return this.productId;}
 
+    public int getQuantity() {return this.quantity;}
+    public void setQuantity(int quantity) {this.quantity = quantity;}
 }

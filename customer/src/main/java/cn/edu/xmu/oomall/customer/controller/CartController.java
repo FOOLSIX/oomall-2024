@@ -10,7 +10,6 @@ import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.javaee.core.validation.NewGroup;
 import cn.edu.xmu.oomall.customer.controller.dto.CartItemDto;
 import cn.edu.xmu.oomall.customer.controller.vo.SimpleCartItemVo;
-import cn.edu.xmu.oomall.customer.dao.CartDao;
 import cn.edu.xmu.oomall.customer.dao.bo.Cart;
 import cn.edu.xmu.oomall.customer.service.CartService;
 import cn.edu.xmu.oomall.customer.dao.bo.CartItem;

@@ -2,22 +2,16 @@ package cn.edu.xmu.oomall.customer.service;
 
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
-import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.customer.controller.vo.CartItemVo;
 import cn.edu.xmu.oomall.customer.dao.CartDao;
 import cn.edu.xmu.oomall.customer.dao.CartItemDao;
 import cn.edu.xmu.oomall.customer.dao.bo.Cart;
 import cn.edu.xmu.oomall.customer.dao.bo.CartItem;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import cn.edu.xmu.javaee.core.util.CloneFactory;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -73,28 +67,6 @@ public class CartService {
         List<CartItem> cartItems = cartItemDao.getAllCartItem(cart.getId());
         return cartItems;
     }
-
-    /**
-     * 买家修改购物车单个商品的数量或规格
-     * @param id
-     * @param requestBody
-     */
-
-    public ReturnObject changeCartInfo(Long id,Map<Long, Long> requestBody) {
-        List<CartItem> cartItems = cartItemDao.getAllCartItem(id);
-        Long productId = ((Number) requestBody.values().toArray()[0]).longValue();
-        Long quantity = ((Number) requestBody.values().toArray()[1]).longValue();
-
-        for (CartItem item : cartItems) {
-            if (item.getProductId().equals(productId)) {
-                //item.setQuantity(quantity);
-                break;
-            }
-        }
-
-        return new ReturnObject();
-    }
-
 
     /**
      * 删除购物车内容

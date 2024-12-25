@@ -25,7 +25,7 @@ public class CartDao {
         if (id == null) {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, "id is null");
         }
-        Optional<CartPo> cartPo = cartPoMapper.findByCreatorId(id);
+        Optional<CartPo> cartPo = cartPoMapper.findById(id);
         return cartPo.map(this::build).orElse(null);
     }
 
