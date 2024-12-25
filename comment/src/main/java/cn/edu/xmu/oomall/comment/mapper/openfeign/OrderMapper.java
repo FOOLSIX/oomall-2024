@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.comment.mapper.openfeign;
 
 import cn.edu.xmu.javaee.core.model.InternalReturnObject;
-import cn.edu.xmu.oomall.comment.mapper.openfeign.po.Order;
+import cn.edu.xmu.oomall.comment.mapper.openfeign.po.OrderPo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface OrderMapper {
 
     @GetMapping("/internal/orders/{id}/status")
-    InternalReturnObject<Order> getOrderById(@PathVariable Long id);
+    InternalReturnObject<OrderPo> getOrderById(@PathVariable Long id);
 
 }

@@ -73,6 +73,18 @@ public class ShopControllerTest {
     }
 
     @Test
+    public void testCreateReplyStatusNotAllow() throws Exception {
+        String body = "{\"id\":8, \"content\":\"回复\", \"shopId\":108, \"productId\":1008}";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/shops/108/comments/18/reply")
+                        .header("authorization", shopToken2)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.COMMENT_CANNOT_CREATE.getErrNo())));
+    }
+
+    @Test
     public void testUpdateComment() throws Exception {
         String body = "{\"content\":\"修改的回复\"}";
         mockMvc.perform(MockMvcRequestBuilders.put("/shops/101/comments/27")
