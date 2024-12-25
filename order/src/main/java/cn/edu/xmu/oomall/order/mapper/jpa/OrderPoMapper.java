@@ -12,14 +12,4 @@ import java.util.List;
 
 @Repository
 public interface OrderPoMapper extends JpaRepository<OrderPo, Long> {
-
-
-    /**
-     * 查询顾客名下订单，不返回失效的订单
-     * @param userId
-     * @return
-     */
-    @Query("SELECT po FROM OrderPo po WHERE po.customerId = :userId AND po.status != 0")
-    List<OrderPo> findByCustomerId(@Param("userId") Long userId);
-
 }

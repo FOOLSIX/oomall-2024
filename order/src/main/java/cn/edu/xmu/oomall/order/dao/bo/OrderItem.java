@@ -13,20 +13,20 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderItem extends OOMallObject implements Serializable {
 
-    @Builder
-    public OrderItem(Long id, Long creatorId, String creatorName, Long modifierId, String modifierName, LocalDateTime gmtCreate, LocalDateTime gmtModified, Long orderId, Long onsaleId, Integer quantity, Long price, Long discountPrice, Long point, String name, Long actId, Long couponId, Byte commented) {
-        super(id, creatorId, creatorName, modifierId, modifierName, gmtCreate, gmtModified);
-        this.orderId = orderId;
-        this.onsaleId = onsaleId;
-        this.quantity = quantity;
-        this.price = price;
-        this.discountPrice = discountPrice;
-        this.point = point;
-        this.name = name;
-        this.actId = actId;
-        this.couponId = couponId;
-        this.commented = commented;
-    }
+//    @Builder
+//    public OrderItem(Long id, Long creatorId, String creatorName, Long modifierId, String modifierName, LocalDateTime gmtCreate, LocalDateTime gmtModified, Long orderId, Long onsaleId, Integer quantity, Long price, Long discountPrice, Long point, String name, Long actId, Long couponId, Byte commented) {
+//        super(id, creatorId, creatorName, modifierId, modifierName, gmtCreate, gmtModified);
+//        this.orderId = orderId;
+//        this.onsaleId = onsaleId;
+//        this.quantity = quantity;
+//        this.price = price;
+//        this.discountPrice = discountPrice;
+//        this.point = point;
+//        this.name = name;
+//        this.actId = actId;
+//        this.couponId = couponId;
+//        this.commented = commented;
+//    }
 
     @Setter
     @Getter
@@ -74,11 +74,11 @@ public class OrderItem extends OOMallObject implements Serializable {
 
     @Override
     public void setGmtCreate(LocalDateTime gmtCreate) {
-
+        this.gmtCreate  = gmtCreate;
     }
 
     @Override
     public void setGmtModified(LocalDateTime gmtModified) {
-
+        this.gmtModified = gmtModified;
     }
 }

@@ -25,28 +25,28 @@ public class ExpressDao {
         this.expressMapper = expressMapper;
     }
 
-    private Express build(Express express){
-        express.setExpressMapper(this.expressMapper);
-        return express;
-    }
+//    private Express build(Express express){
+//        express.setExpressMapper(this.expressMapper);
+//        return express;
+//    }
 
-    public Express findById(Long id) {
-        InternalReturnObject<Express> expressInternalReturnObject = expressMapper.findById(id);
-        if (!expressInternalReturnObject.getErrno().equals(200)){
-            throw new BusinessException(INTERNAL_SERVER_ERR,"openfeign调用失败");
-        }else {
-            return build(expressInternalReturnObject.getData());
-        }
-    }
-
-    public Long createExpress(Order order) {
-        InternalReturnObject<Long> result = expressMapper.create(order);
-        if (!result.getErrno().equals(200)) {
-            throw new BusinessException(INTERNAL_SERVER_ERR, "openfeign调用失败");
-        } else {
-            return result.getData();
-        }
-    }
+//    public Express findById(Long id) {
+//        InternalReturnObject<Express> expressInternalReturnObject = expressMapper.findById(id);
+//        if (!expressInternalReturnObject.getErrno().equals(200)){
+//            throw new BusinessException(INTERNAL_SERVER_ERR,"openfeign调用失败");
+//        }else {
+//            return build(expressInternalReturnObject.getData());
+//        }
+//    }
+//
+//    public Long createExpress(Order order) {
+//        InternalReturnObject<Long> result = expressMapper.create(order);
+//        if (!result.getErrno().equals(200)) {
+//            throw new BusinessException(INTERNAL_SERVER_ERR, "openfeign调用失败");
+//        } else {
+//            return result.getData();
+//        }
+//    }
 
 
 
