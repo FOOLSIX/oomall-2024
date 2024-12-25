@@ -1,12 +1,8 @@
 package cn.edu.xmu.oomall.customer.controller;
 
-import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
-import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.customer.CommentApplicationTests;
-import cn.edu.xmu.oomall.customer.dao.CustomerDao;
-import cn.edu.xmu.oomall.customer.dao.bo.Customer;
 import cn.edu.xmu.oomall.customer.mapper.jpa.CustomerPoMapper;
 import cn.edu.xmu.oomall.customer.service.CustomerService;
 import jakarta.transaction.Transactional;
