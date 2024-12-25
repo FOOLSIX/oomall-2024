@@ -27,7 +27,6 @@ public class CustomerService {
     /**
      * 获取指定id的顾客信息
      * @param id
-     * @return
      */
     public Customer getUserById(Long id){
         Customer customer = this.customerDao.findById(id);

@@ -32,9 +32,17 @@ public class CustomerController {
     private JwtHelper jwtHelper;
     private final CustomerService customerService;
 
-
-
-
+    /**
+     * 买家获得购物车列表
+     *
+     */
+    @GetMapping("/carts")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public ReturnObject getCarts(@LoginUser UserDto userDto,
+                                 @RequestParam(required = false) Integer page,
+                                 @RequestParam(required = false) Integer pageSize){
+        return new ReturnObject();
+    }
 
 
 }

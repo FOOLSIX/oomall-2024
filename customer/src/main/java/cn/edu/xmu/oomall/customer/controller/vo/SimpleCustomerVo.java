@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class SimpleCustomerVo {
     private Long id;
     private String name;
+    private int price;
 
     public SimpleCustomerVo(Customer customer){
         super();
