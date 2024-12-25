@@ -44,7 +44,7 @@ public class UnAuthorizedController {
      * @return
      */
     @GetMapping("/comments/states")
-    public ReturnObject getRegionsState() {
+    public ReturnObject getCommentsState() {
         List<StatusVo> dtoList = this.commentService.retrieveCommentStates();
         return new ReturnObject(ReturnNo.OK, dtoList);
     }
