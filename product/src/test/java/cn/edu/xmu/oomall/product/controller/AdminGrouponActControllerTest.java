@@ -7,8 +7,10 @@ import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.product.ProductTestApplication;
 import cn.edu.xmu.oomall.product.dao.bo.Activity;
 import cn.edu.xmu.oomall.product.dao.bo.GrouponAct;
+import cn.edu.xmu.oomall.product.mapper.jpa.OnsalePoMapper;
 import cn.edu.xmu.oomall.product.mapper.openfeign.ShopMapper;
 import cn.edu.xmu.oomall.product.mapper.openfeign.po.Shop;
+import cn.edu.xmu.oomall.product.mapper.po.OnsalePo;
 import cn.edu.xmu.oomall.product.model.Threshold;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 
 
 /**
@@ -49,6 +53,9 @@ public class AdminGrouponActControllerTest {
 
     @SpyBean
     ShopMapper shopMapper;
+
+    @SpyBean
+    private OnsalePoMapper onsalePoMapper;
 
     private static String adminToken, shopToken1, shopToken2, shopToken3;
 
@@ -425,7 +432,7 @@ public class AdminGrouponActControllerTest {
 
         Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
         Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
-        Mockito.doReturn(ret).when(shopMapper).getShopById(2L);
+        doReturn(ret).when(shopMapper).getShopById(2L);
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/shops/{shopId}/groupons/{id}", 2, 4)
                         .header("authorization", shopToken3)
@@ -479,6 +486,27 @@ public class AdminGrouponActControllerTest {
     }
 
 
+    /**
+     * @Author 37720222205040
+     */
+    @Test
+    void testUpdateGrouponActWhenIdNotExist() throws Exception {
+        Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
+
+        String body = "{\"name\":\"团购活动3\","
+                + "\"thresholds\":[{\"quantity\":\"100\", \"percentage\":\"10\"},{\"quantity\":\"50\",\"percentage\":\"5\"}],"
+                + "\"beginTime\":\"3030-12-05T10:09:50.000\",\"endTime\":\"3032-12-05T10:09:50.000\""
+                + "}";
+        OnsalePo onsalePo=new OnsalePo();
+        onsalePo.setId(-1L);
+        doReturn(onsalePo).when(onsalePoMapper).save(any(OnsalePo.class));
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/groupons/{id}", 2, 4)
+                        .header("authorization", shopToken3)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+    }
 
     /**
      * PUT

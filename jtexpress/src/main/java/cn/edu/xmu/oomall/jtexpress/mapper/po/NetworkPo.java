@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.jtexpress.mapper.po;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "jtexpress_network")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class NetworkPo {
 
     @Id

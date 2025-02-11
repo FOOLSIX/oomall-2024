@@ -2,6 +2,7 @@
 package cn.edu.xmu.oomall.payment.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
@@ -27,6 +28,7 @@ import java.util.*;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CopyFrom({ChannelPo.class})
+@CopyTo(ChannelPo.class)
 public class Channel extends OOMallObject implements Serializable {
 
     /**

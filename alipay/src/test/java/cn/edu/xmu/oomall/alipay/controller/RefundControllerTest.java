@@ -3,8 +3,8 @@ package cn.edu.xmu.oomall.alipay.controller;
 
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.alipay.AliPayApplication;
-import cn.edu.xmu.oomall.alipay.controller.vodto.*;
-
+import cn.edu.xmu.oomall.alipay.controller.vo.*;
+import cn.edu.xmu.oomall.alipay.controller.dto.*;
 import cn.edu.xmu.oomall.alipay.service.bo.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;

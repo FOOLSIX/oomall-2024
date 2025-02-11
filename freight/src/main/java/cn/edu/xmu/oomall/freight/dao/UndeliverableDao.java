@@ -2,9 +2,8 @@ package cn.edu.xmu.oomall.freight.dao;
 
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
-import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.freight.dao.bo.Region;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.freight.dao.bo.Undeliverable;
 import cn.edu.xmu.oomall.freight.dao.openfeign.RegionDao;
 import cn.edu.xmu.oomall.freight.mapper.jpa.UndeliverablePoMapper;
@@ -31,28 +30,42 @@ public class UndeliverableDao {
 
     private final UndeliverablePoMapper undeliverablePoMapper;
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 创建满血不可达地区bo对象
+     */
     public Undeliverable build(Undeliverable undeliverable) {
         undeliverable.setRegionDao(this.regionDao);
         undeliverable.setLogisticsDao(this.logisticsDao);
         return undeliverable;
     }
 
-    Undeliverable build(UndeliverablePo po) {
-        Undeliverable undeliverable = CloneFactory.copy(new Undeliverable(), po);
-        return build(undeliverable);
-    }
-
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 新增不可达地区
+     */
     public void insert(Undeliverable undeliverable, UserDto user) {
-        Region region = undeliverable.getRegion();  // 调用regionDao的getRegionById方法，从而触发对regionId的校验
+        // 调用regionDao的getRegionById方法，从而触发对regionId的校验
+        undeliverable.getRegion();
         undeliverable.setCreatorId(user.getId());
         undeliverable.setGmtCreate(LocalDateTime.now());
         UndeliverablePo po = CloneFactory.copy(new UndeliverablePo(), undeliverable);
         po.setId(null);
         log.debug("insert undeliverablePo = {}", po);
         this.undeliverablePoMapper.save(po);
-        // undeliverable.setId(po.getId());
+        undeliverable.setId(po.getId());
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 删除不可达地区
+     */
     public void delete(Long regionId, Long logisticsId, UserDto user) {
         UndeliverablePo po = undeliverablePoMapper.findByRegionIdAndLogisticsId(regionId, logisticsId);
         if (Objects.isNull(po)) {
@@ -61,6 +74,12 @@ public class UndeliverableDao {
         this.undeliverablePoMapper.deleteById(po.getId());
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 获取不可达地区
+     */
     public List<Undeliverable> retrieveByLogisticsId(Long logisticsId, Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         return this.undeliverablePoMapper.findAllByLogisticsId(logisticsId, pageable).stream()

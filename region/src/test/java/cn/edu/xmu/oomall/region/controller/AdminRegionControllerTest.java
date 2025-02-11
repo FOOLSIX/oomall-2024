@@ -4,6 +4,9 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.oomall.region.RegionApplication;
+import cn.edu.xmu.oomall.region.dao.bo.Region;
+import cn.edu.xmu.oomall.region.mapper.RegionPoMapper;
+import cn.edu.xmu.oomall.region.mapper.po.RegionPo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,10 +22,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 
 
 @SpringBootTest(classes = RegionApplication.class)
@@ -32,6 +38,8 @@ public class AdminRegionControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private RedisUtil redisUtil;
+    @SpyBean
+    private RegionPoMapper regionPoMapper;
     private static String adminToken;
     private final String ADMIN_SUB_REGIONS = "/platforms/{did}/regions/{id}/subregions";
     private final String ADMIN_REGIONS_ID = "/platforms/{did}/regions/{id}";
@@ -104,6 +112,25 @@ public class AdminRegionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.REGION_ABANDONE.getErrNo())));
     }
 
+
+
+    /**
+     * @Author 37720222205040
+     */
+
+    @Test
+    void updateRegionWhenSaveNotExist() throws Exception {
+        RegionPo po=new RegionPo();
+        po.setId(-1L);
+        doReturn(po).when(regionPoMapper).save(any(RegionPo.class));
+        String body = "{\"name\":\"东城区风云再起\", \"shortName\":\"风云再起\", \"lng\":\"116.416357\", \"lat\":\"39.928353\"}";
+        this.mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_REGIONS_ID, 0, 4)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+    }
     @Test
     public void getShopSubRegionsById() throws Exception {
         Mockito.when(redisUtil.get("R4")).thenReturn(null);
@@ -246,6 +273,55 @@ public class AdminRegionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_OUTSCOPE.getErrNo())));
+    }
+
+
+    /**
+     * @Author 37720222205040
+     */
+    @Test
+    void createSubRegionLevelIsNull() throws Exception {
+        Region bo=new Region();
+        bo.setId(1L);
+        bo.setPid(-1L);
+        bo.setLevel(null);
+        bo.setStatus(Region.VALID);
+        Mockito.when(redisUtil.get("R1")).thenReturn(bo);
+        Mockito.when(redisUtil.set(Mockito.anyString(), any(), Mockito.anyLong())).thenReturn(true);
+
+        String body = "{\"name\":\"东城区风云再起\", \"shortName\":\"风云再起\", \"mergerName\":\"北京，东城，风云再起\",\"pinyin\":\"FengYunZaiQi\",\"lng\":\"116.416357\", \"lat\":\"39.928353\",\"areaCode\":\"110101000000\",\"zipCode\":\"00100000\",\"cityCode\":\"010\"}";
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_SUB_REGIONS, 0, 1)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.CREATED.getErrNo())));
+
+    }
+
+    /**
+     * @Author 37720222205040
+     */
+    @Test
+    void createSubRegionLevelIsNullAndPidIsNull() throws Exception {
+        Region bo=new Region();
+        bo.setId(1L);
+        bo.setPid(2L);
+        bo.setLevel(null);
+        bo.setStatus(Region.VALID);
+        Mockito.when(redisUtil.get("R1")).thenReturn(bo);
+        Mockito.when(redisUtil.set(Mockito.anyString(), any(), Mockito.anyLong())).thenReturn(true);
+
+        String body = "{\"name\":\"东城区风云再起\", \"shortName\":\"风云再起\", \"mergerName\":\"北京，东城，风云再起\",\"pinyin\":\"FengYunZaiQi\",\"lng\":\"116.416357\", \"lat\":\"39.928353\",\"areaCode\":\"110101000000\",\"zipCode\":\"00100000\",\"cityCode\":\"010\"}";
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_SUB_REGIONS, 0, 1)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.CREATED.getErrNo())));
+
     }
 
     /**

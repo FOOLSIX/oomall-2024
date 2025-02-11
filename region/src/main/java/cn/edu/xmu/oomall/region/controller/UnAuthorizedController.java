@@ -12,6 +12,7 @@ import cn.edu.xmu.oomall.region.dao.bo.Region;
 import cn.edu.xmu.oomall.region.service.RegionService;
 import cn.edu.xmu.oomall.region.controller.vo.RegionVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
 @RequiredArgsConstructor
+@Slf4j
 public class UnAuthorizedController {
-    private final Logger logger = LoggerFactory.getLogger(UnAuthorizedController.class);
     private final RegionService regionService;
 
     /**

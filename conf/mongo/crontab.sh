@@ -1,0 +1,1 @@
+30 1,4,20 * * * bash /root/oomall-2023/conf/mongo/init-data.sh > /root/logs/mongo-init.log

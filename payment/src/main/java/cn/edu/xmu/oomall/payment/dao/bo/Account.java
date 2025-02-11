@@ -2,6 +2,7 @@
 package cn.edu.xmu.oomall.payment.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
@@ -32,6 +33,7 @@ import static cn.edu.xmu.oomall.payment.dao.bo.PayTrans.NEW;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CopyFrom({AccountPo.class})
+@CopyTo(AccountPo.class)
 public class Account extends OOMallObject implements Serializable {
     private static  final Logger logger = LoggerFactory.getLogger(Account.class);
 

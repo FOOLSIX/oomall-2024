@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.jtexpress.controller;
 
-import cn.edu.xmu.oomall.jtexpress.controller.vo.OrderVo;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.PersonInfoVo;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.OrderDto;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.PersonInfoDto;
 import cn.edu.xmu.oomall.jtexpress.exception.ReturnError;
 import cn.edu.xmu.oomall.jtexpress.jtexpressApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,9 +42,9 @@ public class JTExpressAddOrderControllerTest {
 
     @Test
     void testAddOrderGivenNoExistOrder() throws Exception {
-        OrderVo orderVo = createOrderVoDemo();
-        orderVo.setTxLogisticId("Test3721944712401130");
-        String bizContent = objectMapper.writeValueAsString(orderVo);
+        OrderDto orderDto = createOrderVoDemo();
+        orderDto.setTxLogisticId("Test3721944712401130");
+        String bizContent = objectMapper.writeValueAsString(orderDto);
         logger.debug("{}测试 bizContent：{}", "testAddOrderGivenNoExistOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Add_Order)
@@ -61,8 +61,8 @@ public class JTExpressAddOrderControllerTest {
 
     @Test
     void testAddOrderGivenExistOrder() throws Exception {
-        OrderVo orderVo = createOrderVoDemo();
-        String bizContent = objectMapper.writeValueAsString(orderVo);
+        OrderDto orderDto = createOrderVoDemo();
+        String bizContent = objectMapper.writeValueAsString(orderDto);
         logger.debug("{}测试 bizContent：{}", "testAddOrderGivenExistOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Add_Order)
@@ -94,10 +94,10 @@ public class JTExpressAddOrderControllerTest {
 
     @Test
     void testAddOrderGivenErrorCustomerCode() throws Exception {
-        OrderVo orderVo = createOrderVoDemo();
+        OrderDto orderDto = createOrderVoDemo();
         String errorCustomerCode = "errorTest";
-        orderVo.setCustomerCode(errorCustomerCode);
-        String bizContent = objectMapper.writeValueAsString(orderVo);
+        orderDto.setCustomerCode(errorCustomerCode);
+        String bizContent = objectMapper.writeValueAsString(orderDto);
         logger.debug("{}测试 bizContent：{}", "testAddOrderGivenErrorCustomerCode", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Add_Order)
@@ -135,20 +135,20 @@ public class JTExpressAddOrderControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    private OrderVo createOrderVoDemo() {
-        OrderVo orderVo = new OrderVo();
+    private OrderDto createOrderVoDemo() {
+        OrderDto orderDto = new OrderDto();
 
-        orderVo.setCustomerCode("J0086474299");
-        orderVo.setDigest("qonqb4O1eNr6VCWS07Ieeg==");
-        orderVo.setNetwork(null);
-        orderVo.setTxLogisticId("TEST0000000000");
-        orderVo.setExpressType("EZ");
-        orderVo.setOrderType("1");
-        orderVo.setServiceType("01");
-        orderVo.setDeliveryType("06");
-        orderVo.setPayType("CC_CASH");
+        orderDto.setCustomerCode("J0086474299");
+        orderDto.setDigest("qonqb4O1eNr6VCWS07Ieeg==");
+        orderDto.setNetwork(null);
+        orderDto.setTxLogisticId("TEST0000000000");
+        orderDto.setExpressType("EZ");
+        orderDto.setOrderType("1");
+        orderDto.setServiceType("01");
+        orderDto.setDeliveryType("06");
+        orderDto.setPayType("CC_CASH");
 
-        PersonInfoVo sender = new PersonInfoVo();
+        PersonInfoDto sender = new PersonInfoDto();
         sender.setName("小九");
         sender.setCompany(null);
         sender.setPostCode(null);
@@ -162,9 +162,9 @@ public class JTExpressAddOrderControllerTest {
         sender.setTown(null);
         sender.setStreet(null);
         sender.setAddress("庆丰三路28号");
-        orderVo.setSender(sender);
+        orderDto.setSender(sender);
 
-        PersonInfoVo receiver = new PersonInfoVo();
+        PersonInfoDto receiver = new PersonInfoDto();
         receiver.setName("田丽");
         receiver.setCompany(null);
         receiver.setPostCode(null);
@@ -178,27 +178,27 @@ public class JTExpressAddOrderControllerTest {
         receiver.setTown(null);
         receiver.setStreet(null);
         receiver.setAddress("站前西路永利酒店斜对面童装店");
-        orderVo.setReceiver(receiver);
+        orderDto.setReceiver(receiver);
 
-        orderVo.setSendStartTime("2022-07-04 22:00:00");
-        orderVo.setSendEndTime("2022-07-04 23:00:00");
-        orderVo.setGoodsType("bm000006");
-        orderVo.setLength(0);
-        orderVo.setWidth(0);
-        orderVo.setHeight(0);
-        orderVo.setWeight("0.02");
-        orderVo.setTotalQuantity(0);
-        orderVo.setItemsValue(null);
-        orderVo.setPriceCurrency(null);
-        orderVo.setOfferFee(null);
-        orderVo.setRemark(null);
+        orderDto.setSendStartTime("2022-07-04 22:00:00");
+        orderDto.setSendEndTime("2022-07-04 23:00:00");
+        orderDto.setGoodsType("bm000006");
+        orderDto.setLength(0);
+        orderDto.setWidth(0);
+        orderDto.setHeight(0);
+        orderDto.setWeight("0.02");
+        orderDto.setTotalQuantity(0);
+        orderDto.setItemsValue(null);
+        orderDto.setPriceCurrency(null);
+        orderDto.setOfferFee(null);
+        orderDto.setRemark(null);
 
-        orderVo.setPostSiteCode(null);
-        orderVo.setPostSiteName(null);
-        orderVo.setPostSiteAddress(null);
-        orderVo.setRealName(null);
+        orderDto.setPostSiteCode(null);
+        orderDto.setPostSiteName(null);
+        orderDto.setPostSiteAddress(null);
+        orderDto.setRealName(null);
 
-        return orderVo;
+        return orderDto;
 
     }
 

@@ -74,7 +74,7 @@ public class GreedyAverageDivideStrategy extends DivideStrategy {
      * date: 2022-11-24 11:11
      */
     /*在最少包裹数的前提下使得每个包裹的重量尽量平均*/
-    public Collection<Collection<Item>> WeightAveragePack(Collection<Item> items, Integer packageSize) {
+    public Collection<Collection<Item>> weightAveragePack(Collection<Item> items, Integer packageSize) {
         logger.debug("pack: packageSize = {}, items = {}", packageSize, items);
         Collection<Collection<Item>> ret = new ArrayList<>();
         int packageNum = minPackage(packageSize, items);
@@ -130,7 +130,7 @@ public class GreedyAverageDivideStrategy extends DivideStrategy {
             //分成一个一个商品，小于包裹尺寸的才留下
             Collection<Item> singleItems = Item.extractToSingle(productItems, template.gotType(), template.getUpperLimit());
             Collection<Collection<Item>> packs = new ArrayList<>();
-            packs = this.WeightAveragePack(singleItems, packageSize);
+            packs = this.weightAveragePack(singleItems, packageSize);
             packs = Item.mergeItems(packs);
             ret = Item.gotProductItems(productItems, packs);
             logger.debug("all packs: {}", ret);

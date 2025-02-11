@@ -9,8 +9,13 @@ import cn.edu.xmu.oomall.shop.ShopTestApplication;
 import cn.edu.xmu.oomall.shop.controller.dto.PieceTemplateDto;
 import cn.edu.xmu.oomall.shop.controller.dto.TemplateDto;
 import cn.edu.xmu.oomall.shop.controller.dto.WeightTemplateDto;
+import cn.edu.xmu.oomall.shop.dao.bo.template.Template;
+import cn.edu.xmu.oomall.shop.mapper.RegionTemplatePoMapper;
+import cn.edu.xmu.oomall.shop.mapper.TemplatePoMapper;
 import cn.edu.xmu.oomall.shop.mapper.openfeign.RegionMapper;
 import cn.edu.xmu.oomall.shop.mapper.openfeign.po.RegionPo;
+import cn.edu.xmu.oomall.shop.mapper.po.RegionTemplatePo;
+import cn.edu.xmu.oomall.shop.mapper.po.TemplatePo;
 import cn.edu.xmu.oomall.shop.mapper.po.WeightThresholdPo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,9 +35,12 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @author ChenLinghui
@@ -39,7 +48,7 @@ import static org.hamcrest.CoreMatchers.is;
  */
 @SpringBootTest(classes = ShopTestApplication.class)
 @AutoConfigureMockMvc
-@Transactional(propagation = Propagation.REQUIRES_NEW)
+@Transactional(propagation = Propagation.REQUIRES_NEW, transactionManager = "")
 public class TemplateControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -51,8 +60,13 @@ public class TemplateControllerTest {
     @MockBean
     private RocketMQTemplate rocketmq;
 
+    @SpyBean
+    private TemplatePoMapper templatePoMapper;
     private static String adminToken;
     private static String commonShopToken;
+    @SpyBean
+    @Autowired
+    private RegionTemplatePoMapper regionTemplatePoMapper;
 
     /**
      * serUp用来准备各种情况下的Token
@@ -280,6 +294,53 @@ public class TemplateControllerTest {
     }
 
     /**
+     * @author 37720222205040
+     * findById时redis命中
+     */
+    @Test
+    void testUpdateTemplateByIdWithRedis() throws Exception {
+        TemplateDto vo = new TemplateDto();
+        vo.setType(1);
+        vo.setName("新的模板名称");
+        vo.setDefaultModel((byte) 1);
+        String body = JacksonUtil.toJson(vo);
+        Template bo=new Template();
+        bo.setId(2L);
+        bo.setShopId(1L);
+        Mockito.when(redisUtil.get("t2")).thenReturn(bo);
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/templates/{id}", 1, 2)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
+
+    }
+
+    /**
+     * @author 37720222205040
+     * save时Id为-1(即不存在)
+     */
+    @Test
+    void testUpdateTemplateByIdWhenIdNotExist() throws Exception {
+        TemplateDto vo = new TemplateDto();
+        vo.setType(1);
+        vo.setName("新的模板名称");
+        vo.setDefaultModel((byte) 1);
+        String body = JacksonUtil.toJson(vo);
+        Template bo=new Template();
+        bo.setId(-1L);
+        bo.setShopId(1L);
+        Mockito.when(redisUtil.get("t-1")).thenReturn(bo);
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/templates/{id}", 1, -1)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+
+    }
+    /**
      * 管理员修改运费模板，传参模板不存在
      *
      * @author ChenLinghui
@@ -476,6 +537,35 @@ public class TemplateControllerTest {
 
     }
 
+
+    /**
+     * 管理员删除地区模板
+     * @author 37720222205040
+     * delRegionByTemplateIdAndRegionId时在redis存在需要删除redis
+     */
+    @Test
+    void testDeleteRegionTemplateWithRedis() throws Exception {
+        Mockito.when(redisUtil.hasKey("R248059T1")).thenReturn(true);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shops/{shopId}/templates/{id}/regions/{rid}", 1, 1, 248059)
+                        .header("authorization", adminToken))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
+    }
+
+    /**
+     * 管理员删除地区模板
+     * @author 37720222205040
+     * delRegionByTemplateIdAndRegionId时ret为Empty
+     */
+    @Test
+    void testDeleteRegionTemplateWhenRetIsEmpty() throws Exception {
+        Optional<RegionTemplatePo> ret=Optional.empty();
+        doReturn(ret).when(regionTemplatePoMapper).findByTemplateIdAndRegionId(anyLong(),anyLong());
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shops/{shopId}/templates/{id}/regions/{rid}", 1, 1, 248059)
+                        .header("authorization", adminToken))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+    }
     /**
      * 管理员定义件数模板明细
      *
@@ -594,6 +684,43 @@ public class TemplateControllerTest {
     }
 
     /**
+     * 管理员修改件数模板
+     *
+     * @author 37720222205040
+     * 在findByTemplateIdAndRegionId时返回的ret为Optional.ofempty()
+     */
+    @Test
+    void testUpdatePieceTemplateWhenRetIsEmpty() throws Exception {
+        PieceTemplateDto vo = new PieceTemplateDto();
+
+        vo.setAdditionalItems(2);
+        vo.setFirstItem(2);
+        vo.setAdditionalItemsPrice(4L);
+        vo.setFirstItemPrice(1L);
+
+        InternalReturnObject<RegionPo> ret = new InternalReturnObject<RegionPo>();
+        RegionPo regionPo = new RegionPo();
+        regionPo.setId(251197L);
+        regionPo.setName("测试地区的名字");
+        ret.setData(regionPo);
+        ret.setErrno(ReturnNo.OK.getErrNo());
+        ret.setErrmsg(ReturnNo.OK.getMessage());
+        doReturn(Optional.empty()).when(regionTemplatePoMapper).findByTemplateIdAndRegionId(anyLong(),anyLong());
+        Mockito.when(regionMapper.findRegionById(Mockito.eq(248059L))).thenReturn(ret);
+
+        String body = JacksonUtil.toJson(vo);
+
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/templates/{id}/regions/{rid}/piecetemplates", 1, 2, 248059)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+
+
+    }
+    /**
      * 管理员修改件数模板且传参模板类型不匹配
      *
      * @author ChenLinghui
@@ -655,13 +782,15 @@ public class TemplateControllerTest {
      *
      * @author ChenLinghui
      * @Task 2023-dgn1-008
+     * 更新数据,修正用例
+     * @Author 37220222203851
      */
     @Test
     void testCloneRegionTemplate() throws Exception {
 
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/shops/{shopId}/templates/{id}/regions/{sid}/clone/regions/{rid}",
-                                1, 1, 191020,0)
+                                1, 1, 107,0)
                         .header("authorization", adminToken))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));

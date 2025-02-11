@@ -6,8 +6,10 @@ import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.oomall.product.ProductApplication;
 import cn.edu.xmu.oomall.product.ProductTestApplication;
+import cn.edu.xmu.oomall.product.mapper.jpa.ActivityPoMapper;
 import cn.edu.xmu.oomall.product.mapper.openfeign.ShopMapper;
 import cn.edu.xmu.oomall.product.mapper.openfeign.po.Shop;
+import cn.edu.xmu.oomall.product.mapper.po.ActivityPo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,6 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(classes = ProductTestApplication.class)
 @AutoConfigureMockMvc
@@ -39,6 +44,8 @@ public class ShopCouponActControllerTest {
     @Autowired
     private ShopMapper shopMapper;
 
+    @SpyBean
+    private ActivityPoMapper activityPoMapper;
 
     private static String adminToken;
 
@@ -212,6 +219,43 @@ public class ShopCouponActControllerTest {
                 //.andDo(MockMvcResultHandlers.print());
     }
 
+    /*
+     * @Author 37720222205040
+     */
+    @Test
+    public void putCouponActProductWhenIdNotExist() throws Exception {
+        Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
+        Mockito.when(redisUtil.set(Mockito.anyString(), any(), Mockito.anyLong())).thenReturn(true);
+
+        String json = "{\"name\":\"test\", \"quantity\": 100, \"quantityType\": 1, \"validTerm\": 0, " +
+                "\"strategy\": {" +
+                "\"value\": 1000," +
+                "\"couponLimitation\": {" +
+                "\"value\": 0," +
+                "\"className\": \"cn.edu.xmu.oomall.product.model.strategy.impl.ComplexCouponLimitation\"," +
+                "\"couponLimitationList\": [{" +
+                "\"value\": 2," +
+                "\"className\": \"cn.edu.xmu.oomall.product.model.strategy.impl.CrossCategoryLimitation\"" +
+                "}, {" +
+                "\"value\": 10000," +
+                "\"className\": \"cn.edu.xmu.oomall.product.model.strategy.impl.PriceCouponLimitation\"" +
+                "}]" +
+                "}," +
+                "\"className\": \"cn.edu.xmu.oomall.product.model.strategy.impl.PriceCouponDiscount\"" +
+                "}}";
+        ActivityPo activityPo=new ActivityPo();
+        activityPo.setId(-1L);
+        doReturn(activityPo).when(activityPoMapper).save(any(ActivityPo.class));
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/couponactivities/{id}", 2L, 101L)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
+        //.andDo(MockMvcResultHandlers.print());
+    }
+
 //    @Test
 //    public void putCouponActProductTest2() throws Exception {
 //        // 确保选择性validTerm正常工作
@@ -263,6 +307,8 @@ public class ShopCouponActControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
         //.andDo(MockMvcResultHandlers.print());
     }
+
+
 
     @Test
     public void delCouponActTest1() throws Exception {

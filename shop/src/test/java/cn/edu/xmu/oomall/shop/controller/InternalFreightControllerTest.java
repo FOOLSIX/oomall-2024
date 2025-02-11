@@ -6,6 +6,7 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.shop.ShopTestApplication;
 import cn.edu.xmu.oomall.shop.controller.dto.ProductItemDto;
+import cn.edu.xmu.oomall.shop.dao.bo.Region;
 import cn.edu.xmu.oomall.shop.mapper.openfeign.RegionMapper;
 import cn.edu.xmu.oomall.shop.mapper.openfeign.po.RegionPo;
 import org.junit.jupiter.api.Test;
@@ -199,11 +200,11 @@ public class InternalFreightControllerTest {
     void testGetFreightWhenAverageBackPackPieceParentRegion() throws Exception {
         InternalReturnObject<List<RegionPo>> ret = new InternalReturnObject<>(new ArrayList<>() {
             {
-                add(new RegionPo(4L, "testRegion"));
-                add(new RegionPo(3L, "testRegion"));
-                add(new RegionPo(2L, "testRegion"));
-                add(new RegionPo(1L, "testRegion"));
-                add(new RegionPo(0L, "testRegion"));
+                add(new RegionPo(4L, "testRegion", Region.VALID));
+                add(new RegionPo(3L, "testRegion", Region.VALID));
+                add(new RegionPo(2L, "testRegion", Region.VALID));
+                add(new RegionPo(1L, "testRegion", Region.VALID));
+                add(new RegionPo(0L, "testRegion", Region.VALID));
             }
         });
         Mockito.when(regionMapper.retrieveParentRegionsById(5L)).thenReturn(ret);

@@ -44,6 +44,7 @@ public class GrouponActVo {
         this.id = id;
     }
 
+    @CopyFrom.Exclude(GrouponAct.class)
     public IdNameTypeVo getShop() {
         return shop;
     }

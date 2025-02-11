@@ -473,7 +473,7 @@ public class WeChatPayControllerTest {
 
         DivRefundTransVo vo = new DivRefundTransVo();
         vo.setSubMchid("1900008XXX");
-        vo.setOutOrderNo("10");
+        vo.setOutOrderNo("OOMALL20150812125046");
         vo.setOutReturnNo("10");
         vo.setReturnMchid("1900007XXX");
         vo.setAmount(10);
@@ -486,8 +486,8 @@ public class WeChatPayControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpectAll(
                         jsonPath("$.subMchid", is("1900008XXX")),
-                        jsonPath("$.orderId", is("10")),
-                        jsonPath("$.outOrderNo", is("10")),
+                        jsonPath("$.orderId", is("O89769")),
+                        jsonPath("$.outOrderNo", is("OOMALL20150812125046")),
                         jsonPath("$.outReturnNo", is("10")),
                         jsonPath("$.returnId",startsWith("RT")),
                         jsonPath("$.returnMchid", is("1900007XXX")),

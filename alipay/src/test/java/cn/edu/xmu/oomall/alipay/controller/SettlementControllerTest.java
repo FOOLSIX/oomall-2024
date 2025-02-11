@@ -2,14 +2,17 @@ package cn.edu.xmu.oomall.alipay.controller;
 
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.alipay.AliPayApplication;
-import cn.edu.xmu.oomall.alipay.controller.vodto.*;
-
+import cn.edu.xmu.oomall.alipay.controller.vo.*;
+import cn.edu.xmu.oomall.alipay.controller.dto.*;
+import cn.edu.xmu.oomall.alipay.mapper.AlipaySettlementPoMapper;
+import cn.edu.xmu.oomall.alipay.mapper.po.AlipaySettlementPo;
 import cn.edu.xmu.oomall.alipay.service.bo.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +52,7 @@ class SettlementControllerTest {
 
     private static ObjectMapper objectMapper;
 
+
     @BeforeAll
     static void setUp(){
         objectMapper = new ObjectMapper();
@@ -75,6 +79,30 @@ class SettlementControllerTest {
                                 .header("authorization", String.format(authorization, System.currentTimeMillis()))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(createDivVo)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void tesPostDivPayWithSettlement() throws Exception {
+        PostDivPayVo postDivPayVo = PostDivPayVo.builder()
+                .outRequestNo("div123456")
+                .tradeNo("1187052387907645452")
+                .royaltyParameters(new ArrayList<>(){
+                    {
+                        add(new OpenApiRoyaltyDetailInfoPojo(){
+                            {
+                                setAmount(1.0);
+                                setTransIn("oomall123456");
+                                setTransOut("testShop123456");
+                            }
+                        });
+                    }
+                }).build();
+        this.mockMvc.perform(
+                        post(ORDER_SETTLE)
+                                .header("authorization", String.format(authorization, System.currentTimeMillis()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(postDivPayVo)))
                 .andExpect(status().isOk());
     }
 
@@ -168,19 +196,19 @@ class SettlementControllerTest {
     @Test
     void tesPostDivPay() throws Exception {
         PostDivPayVo postDivPayVo = PostDivPayVo.builder()
-               .outRequestNo("div123456")
-               .tradeNo("1187051287120949248")
-               .royaltyParameters(new ArrayList<>(){
-                   {
-                     add(new OpenApiRoyaltyDetailInfoPojo(){
-                         {
-                             setAmount(1.0);
-                             setTransIn("oomall123456");
-                             setTransOut("testShop123456");
-                         }
-                     });
-                 }
-               }).build();
+                .outRequestNo("div123456")
+                .tradeNo("1187051287120949248")
+                .royaltyParameters(new ArrayList<>(){
+                    {
+                        add(new OpenApiRoyaltyDetailInfoPojo(){
+                            {
+                                setAmount(1.0);
+                                setTransIn("oomall123456");
+                                setTransOut("testShop123456");
+                            }
+                        });
+                    }
+                }).build();
         this.mockMvc.perform(
                         post(ORDER_SETTLE)
                                 .header("authorization", String.format(authorization, System.currentTimeMillis()))

@@ -4,6 +4,7 @@ import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
 import cn.edu.xmu.oomall.payment.PaymentApplication;
+import cn.edu.xmu.oomall.payment.dao.ChannelDao;
 import cn.edu.xmu.oomall.payment.dao.bo.PayTrans;
 import cn.edu.xmu.oomall.payment.dao.bo.RefundTrans;
 import cn.edu.xmu.oomall.payment.mapper.generator.PayTransPoMapper;
@@ -448,7 +449,6 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errmsg", is("退款单对象(id=1761)超出商铺（id = 1）的操作范围")));
 
     }
-
     /**
      * 04 获取已经完成的退款单
      * 快乐路径
@@ -984,4 +984,6 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.amount", is(228795)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.status", is(RefundTrans.SUCCESS.intValue())));
     }
+
+
 }

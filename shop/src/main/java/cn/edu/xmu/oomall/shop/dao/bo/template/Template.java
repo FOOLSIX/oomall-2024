@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.shop.dao.bo.divide.DivideStrategy;
 import cn.edu.xmu.oomall.shop.dao.bo.divide.PackAlgorithm;
 import cn.edu.xmu.oomall.shop.dao.openfeign.RegionDao;
 import io.lettuce.core.dynamic.annotation.CommandNaming;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -30,9 +31,9 @@ import java.util.Optional;
  */
 @ToString(callSuper = true, doNotUseGetters = true)
 @NoArgsConstructor
-@CopyFrom({TemplateDto.class, TemplatePo.class})
+@CopyFrom(TemplatePo.class)
+@Slf4j
 public class Template extends OOMallObject implements Serializable, Cloneable {
-    private static final Logger logger = LoggerFactory.getLogger(Template.class);
     /**
      * 默认模板
      */
@@ -64,26 +65,36 @@ public class Template extends OOMallObject implements Serializable, Cloneable {
     /**
      * 商铺id
      */
+    @Setter
+    @Getter
     private Long shopId;
 
     /**
      * 模板名称
      */
+    @Setter
+    @Getter
     private String name;
 
     /**
      * 1 默认
      */
+    @Setter
+    @Getter
     private Byte defaultModel;
 
     /**
      * 模板类名
      */
+    @Setter
+    @Getter
     protected String templateBean;
 
     /**
      * 分包策略
      */
+    @Setter
+    @Getter
     protected String divideStrategy;
 
     @Getter
@@ -92,6 +103,8 @@ public class Template extends OOMallObject implements Serializable, Cloneable {
     /**
      * 打包算法
      */
+    @Setter
+    @Getter
     protected String packAlgorithm;
 
 
@@ -132,7 +145,7 @@ public class Template extends OOMallObject implements Serializable, Cloneable {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
         regionTemplate1.setId(oldBo.getId());
-        logger.debug("oldBo = {}", oldBo);
+        log.debug("oldBo = {}", oldBo);
         regionTemplate1.setObjectId(oldBo.getObjectId());
         return this.regionTemplateDao.save(this, regionTemplate1, user);
     }
@@ -175,60 +188,11 @@ public class Template extends OOMallObject implements Serializable, Cloneable {
         }
         if (ret.isPresent()) {
             RegionTemplate bo = ret.get();
-            logger.debug("findByTemplateIdAndRegionId: regionTemplate={}", bo);
+            log.debug("findByTemplateIdAndRegionId: regionTemplate={}", bo);
             return bo;
         } else {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
-    }
-
-
-    public Long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Byte getDefaultModel() {
-        return defaultModel;
-    }
-
-    public void setDefaultModel(Byte defaultModel) {
-        this.defaultModel = defaultModel;
-    }
-
-    public String getTemplateBean() {
-        return templateBean;
-    }
-
-    public void setTemplateBean(String templateBean) {
-        this.templateBean = templateBean;
-    }
-
-    public String getDivideStrategy() {
-        return divideStrategy;
-    }
-
-    public void setDivideStrategy(String divideStrategy) {
-        this.divideStrategy = divideStrategy;
-    }
-
-    public String getPackAlgorithm() {
-        return packAlgorithm;
-    }
-
-    public void setPackAlgorithm(String packAlgorithm) {
-        this.packAlgorithm = packAlgorithm;
     }
 
     public Long getId() {

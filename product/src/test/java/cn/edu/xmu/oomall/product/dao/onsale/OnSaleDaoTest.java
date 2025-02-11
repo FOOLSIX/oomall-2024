@@ -113,18 +113,6 @@ public class OnSaleDaoTest {
     }
 
     /**
-     * 判断是否存在时间重叠的onsale
-     */
-    @Test
-    void testHasInsertGivenProductIdNull(){
-        UserDto user = UserDto.builder().id(1L).name("商铺8").departId(8L).userLevel(1).build();
-
-        OnSale onSale = new OnSale();
-
-        assertThrows(BusinessException.class,()->onsaleDao.insert(onSale,user));
-    }
-
-    /**
      * 删除所有相关的onsale
      */
     @Test

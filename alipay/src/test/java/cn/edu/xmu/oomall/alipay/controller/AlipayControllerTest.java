@@ -1,14 +1,18 @@
 package cn.edu.xmu.oomall.alipay.controller;
 
+import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.oomall.alipay.AliPayApplication;
-import cn.edu.xmu.oomall.alipay.controller.vodto.*;
+import cn.edu.xmu.oomall.alipay.controller.vo.*;
+import cn.edu.xmu.oomall.alipay.controller.dto.*;
 
 import cn.edu.xmu.oomall.alipay.openFeign.PaymentFeightService;
+import cn.edu.xmu.oomall.alipay.service.bo.Payment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +53,8 @@ class AlipayControllerTest {
     private PaymentFeightService paymentFeightService;
 
     private static ObjectMapper objectMapper;
+    @MockBean
+    private Payment payment;
 
     @BeforeAll
     static void setUp(){
@@ -113,23 +119,63 @@ class AlipayControllerTest {
     }
 
 
-     //需要rocketMQ+OpenFeign，所以不进行单元测试
-//    @Test
-//    void tesPayWhenFailWithCallBack() throws Exception {
-//        when(this.paymentFeightService.notify(any())).thenReturn(null);
-//        PostPayVo postPayVo = new PostPayVo();
-//        postPayVo.setOutTradeNo("123456789");
-//        postPayVo.setSubject("测试商品");
-//        postPayVo.setTotalAmount(99.01);
-//        postPayVo.setNotifyUrl("http://localhost:8080/api/v1/pay/notify");
-//        System.out.println("postPayVo:"+objectMapper.writeValueAsString(postPayVo));
-//        this.mockMvc.perform(
-//                        post(TRADE_WRAP_PAY)
-//                                .header("authorization", String.format(authorization, System.currentTimeMillis()))
-//                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                                .content(objectMapper.writeValueAsString(postPayVo)))
-//                .andExpect(status().isOk());
-//    }
+    //需要rocketMQ+OpenFeign，所以不进行单元测试
+    @Test
+    void tesPayWhenFailWithCallBack() throws Exception {
+        when(this.paymentFeightService.notify(any())).thenReturn(null);
+        PostPayVo postPayVo = new PostPayVo();
+        postPayVo.setOutTradeNo("123456789");
+        postPayVo.setSubject("测试商品");
+        postPayVo.setTotalAmount(99.01);
+        postPayVo.setNotifyUrl("http://localhost:8080/api/v1/pay/notify");
+        System.out.println("postPayVo:"+objectMapper.writeValueAsString(postPayVo));
+        this.mockMvc.perform(
+                        post(TRADE_WRAP_PAY)
+                                .header("authorization", String.format(authorization, System.currentTimeMillis()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(postPayVo)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void tesPayWhenSuccess() throws Exception {
+        when(this.paymentFeightService.notify(any())).thenReturn(null);
+        PostPayVo postPayVo = new PostPayVo();
+        postPayVo.setOutTradeNo("123456789");
+        postPayVo.setSubject("测试商品");
+        postPayVo.setTotalAmount(99.04);
+        postPayVo.setNotifyUrl("http://localhost:8080/api/v1/pay/notify");
+        System.out.println("postPayVo:"+objectMapper.writeValueAsString(postPayVo));
+        this.mockMvc.perform(
+                        post(TRADE_WRAP_PAY)
+                                .header("authorization", String.format(authorization, System.currentTimeMillis()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(postPayVo)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void tesPayWhenAlreadyPaidAndTradeisClosed() throws Exception {
+
+//        when(this.rocketMQTemplate.sendOneWay(any(String.class), any(Message.class)))
+//                .thenReturn(null);
+        when(this.paymentFeightService.notify(any())).thenReturn(null);
+
+        PostPayVo postPayVo = new PostPayVo();
+        postPayVo.setOutTradeNo("2");
+        postPayVo.setSubject("测试商品");
+        postPayVo.setTotalAmount(100.0);
+        postPayVo.setNotifyUrl("http://localhost:8080/api/v1/pay/notify");
+        System.out.println("postPayVo:"+objectMapper.writeValueAsString(postPayVo));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post(TRADE_WRAP_PAY)
+                        .header("authorization", String.format(authorization, System.currentTimeMillis()))
+                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(postPayVo)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message",is("交易已关闭")))
+                .andDo(MockMvcResultHandlers.print());
+    }
 
     @Test
     void tesPayWhenFailWithoutCallBack() throws Exception {
@@ -181,7 +227,7 @@ class AlipayControllerTest {
     @Test
     void testCancelOrderWhenPaymentNotExist() throws Exception {
         CancelOrderVo cancelOrderVo = new CancelOrderVo();
-            cancelOrderVo.setTradeNo("118568467898");
+        cancelOrderVo.setTradeNo("118568467898");
         System.out.println("cancelOrderVo:"+objectMapper.writeValueAsString(cancelOrderVo));
         this.mockMvc.perform(
                         post(TRADE_CLOSE)

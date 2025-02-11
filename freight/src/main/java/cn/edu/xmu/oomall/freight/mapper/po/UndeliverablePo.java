@@ -8,16 +8,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+
 /**
- * @author fan ninghan
- * 2023-dng3-008
+ * 2024-dsg-112
+ *
+ * @author Hao Chen
+ * 不可送达地区po对象
  */
 @Entity
+@ToString
+@CopyFrom({Undeliverable.class})
 @Table(name = "freight_undeliverable")
 @AllArgsConstructor
 @NoArgsConstructor
-@CopyFrom({Undeliverable.class})
-@ToString
 public class UndeliverablePo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

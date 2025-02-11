@@ -9,5 +9,5 @@ spring:
 replicaset:
   mongodb:
     replica-set: rs0
-    read-preference: nearest
+    read-preference: primary
     hosts: mongo1:27017,mongo2:27017,mongo3:27017

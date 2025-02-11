@@ -14,16 +14,18 @@ import java.time.LocalDateTime;
 @Table(name = "freight_contract")
 @AllArgsConstructor
 @NoArgsConstructor
-@CopyFrom({Contract.class})
+@Data
 @ToString
 public class ContractPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long logisticsId;
+
     private Long shopId;
 
-    private Long logisticsId;
+    private Integer quota;
 
     private String secret;
 
@@ -43,99 +45,11 @@ public class ContractPo {
 
     private Integer priority;
 
-    public Long getId() {
-        return id;
-    }
+    private String account;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private LocalDateTime beginTime;
 
-    public Long getShopId() {
-        return shopId;
-    }
+    private LocalDateTime endTime;
 
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
-
-    public Long getLogisticsId() {
-        return logisticsId;
-    }
-
-    public void setLogisticsId(Long logisticsId) {
-        this.logisticsId = logisticsId;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public Long getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(Long creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public String getCreatorName() {
-        return creatorName;
-    }
-
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
-    }
-
-    public Long getModifierId() {
-        return modifierId;
-    }
-
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
-    }
-
-    public String getModifierName() {
-        return modifierName;
-    }
-
-    public void setModifierName(String modifierName) {
-        this.modifierName = modifierName;
-    }
-
-    public LocalDateTime getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(LocalDateTime gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public LocalDateTime getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(LocalDateTime gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public Byte getInvalid() {
-        return invalid;
-    }
-
-    public void setInvalid(Byte invalid) {
-        this.invalid = invalid;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
+    private Long warehouseId;
 }

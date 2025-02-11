@@ -199,148 +199,20 @@ public class OrderPo {
     @Column(name = "customer_code",length = 30)
     private String customerCode;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(String network) {
-        this.network = network;
-    }
-
-    public String getTxLogisticId() {
-        return txLogisticId;
-    }
-
-    public void setTxLogisticId(String txLogisticId) {
-        this.txLogisticId = txLogisticId;
-    }
-
-    public String getExpressType() {
-        return expressType;
-    }
-
-    public void setExpressType(String expressType) {
-        this.expressType = expressType;
-    }
-
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public String getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(String deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
-    public String getPayType() {
-        return payType;
-    }
-
-    public void setPayType(String payType) {
-        this.payType = payType;
-    }
-
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public LocalDateTime getSendStartTime() {
-        return sendStartTime;
-    }
-
-    public void setSendStartTime(LocalDateTime sendStartTime) {
-        this.sendStartTime = sendStartTime;
-    }
-
-    public LocalDateTime getSendEndTime() {
-        return sendEndTime;
-    }
-
-    public void setSendEndTime(LocalDateTime sendEndTime) {
-        this.sendEndTime = sendEndTime;
-    }
-
-    public String getGoodsType() {
-        return goodsType;
-    }
-
-    public void setGoodsType(String goodsType) {
-        this.goodsType = goodsType;
-    }
 
     public Boolean getRealName() {
         return isRealName;
     }
-
     public void setRealName(Boolean realName) {
         isRealName = realName;
     }
-
     public Boolean getCustomsDeclaration() {
         return isCustomsDeclaration;
     }
 
     public void setCustomsDeclaration(Boolean customsDeclaration) {
         isCustomsDeclaration = customsDeclaration;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public Double getWeight() {
@@ -350,95 +222,6 @@ public class OrderPo {
     public void setWeight(Double weight) {
         this.weight = String.format("%.2f", weight);
     }
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
 
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
 
-    public void setTotalQuantity(int totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    public String getItemsValue() {
-        return itemsValue;
-    }
-
-    public void setItemsValue(String itemsValue) {
-        this.itemsValue = itemsValue;
-    }
-
-    public String getPriceCurrency() {
-        return priceCurrency;
-    }
-
-    public void setPriceCurrency(String priceCurrency) {
-        this.priceCurrency = priceCurrency;
-    }
-
-    public String getOfferFee() {
-        return offerFee;
-    }
-
-    public void setOfferFee(String offerFee) {
-        this.offerFee = offerFee;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getPostSiteCode() {
-        return postSiteCode;
-    }
-
-    public void setPostSiteCode(String postSiteCode) {
-        this.postSiteCode = postSiteCode;
-    }
-
-    public String getPostSiteName() {
-        return postSiteName;
-    }
-
-    public void setPostSiteName(String postSiteName) {
-        this.postSiteName = postSiteName;
-    }
-
-    public String getPostSiteAddress() {
-        return postSiteAddress;
-    }
-
-    public void setPostSiteAddress(String postSiteAddress) {
-        this.postSiteAddress = postSiteAddress;
-    }
-
-    public String getBillCode() {
-        return billCode;
-    }
-
-    public void setBillCode(String billCode) {
-        this.billCode = billCode;
-    }
-
-    public int getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(int orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public String getCustomerCode() {
-        return customerCode;
-    }
-
-    public void setCustomerCode(String customerCode) {
-        this.customerCode = customerCode;
-    }
 }

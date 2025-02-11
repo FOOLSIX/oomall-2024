@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.alipay.service.bo;
 
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
-import cn.edu.xmu.oomall.alipay.controller.vodto.OpenApiRoyaltyDetailInfoPojo;
+import cn.edu.xmu.oomall.alipay.controller.vo.OpenApiRoyaltyDetailInfoPojo;
 import cn.edu.xmu.oomall.alipay.mapper.po.AlipayRoyaltyDetail;
 
 @CopyFrom({OpenApiRoyaltyDetailInfoPojo.class, AlipayRoyaltyDetail.class})

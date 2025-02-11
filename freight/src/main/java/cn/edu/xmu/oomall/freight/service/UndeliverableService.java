@@ -16,15 +16,33 @@ public class UndeliverableService {
 
     private final UndeliverableDao undeliverableDao;
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 新增不可达地区
+     */
     public void addUndeliverableRegion(Undeliverable undeliverable, UserDto user) {
         undeliverable = undeliverableDao.build(undeliverable);
         undeliverableDao.insert(undeliverable, user);
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 删除无法配送的地区
+     */
     public void deleteUndeliverableRegion(Long regionId, Long logisticsId, UserDto user){
         undeliverableDao.delete(regionId, logisticsId, user);
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 获取无法配送的地区
+     */
     public List<Undeliverable> retrieveUndeliverableRegion(Long logisticsId, Integer page, Integer pageSize){
         return undeliverableDao.retrieveByLogisticsId(logisticsId, page, pageSize);
     }

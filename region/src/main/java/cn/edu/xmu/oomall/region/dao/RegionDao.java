@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.region.mapper.RegionPoMapper;
 import cn.edu.xmu.oomall.region.mapper.po.RegionPo;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,12 +33,13 @@ import static cn.edu.xmu.javaee.core.model.Constants.IDNOTEXIST;
 @Repository
 @RefreshScope
 @RequiredArgsConstructor
+@Slf4j
 public class RegionDao {
-    private final static Logger logger = LoggerFactory.getLogger(RegionDao.class);
+    //Region缓存
     private final static String KEY = "R%d";
-
+    //Region上级地区缓存
     private final static String PARENT_KEY = "RP%d";
-
+    //Region下级地区缓存
     private final static String CHILD_KEY = "RC%d";
 
     @Value("${oomall.region.timeout}")
@@ -65,7 +67,7 @@ public class RegionDao {
      * @throws RuntimeException
      */
     public Region findById(Long id){
-        logger.debug("findById: id = {}", id);
+        log.debug("findById: id = {}", id);
         assert (!Objects.isNull(id)): "id can not be null";
 
         String key = String.format(KEY, id);
@@ -74,13 +76,13 @@ public class RegionDao {
             // 缓存中没有
             Optional<RegionPo> ret = regionPoMapper.findById(id);
             if (ret.isPresent()) {
-                logger.debug("findById: retrieve from database region = {}", ret.get());
+                log.debug("findById: retrieve from database region = {}", ret.get());
                 return this.build(ret.get(), Optional.of(key));
             } else {
                 throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "地区", id));
             }
         }else {
-            logger.debug("findById: hit in redis key = {}, region = {}", key, bo);
+            log.debug("findById: hit in redis key = {}, region = {}", key, bo);
             this.build(bo);
             return bo;
         }
@@ -94,7 +96,7 @@ public class RegionDao {
      * @throws RuntimeException
      */
     public List<Region> retrieveSubRegionsById(Long pid, Integer page, Integer pageSize) throws RuntimeException {
-        logger.debug("retrieveSubRegionsByPid: pid = {}", pid);
+        log.debug("retrieveSubRegionsByPid: pid = {}", pid);
         assert (!Objects.isNull(pid)):"pid can not be null.";
         String key = String.format(CHILD_KEY, pid);
         List<Long> childIds = (List<Long>) redisUtil.get(key);
@@ -123,7 +125,7 @@ public class RegionDao {
         bo.setCreator(user);
         bo.setGmtCreate(LocalDateTime.now());
         RegionPo po = CloneFactory.copy(new RegionPo(), bo);
-        logger.debug("save: po = {}", po);
+        log.debug("save: po = {}", po);
         po = regionPoMapper.save(po);
         bo.setId(po.getId());
         return bo;
@@ -140,7 +142,7 @@ public class RegionDao {
         bo.setModifier(user);
         bo.setGmtModified(LocalDateTime.now());
         RegionPo po = CloneFactory.copy(new RegionPo(), bo);
-        logger.debug("save: po = {}", po);
+        log.debug("save: po = {}", po);
         RegionPo updatePo = regionPoMapper.save(po);
         if(IDNOTEXIST.equals(updatePo.getId())) {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "地区", bo.getId()));
@@ -165,7 +167,7 @@ public class RegionDao {
                 regions.add(region);
             }
             this.redisUtil.set(key, (ArrayList<Long>) regions.stream().map(Region::getId).collect(Collectors.toList()), timeout);
-            logger.debug("retrieveParentsRegions: regions = {}", regions);
+            log.debug("retrieveParentsRegions: regions = {}", regions);
             return regions;
 
         }else{

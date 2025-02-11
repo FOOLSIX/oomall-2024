@@ -18,7 +18,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql:3306/wechatpay?serverTimezone=Asia/Shanghai
-    username: root
+    username: demouser
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
     druid:

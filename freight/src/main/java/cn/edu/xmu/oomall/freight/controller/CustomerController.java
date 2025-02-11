@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.freight.controller;
 
 import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.ReturnObject;
 import cn.edu.xmu.javaee.core.model.vo.IdNameTypeVo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 
@@ -41,17 +43,26 @@ public class CustomerController {
 
     private final ExpressService expressService;
 
+    /**
+     * 2024-dsg-114
+     * 根据物流单号查询属于哪家物流公司
+     */
     @GetMapping("/logistics")
     public ReturnObject getLogisticsCompany(@RequestParam(required = false) String billCode,
-                                            @LoginUser UserDto user){
-        Logistics logistics = this.logisticsService.findByBillCode(billCode);
-        IdNameTypeVo company = IdNameTypeVo.builder().id(logistics.getId()).name(logistics.getName()).build();
-        return new ReturnObject(company);
+                                            @LoginUser UserDto user) {
+        if(Objects.nonNull(billCode)) {
+            Optional<Logistics> logisticsOpt = this.logisticsService.getCompanyByBillCode(billCode);
+            return logisticsOpt.map(logistics -> new ReturnObject(ReturnNo.OK, IdNameTypeVo.builder().id(logistics.getId()).name(logistics.getName()).build()))
+                    .orElseGet(() -> new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
+        }
+        return new ReturnObject(ReturnNo.OK,this.logisticsService.getAllCompany());
     }
+
     /**
      * 2024-dsg-112
-     * 获取无法配送的地区
      *
+     * @author Hao Chen
+     * 获取无法配送的地区
      */
     @GetMapping("/logistics/{id}/undeliverableregions")
     public ReturnObject getUndeliverableRegion(@PathVariable Long id,
@@ -71,7 +82,7 @@ public class CustomerController {
     @GetMapping("/packages")
     @Transactional(propagation = Propagation.REQUIRED)
     public ReturnObject getPackage(@RequestParam String billCode) {
-        Express express = this.expressService.findExpressByBillCode(PLATFORM, billCode);
+        Express express = this.expressService.retrieveExpressByBillCode(PLATFORM, billCode);
         if (Objects.nonNull(express)){
             return new ReturnObject(new ExpressVo(express));
         }

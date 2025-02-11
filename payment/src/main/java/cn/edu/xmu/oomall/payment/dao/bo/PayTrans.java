@@ -2,6 +2,7 @@
 package cn.edu.xmu.oomall.payment.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
@@ -31,7 +32,8 @@ import static cn.edu.xmu.javaee.core.model.Constants.SYSTEM;
 @ToString(callSuper = true, doNotUseGetters = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@CopyFrom({PayTransPo.class, PayTransDto.class})
+@CopyFrom({PayTransPo.class})
+@CopyTo({PayTransPo.class})
 public class PayTrans extends Transaction{
 
     @ToString.Exclude

@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface LogisticsPoMapper extends JpaRepository<LogisticsPo, Long> {
-
 }

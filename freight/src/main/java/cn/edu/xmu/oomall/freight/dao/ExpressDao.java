@@ -5,7 +5,8 @@ import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.freight.dao.bo.Express;
 import cn.edu.xmu.oomall.freight.dao.logistics.LogisticsAdaptorFactory;
-import cn.edu.xmu.oomall.freight.mapper.jpa.ExpressPoMapper;
+// import cn.edu.xmu.oomall.freight.mapper.jpa.ExpressPoMapper;
+import cn.edu.xmu.oomall.freight.mapper.mongo.ExpressMapper;
 import cn.edu.xmu.oomall.freight.mapper.po.ExpressPo;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +21,32 @@ import java.util.Optional;
 import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 import static cn.edu.xmu.javaee.core.model.Constants.IDNOTEXIST;
 
+
+
 /**
  * 2023-dgn3-009
  *
  * @author huangzian,fan ninghan
  */
+
+/**
+ * @author Wu Yiwei
+ * @date 2024/12/9
+ * @description express 改为 mongo 存储
+ */
 @Repository
 @Slf4j
 public class ExpressDao {
-    private final ExpressPoMapper expressPoMapper;
+    // private final ExpressPoMapper expressPoMapper;
+    private final ExpressMapper expressMapper;
     @Lazy
     private final  ContractDao contractDao;
     private final LogisticsAdaptorFactory factory;
 
     @Autowired
     @Lazy
-    public ExpressDao(ExpressPoMapper expressPoMapper, ContractDao contractDao, LogisticsAdaptorFactory factory) {
-        this.expressPoMapper = expressPoMapper;
+    public ExpressDao(ExpressMapper expressMapper, ContractDao contractDao, LogisticsAdaptorFactory factory) {
+        this.expressMapper = expressMapper;
         this.contractDao = contractDao;
         this.factory = factory;
     }
@@ -45,26 +55,27 @@ public class ExpressDao {
         bo.setId(null);
         bo.setCreator(user);
         bo.setGmtCreate(LocalDateTime.now());
-        ExpressPo po = CloneFactory.copy(new ExpressPo(), bo);
-        log.debug("save: po = {}", po);
-        po = expressPoMapper.save(po);
-        bo.setId(po.getId());
+
+        log.debug("save: bo = {}", bo);
+
+        bo = expressMapper.save(bo);
         return bo;
     }
 
     public Express findById(Long shopId, Long id) throws RuntimeException{
+        assert id != null : "id cannot be null";
+
         log.debug("findById: id = {}", id);
-        if (null == id) {
-            throw new IllegalArgumentException("id can not be null");
-        }
-        Optional<ExpressPo> ret = expressPoMapper.findById(id);
+
+        Optional<Express> ret = expressMapper.findById(id);
         if (ret.isPresent()) {
-            ExpressPo po = ret.get();
-            log.debug("findById: retrieve from database express = {}", po);
-            if (!PLATFORM.equals(shopId) && !shopId.equals(po.getShopId())) {
+            Express bo = ret.get();
+            log.debug("findById: retrieve from database express = {}", bo);
+
+            if (!PLATFORM.equals(shopId) && !shopId.equals(bo.getShopId())) {
                 throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "物流单", id, shopId));
             }
-            Express bo = CloneFactory.copy(new Express(), po);
+
             build(bo);
             return bo;
         } else {
@@ -81,21 +92,22 @@ public class ExpressDao {
     public void save(Express bo, UserDto user) {
         bo.setModifier(user);
         bo.setGmtModified(LocalDateTime.now());
-        ExpressPo po = CloneFactory.copy(new ExpressPo(), bo);
-        log.debug("save: po = {}", po);
-        ExpressPo updatePo = expressPoMapper.save(po);
-        if (IDNOTEXIST.equals(updatePo.getId())) {
+
+        log.debug("save: bo = {}", bo);
+
+        Express updateBo = expressMapper.save(bo);
+        if (IDNOTEXIST.equals(updateBo.getId())) {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "物流单", bo.getId()));
         }
     }
 
-    public Express findByBillCode(Long shopId, String billCode) throws RuntimeException{
-        ExpressPo po = this.expressPoMapper.findByBillCode(billCode);
-        if (po != null) {
-            log.debug("findByBillCode: retrieve from database express = {}", po);
-            Express bo = CloneFactory.copy(new Express(), po);
-            if (!PLATFORM.equals(shopId) && !shopId.equals(po.getShopId())) {
-                throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "物流单", po.getId(), shopId));
+    public Express retrieveByBillCode(Long shopId, String billCode) throws RuntimeException{
+        Express bo = this.expressMapper.findByBillCode(billCode);
+        if (bo != null) {
+            log.debug("retrieveByBillCode: retrieve from database express = {}", bo);
+
+            if (!PLATFORM.equals(shopId) && !shopId.equals(bo.getShopId())) {
+                throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "物流单", bo.getId(), shopId));
             }
             build(bo);
             return bo;

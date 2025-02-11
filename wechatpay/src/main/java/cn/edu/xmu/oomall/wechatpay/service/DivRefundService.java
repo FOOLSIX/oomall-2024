@@ -56,13 +56,15 @@ public class DivRefundService {
         // 确保回退过程的收账者存在
         String orderId = divPayTrans.getOrderId();
         Collection<DivReceiver> receivers = divReceiverDao.getDivReceiversByOrderId(orderId);
-        Optional<DivReceiver> receiver = receivers.stream().filter(bo ->  bo.getResult().equals(RECEIVER_RESULT_SUCCESS)).findFirst();
-        if (receiver.isEmpty()) {
+        if (Objects.isNull(receivers) || receivers.isEmpty()) {
             throw new WeChatPayException(WeChatPayReturnNo.RESOURCE_NOT_EXISTS);
+        }else{
+            Optional<DivReceiver> receiver = receivers.stream().filter(bo ->  bo.getResult().equals(RECEIVER_RESULT_SUCCESS)).findFirst();
+            if (receiver.isEmpty()) {
+                throw new WeChatPayException(WeChatPayReturnNo.RESOURCE_NOT_EXISTS);
+            }
         }
-
         divRefundTrans.setOrderId(divPayTrans.getOrderId());
-
         return divRefundSuccess(divRefundTrans);
     }
 

@@ -1,0 +1,1 @@
+30 1,4,20 * * * bash /root/oomall-2023/conf/mysql/init-data.sh > /root/logs/mysql-init.log

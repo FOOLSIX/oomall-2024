@@ -4,6 +4,8 @@ import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.freight.dao.bo.Region;
+import cn.edu.xmu.oomall.freight.mapper.po.WarehouseRegionPo;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.freight.dao.bo.Contract;
 import cn.edu.xmu.oomall.freight.dao.logistics.LogisticsAdaptorFactory;
@@ -19,9 +21,14 @@ import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  */
 @Repository
@@ -118,14 +125,46 @@ public class ContractDao {
         } else {
             Optional<ContractPo> po = this.contractPoMapper.findById(id);
             if (po.isPresent()) {
-                if (!PLATFORM.equals(shopId) && !shopId.equals(po.get().getShopId())) {
+                if(!po.get().getShopId().equals(shopId))
                     throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "商铺物流", id, shopId));
-                }
                 return this.build(po.get(), Optional.of(key));
             }
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "商铺物流", id));
         }
     }
 
+    /**
+     * @author 37220222203558
+     * 2024-dsg116
+     */
+    public List<Contract> findByWarehouseId(Long warehouseId) throws RuntimeException{
+        List<ContractPo> poList = contractPoMapper.findAllByWarehouseId(warehouseId);
+        List<Contract> boList = new ArrayList<>();
+        for(ContractPo po : poList){
+            boList.add(CloneFactory.copy(new Contract(), po));
+        }
+        return boList;
+    }
 
+    public void deleteContract(Long shopId, Long id) {
+        this.findById(shopId,id);
+        //deleteById方法的返回值为void
+        this.contractPoMapper.deleteById(id);
+    }
+
+    /**
+     * 2024-dsg-115
+     * @author liboyang
+     * 获得仓库物流的月结合同
+     */
+    public List<Contract> retrieveByWareHouseId(Long shopId,Long warehouseId,Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return this.contractPoMapper.findAllByShopIdAndWarehouseIdOrderByPriorityAsc(shopId,warehouseId,pageable).stream()
+                .map(po -> {
+                    Contract bo = CloneFactory.copy(new Contract(), po);
+                    this.build(bo);
+                    return bo;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

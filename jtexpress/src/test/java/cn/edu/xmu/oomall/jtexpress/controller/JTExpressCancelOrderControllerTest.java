@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.jtexpress.controller;
 
-import cn.edu.xmu.oomall.jtexpress.controller.vo.CancelOrderVo;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.OrderVo;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.CancelOrderDto;
 import cn.edu.xmu.oomall.jtexpress.exception.ReturnError;
 import cn.edu.xmu.oomall.jtexpress.jtexpressApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,8 +35,8 @@ public class JTExpressCancelOrderControllerTest {
 
     @Test
     void testCancelOrderGivenUnCompleteOrder() throws Exception {
-        CancelOrderVo cancelOrderVo = createCancelOrderVo();
-        String bizContent = objectMapper.writeValueAsString(cancelOrderVo);
+        CancelOrderDto cancelOrderDto = createCancelOrderVo();
+        String bizContent = objectMapper.writeValueAsString(cancelOrderDto);
         logger.debug("{}测试 bizContent：{}", "testCancelOrderGivenUnCompleteOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Cancel_Order)
@@ -54,9 +52,9 @@ public class JTExpressCancelOrderControllerTest {
 
     @Test
     void testCancelOrderGivenCompleteOrder() throws Exception {
-        CancelOrderVo cancelOrderVo = createCancelOrderVo();
-        cancelOrderVo.setTxLogisticId("TEST1111111111");
-        String bizContent = objectMapper.writeValueAsString(cancelOrderVo);
+        CancelOrderDto cancelOrderDto = createCancelOrderVo();
+        cancelOrderDto.setTxLogisticId("TEST1111111111");
+        String bizContent = objectMapper.writeValueAsString(cancelOrderDto);
         logger.debug("{}测试 bizContent：{}", "testCancelOrderGivenCompleteOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Cancel_Order)
@@ -71,9 +69,9 @@ public class JTExpressCancelOrderControllerTest {
 
     @Test
     void testCancelOrderGivenCancelOrder() throws Exception {
-        CancelOrderVo cancelOrderVo = createCancelOrderVo();
-        cancelOrderVo.setTxLogisticId("TEST2222222222");
-        String bizContent = objectMapper.writeValueAsString(cancelOrderVo);
+        CancelOrderDto cancelOrderDto = createCancelOrderVo();
+        cancelOrderDto.setTxLogisticId("TEST2222222222");
+        String bizContent = objectMapper.writeValueAsString(cancelOrderDto);
         logger.debug("{}测试 bizContent：{}", "testCancelOrderGivenCancelOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Cancel_Order)
@@ -88,9 +86,9 @@ public class JTExpressCancelOrderControllerTest {
 
     @Test
     void testCancelOrderGivenNoExistOrder() throws Exception {
-        CancelOrderVo cancelOrderVo = createCancelOrderVo();
-        cancelOrderVo.setTxLogisticId("TEST2222231232222");
-        String bizContent = objectMapper.writeValueAsString(cancelOrderVo);
+        CancelOrderDto cancelOrderDto = createCancelOrderVo();
+        cancelOrderDto.setTxLogisticId("TEST2222231232222");
+        String bizContent = objectMapper.writeValueAsString(cancelOrderDto);
         logger.debug("{}测试 bizContent：{}", "testCancelOrderGivenNoExistOrder", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Cancel_Order)
@@ -105,9 +103,9 @@ public class JTExpressCancelOrderControllerTest {
 
     @Test
     void testCancelOrderGivenInconsistentCustomer() throws Exception {
-        CancelOrderVo cancelOrderVo = createCancelOrderVo();
-        cancelOrderVo.setCustomerCode("J33331");
-        String bizContent = objectMapper.writeValueAsString(cancelOrderVo);
+        CancelOrderDto cancelOrderDto = createCancelOrderVo();
+        cancelOrderDto.setCustomerCode("J33331");
+        String bizContent = objectMapper.writeValueAsString(cancelOrderDto);
         logger.debug("{}测试 bizContent：{}", "testCancelOrderGivenInconsistentCustomer", bizContent);
         long timestamp = System.currentTimeMillis();
         this.mockMvc.perform(MockMvcRequestBuilders.post(Cancel_Order)
@@ -121,14 +119,14 @@ public class JTExpressCancelOrderControllerTest {
     }
 
 
-    private CancelOrderVo createCancelOrderVo() {
-        CancelOrderVo cancelOrderVo = new CancelOrderVo();
-        cancelOrderVo.setCustomerCode("J0086474299");
-        cancelOrderVo.setDigest("qonqb4O1eNr6VCWS07Ieeg==");
-        cancelOrderVo.setTxLogisticId("TEST0000000000");
-        cancelOrderVo.setOrderType("1");
-        cancelOrderVo.setReason("产品订单取消");
-        return cancelOrderVo;
+    private CancelOrderDto createCancelOrderVo() {
+        CancelOrderDto cancelOrderDto = new CancelOrderDto();
+        cancelOrderDto.setCustomerCode("J0086474299");
+        cancelOrderDto.setDigest("qonqb4O1eNr6VCWS07Ieeg==");
+        cancelOrderDto.setTxLogisticId("TEST0000000000");
+        cancelOrderDto.setOrderType("1");
+        cancelOrderDto.setReason("产品订单取消");
+        return cancelOrderDto;
     }
 
 }

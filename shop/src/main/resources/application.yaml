@@ -20,7 +20,7 @@ spring:
         enabled: false
       host: redis
       database: 0
-      password: 123456
+      password: OOADRedis123456
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql:3306/shop?serverTimezone=Asia/Shanghai

@@ -96,22 +96,37 @@ public class Product extends OOMallObject implements Serializable {
         return STATUSNAMES.get(this.status);
     }
 
+    @Setter
+    @Getter
     private String skuSn;
 
+    @Setter
+    @Getter
     private String name;
 
+    @Setter
+    @Getter
     private Long originalPrice;
 
+    @Setter
+    @Getter
     private Long weight;
 
+    @Setter
+    @Getter
     private String barcode;
 
+    @Setter
+    @Getter
     private String unit;
 
+    @Setter
+    @Getter
     private String originPlace;
 
     @Setter
-    @CopyFrom.Exclude({ProductDraft.class, ProductDto.class, ProductPo.class})
+    @Getter
+    @CopyFrom.Exclude({ProductDraft.class, ProductDto.class})
     private Integer commissionRatio;
 
     public Integer getCommissionRatio(){
@@ -121,11 +136,10 @@ public class Product extends OOMallObject implements Serializable {
         return this.commissionRatio;
     }
 
+    @Setter
+    @Getter
     private Byte status;
 
-    public void setStatus(Byte status){
-        this.status = status;
-    }
 
     /**
      * 获得商品状态
@@ -159,7 +173,13 @@ public class Product extends OOMallObject implements Serializable {
      * @author :37220222203708
      */
     public OnSale createOnsale(OnSale onsale, UserDto user) {
-        this.hasConflictOnsale(onsale);
+        if (this.status.equals(Product.BANNED)){
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "产品", this.id, this.status));
+        }
+
+        if (this.onsaleDao.hasOverlap(onsale)){
+            throw new BusinessException(ReturnNo.GOODS_ONSALE_CONFLICT, String.format(ReturnNo.GOODS_ONSALE_CONFLICT.getMessage(),onsale.getId()));
+        }
         log.debug("createOnsale: onsale = {}", onsale);
         return this.onsaleDao.insert(onsale,user);
     }
@@ -168,48 +188,26 @@ public class Product extends OOMallObject implements Serializable {
      * @author :37220222203708
      */
     public String updateOnsale(OnSale onsale, UserDto user) {
-        this.hasConflictOnsale(onsale);
+        if (this.status.equals(Product.BANNED)){
+            throw new BusinessException(ReturnNo.STATENOTALLOW, String.format(ReturnNo.STATENOTALLOW.getMessage(), "产品", this.id, this.status));
+        }
+        if (this.onsaleDao.hasOverlap(onsale)){
+            throw new BusinessException(ReturnNo.GOODS_ONSALE_CONFLICT, String.format(ReturnNo.GOODS_ONSALE_CONFLICT.getMessage(),onsale.getId()));
+        }
         log.debug("updateOnsale: onsale = {}", onsale);
         return this.onsaleDao.save(onsale,user);
     }
 
-
-
-    /**
-     *  //判断是否存在时间重叠的onsale
-     * @param onsale 判断的onsale对象
-     * @throws BusinessException
-     */
     @Setter
-    @JsonIgnore
-    @ToString.Exclude
-    private OnsalePoMapper onsalePoMapper;
-    private void hasConflictOnsale(OnSale onsale) throws BusinessException{
-        log.debug("hasConflictOnsale: onsale = {}", onsale);
-        if (Objects.isNull(onsale.getProductId()) && Objects.isNull(onsale.getBeginTime()) && Objects.isNull(onsale.getEndTime())){
-            throw new IllegalArgumentException("OnsaleDao.hasConflictOnsale: onsale's productId, beginTime and endTime can not be null");
-        }
-
-        PageRequest pageable = PageRequest.of(0,MAX_RETURN, Sort.by(Sort.Direction.ASC, "beginTime"));
-        List<OnsalePo> poList =  this.onsalePoMapper.findOverlap(onsale.getProductId(), onsale.getBeginTime(), onsale.getEndTime(), pageable);
-        if (!poList.isEmpty()){
-            log.debug("hasConflictOnsale: poList Size = {}, onsale's id = {}",poList.size(), onsale.getId());
-            if (!Objects.isNull(onsale.getId())) {
-                //修改的目标onsale不计算在重复范围内
-                poList = poList.stream().filter(o -> !onsale.getId().equals(o.getId())).collect(Collectors.toList());
-            }
-
-            if (poList.size() > 0) {
-                throw new BusinessException(ReturnNo.GOODS_ONSALE_CONFLICT, String.format(ReturnNo.GOODS_ONSALE_CONFLICT.getMessage(), poList.get(0).getId()));
-            }
-        }
-    }
+    @Getter
     private Long goodsId;
     /**
      * 相关商品
      */
     @JsonIgnore
     @ToString.Exclude
+    @Setter
+    @Getter
     private List<Product> otherProduct;
 
     @Setter
@@ -231,6 +229,8 @@ public class Product extends OOMallObject implements Serializable {
      */
     @JsonIgnore
     @ToString.Exclude
+    @Setter
+    @Getter
     private OnSale validOnsale;
 
     @Setter
@@ -304,6 +304,8 @@ public class Product extends OOMallObject implements Serializable {
         }
     }
 
+    @Setter
+    @Getter
     private Long categoryId;
     /**
      * 所属分类
@@ -311,6 +313,7 @@ public class Product extends OOMallObject implements Serializable {
     @JsonIgnore
     @Setter
     @ToString.Exclude
+    @Getter
     private Category category;
 
     @Setter
@@ -340,10 +343,14 @@ public class Product extends OOMallObject implements Serializable {
         return new ArrayList<>();
     }
 
+    @Setter
+    @Getter
     private Long shopId;
 
     @JsonIgnore
     @ToString.Exclude
+    @Setter
+    @Getter
     private Shop shop;
 
     @JsonIgnore
@@ -364,11 +371,18 @@ public class Product extends OOMallObject implements Serializable {
         }
         return this.shop;
     }
+
+    @Setter
+    @Getter
+    private Long shopLogisticId;
+
     /**
      *@author jyx
      */
     @JsonIgnore
     @ToString.Exclude
+    @Setter
+    @Getter
     private Logistics logistics;
     /**
      *@author jyx
@@ -397,10 +411,14 @@ public class Product extends OOMallObject implements Serializable {
         return this.logistics;
     }
 
+    @Setter
+    @Getter
     private Long templateId;
 
     @JsonIgnore
     @ToString.Exclude
+    @Setter
+    @Getter
     private Template template;
 
     @JsonIgnore
@@ -424,10 +442,9 @@ public class Product extends OOMallObject implements Serializable {
         return this.template;
     }
 
-    private Long shopLogisticId;
 
-
-
+    @Setter
+    @Getter
     private Long freeThreshold;
 
     public void ban(){
@@ -498,109 +515,5 @@ public class Product extends OOMallObject implements Serializable {
 
     public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
-    }
-
-    public String getSkuSn() {
-        return skuSn;
-    }
-
-    public void setSkuSn(String skuSn) {
-        this.skuSn = skuSn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(Long originalPrice) {
-        this.originalPrice = originalPrice;
-    }
-
-    public Long getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Long weight) {
-        this.weight = weight;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getOriginPlace() {
-        return originPlace;
-    }
-
-    public void setOriginPlace(String originPlace) {
-        this.originPlace = originPlace;
-    }
-
-    public Long getShopLogisticId() {
-        return shopLogisticId;
-    }
-
-    public void setShopLogisticId(Long shopLogisticId) {
-        this.shopLogisticId = shopLogisticId;
-    }
-
-    public Long getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
-
-    public Long getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(Long templateId) {
-        this.templateId = templateId;
-    }
-
-    public Long getFreeThreshold() {
-        return freeThreshold;
-    }
-
-    public void setFreeThreshold(Long freeThreshold) {
-        this.freeThreshold = freeThreshold;
     }
 }

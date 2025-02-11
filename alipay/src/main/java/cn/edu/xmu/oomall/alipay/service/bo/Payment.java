@@ -3,7 +3,7 @@ package cn.edu.xmu.oomall.alipay.service.bo;
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.oomall.alipay.mapper.po.AlipayDivReceiver;
 import cn.edu.xmu.oomall.alipay.mapper.po.AlipayPaymentPo;
-import cn.edu.xmu.oomall.alipay.controller.vodto.PostPayVo;
+import cn.edu.xmu.oomall.alipay.controller.vo.PostPayVo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

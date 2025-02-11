@@ -9,6 +9,7 @@ import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.oomall.region.dao.RegionDao;
 import cn.edu.xmu.oomall.region.dao.bo.Region;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
+@Slf4j
 public class RegionService {
-    private final static Logger logger = LoggerFactory.getLogger(RegionService.class);
 
     private final RegionDao regionDao;
     private final RedisUtil redisUtil;
@@ -77,7 +78,7 @@ public class RegionService {
 
     public void updateById(Region region, UserDto user) {
         Region bo = this.regionDao.findById(region.getId());
-        logger.debug("updateRegionById: bo = {}", bo);
+        log.debug("updateRegionById: bo = {}", bo);
         if (Region.ABANDONED.equals(bo.getStatus())) {
             throw new BusinessException(ReturnNo.REGION_ABANDONE, String.format(ReturnNo.REGION_ABANDONE.getMessage(), region.getId()));
         }
@@ -135,7 +136,7 @@ public class RegionService {
      * @return RegionDto
      */
     public Region findById(Long id) {
-        logger.debug("findRegionById: id = {}", id);
+        log.debug("findRegionById: id = {}", id);
         return this.regionDao.findById(id);
     }
 
@@ -145,7 +146,7 @@ public class RegionService {
      * @return 上级地区列表
      */
     public List<Region> retrieveParentsRegionsById(Long id) {
-        logger.debug("retrieveParentsRegionsById: id = {}", id);
+        log.debug("retrieveParentsRegionsById: id = {}", id);
         Region region = this.regionDao.findById(id);
         return region.getAncestors();
     }

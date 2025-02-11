@@ -53,7 +53,9 @@ public class InternalController {
                 .receivMobile(expressDto.getDelivery().getMobile())
                 .receivName(expressDto.getDelivery().getName())
                 .contractId(expressDto.getShopLogisticId())
-                .goodsType(expressDto.getGoodsType()).weight(expressDto.getWeight()).build();
+                .goodsType(expressDto.getGoodsType()).weight(expressDto.getWeight())
+                .payMethod(expressDto.getPayMethod())
+                .build();
         Express newExpress = this.expressService.createExpress(shopId, express, user);
         return new ReturnObject(ReturnNo.CREATED, CloneFactory.copy(new SimpleExpressVo(), newExpress));
     }

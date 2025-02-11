@@ -5,6 +5,7 @@ import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.oomall.shop.dao.openfeign.RegionDao;
 import cn.edu.xmu.oomall.shop.mapper.openfeign.po.RegionPo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,14 +16,34 @@ import java.util.Optional;
 
 @ToString(doNotUseGetters = true)
 @NoArgsConstructor
+@Data
 @CopyFrom({RegionPo.class})
 public class Region {
+
+    /**
+     * 共三种状态
+     */
+    //有效
+    @ToString.Exclude
+    @JsonIgnore
+    public static final Byte VALID = 0;
+    //停用
+    @ToString.Exclude
+    @JsonIgnore
+    public static final Byte SUSPENDED = 1;
+    //废弃
+    @ToString.Exclude
+    @JsonIgnore
+    public static final Byte ABANDONED = 2;
+
     private Long id;
 
     /**
      * 名称
      */
     private String name;
+
+    private Byte status;
 
     @Setter
     @ToString.Exclude
@@ -35,21 +56,5 @@ public class Region {
             ret = this.regionDao.retrieveParentRegionsById(this.id);
         }
         return Optional.ofNullable(ret);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

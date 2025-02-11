@@ -4,6 +4,9 @@ management:
       exposure:
         include: "*"
 spring:
+  profiles:
+    active: dev
+
   cloud:
     nacos:
       discovery:
@@ -15,7 +18,7 @@ spring:
         enabled: false
       host: redis
       database: 0
-      password: OOADRedis123456
+      password: 123456
 
   datasource:
     #JDBC drivers

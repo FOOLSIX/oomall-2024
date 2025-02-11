@@ -184,4 +184,29 @@ public class CouponActControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_NOTEXIST.getErrNo())));
     }
+
+    /**
+     * @author 3722022203678
+     */
+    @Test
+    public void testRetrieveCouponActByShopIdAndProductId() throws Exception {
+        // 准备测试数据
+        Long shopId = 1L;
+        Long productId = 1L;
+        Integer status = 1;
+        Integer page = 1;
+        Integer pageSize = 10;
+
+        // 执行测试
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/couponactivities")
+                .param("shopId", String.valueOf(shopId))
+                .param("productId", String.valueOf(productId))
+                .param("status", status.toString())
+                .param("page", page.toString())
+                .param("pageSize", pageSize.toString())
+                .header("authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
+    }
 }

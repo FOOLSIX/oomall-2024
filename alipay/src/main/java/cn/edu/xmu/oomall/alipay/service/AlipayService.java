@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
 import cn.edu.xmu.javaee.core.util.SnowFlakeIdWorker;
-import cn.edu.xmu.oomall.alipay.controller.vodto.CancelOrderDto;
-import cn.edu.xmu.oomall.alipay.controller.vodto.CancelOrderVo;
-import cn.edu.xmu.oomall.alipay.controller.vodto.GetTransVo;
+import cn.edu.xmu.oomall.alipay.controller.dto.CancelOrderDto;
+import cn.edu.xmu.oomall.alipay.controller.vo.CancelOrderVo;
+import cn.edu.xmu.oomall.alipay.controller.vo.GetTransVo;
 import cn.edu.xmu.oomall.alipay.exception.AlipayBusinessException;
 
 

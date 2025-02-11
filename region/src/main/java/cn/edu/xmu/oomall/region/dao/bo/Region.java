@@ -2,11 +2,11 @@
 package cn.edu.xmu.oomall.region.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.region.controller.dto.RegionDto;
 import cn.edu.xmu.oomall.region.dao.RegionDao;
 import cn.edu.xmu.oomall.region.mapper.po.RegionPo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,7 +27,8 @@ import static cn.edu.xmu.javaee.core.model.Constants.MAX_RETURN;
 @AllArgsConstructor
 @ToString(callSuper = true, doNotUseGetters = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@CopyFrom({RegionPo.class, RegionDto.class})
+@CopyFrom(RegionPo.class)
+@CopyTo(RegionPo.class)
 public class Region extends OOMallObject implements Serializable {
     @ToString.Exclude
     @JsonIgnore

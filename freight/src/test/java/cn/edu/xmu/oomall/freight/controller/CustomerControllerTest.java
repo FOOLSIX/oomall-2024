@@ -47,7 +47,7 @@ public class CustomerControllerTest {
         customerToken = jwtHelper.createToken(1L, "customer", 2L, 2, 3600);
     }
 
-    //@Test
+    @Test
     public void testGetLogisticsCompanyGivenWrongBillCode() throws Exception {
         Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
         Mockito.when(redisUtil.set(Mockito.anyString(), Mockito.any(), Mockito.anyLong())).thenReturn(true);
@@ -63,23 +63,39 @@ public class CustomerControllerTest {
 //        resultActions.andDo(print());
     }
 
-    //@Test
+    @Test
     public void testGetLogisticsCompany() throws Exception {
         Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
         Mockito.when(redisUtil.set(Mockito.anyString(), Mockito.any(), Mockito.anyLong())).thenReturn(true);
-        ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics")
                         .header("authorization", adminToken)
-                        .param("billCode", "1234567890")
+                        .param("billCode", "JT1234567891234")
                         .contentType("application/json;charset=UTF-8"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno").value(ReturnNo.OK.getErrNo()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(3));
+    }
 
+    @Test
+    public void testGetLogisticsCompanyWithoutBillCode() throws Exception {
+        Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
+        Mockito.when(redisUtil.set(Mockito.anyString(), Mockito.any(), Mockito.anyLong())).thenReturn(true);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics")
+                        .header("authorization", adminToken)
+                        .contentType("application/json;charset=UTF-8"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno").value(ReturnNo.OK.getErrNo()));
         // display:
 //        resultActions.andReturn().getResponse().setCharacterEncoding("UTF-8");
 //        resultActions.andDo(print());
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 测试顾客查看不可送达地区，happy path
+     */
     @Test
     public void testGetUndeliverable() throws Exception {
         InternalReturnObject<RegionPo> ret = new InternalReturnObject<>();
@@ -91,8 +107,7 @@ public class CustomerControllerTest {
 
         when(regionMapper.findRegionById(483250L)).thenReturn(ret);
 
-        // 模拟顾客请求查看不可送达地区
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics/{id}/undeliverableregions", 4L)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics/{id}/undeliverableregions", 1L)
                         .header("authorization", customerToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -101,10 +116,15 @@ public class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.list[0].region.id",is(483250)));
     }
 
+    /**
+     * 2024-dsg-112
+     *
+     * @author Hao Chen
+     * 测试查看不可送达地区，但没有不可送达地区
+     */
     @Test
     public void testGetUndeliverableWithEmpty() throws Exception {
-        // 模拟顾客请求查看不可送达地区，但没有不可送达地区
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics/{id}/undeliverableregions", 1L)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/logistics/{id}/undeliverableregions", 2L)
                         .header("authorization", customerToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.alipay.service.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
-import cn.edu.xmu.oomall.alipay.controller.vodto.RoyaltyDetailInfoPojo;
+import cn.edu.xmu.oomall.alipay.controller.vo.RoyaltyDetailInfoPojo;
 import cn.edu.xmu.oomall.alipay.mapper.po.AlipayRefundRoyaltyDetail;
 import lombok.Data;
 import lombok.NoArgsConstructor;

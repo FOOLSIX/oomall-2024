@@ -1,8 +1,11 @@
 package cn.edu.xmu.oomall.shop.controller.dto;
 
+import cn.edu.xmu.javaee.core.aop.CopyTo;
+import cn.edu.xmu.oomall.shop.dao.bo.template.Template;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@CopyTo(Template.class)
 public class TemplateDto {
 
     public static Integer WEIGHT = 0;

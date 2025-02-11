@@ -1,44 +1,30 @@
 package cn.edu.xmu.oomall.freight.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotBlank;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
+import cn.edu.xmu.javaee.core.validation.NewGroup;
+import cn.edu.xmu.oomall.freight.dao.bo.Contract;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-/**
- * @author fan ninghan
- * 2023-dng3-008
- */
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@CopyTo(Contract.class)
 public class ContractDto {
-    @NotBlank
-    private Long logisticsId;
-    @NotBlank
+    private String account;
     private String secret;
-    @NotBlank
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+    @NotNull(message = "开始时间不能为空")
+    private LocalDateTime beginTime;
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+    @NotNull(message = "结束时间不能为空")
+    private LocalDateTime endTime;
+    @NotNull(message = "配送优先级不能为空",groups=NewGroup.class)
     private Integer priority;
-
-    public Long getLogisticsId() {
-        return logisticsId;
-    }
-
-    public void setLogisticsId(Long logisticsId) {
-        this.logisticsId = logisticsId;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
+    @NotNull(message = "每月配额不能为空")
+    private Integer quota;
 }

@@ -66,6 +66,7 @@ public class ShopProductControllerTest {
     private static String shopToken4;
     private static String shopToken5;
     private static String shopToken8;
+    private static String shopToken10;
 
     private static final String ADMIN_ONSALES_ID = "/shops/{shopId}/onsales/{id}";
     private static final String ADMIN_PRODUCT_ID_ONSALES = "/shops/{shopId}/products/{id}/onsales";
@@ -79,6 +80,7 @@ public class ShopProductControllerTest {
         shopToken4 = jwtHelper.createToken(1L, "努力向前", 4L, 1, 3600);
         shopToken5 = jwtHelper.createToken(1L, "坚持就是胜利", 5L, 1, 3600);
         shopToken8 = jwtHelper.createToken(1L, "商铺8", 8L, 1, 3600);
+        shopToken10 = jwtHelper.createToken(1L, "商铺10", 10L, 1, 3600);
     }
 
     /**
@@ -607,6 +609,24 @@ public class ShopProductControllerTest {
                         .characterEncoding("UTF-8"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_OUTSCOPE.getErrNo())));
+
+    }
+
+    /**
+     * POST
+     * TEST  relateProductId GIVEN shopID=10 id=1550 body{"productId" = 1562}
+     * 将两个商品设为相关成功
+     */
+    @Test
+    public void TestRelateProductIdWhenSuccess()throws Exception{
+        when(redisUtil.hasKey("P1550")).thenReturn(false);
+        String body = "{\"productId\":1562}";
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/shops/{shopId}/products/{id}/relations",10,1550)
+                        .header("authorization", shopToken10)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno",is(ReturnNo.OK.getErrNo())));
 
     }
 }

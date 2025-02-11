@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.Map;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @CopyFrom({TraceDetailPo.class})
+@Data
 public class TraceDetail {
 
     @JsonIgnore
@@ -151,131 +153,5 @@ public class TraceDetail {
     }
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getScanTime() {
-        return scanTime;
-    }
-
-    public void setScanTime(LocalDateTime scanTime) {
-        this.scanTime = scanTime;
-    }
-
-    public String getBillCode() {
-        return billCode;
-    }
-
-    public void setBillCode(String billCode) {
-        this.billCode = billCode;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getScanType() {
-        return scanType;
-    }
-
-    public void setScanType(String scanType) {
-        this.scanType = scanType;
-    }
-
-    public String getProblemType() {
-        return problemType;
-    }
-
-    public void setProblemType(String problemType) {
-        this.problemType = problemType;
-    }
-
-    public String getStaffName() {
-        return staffName;
-    }
-
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
-    }
-
-    public String getStaffContact() {
-        return staffContact;
-    }
-
-    public void setStaffContact(String staffContact) {
-        this.staffContact = staffContact;
-    }
-
-    public Long getScanNetworkId() {
-        return scanNetworkId;
-    }
-
-    public void setScanNetworkId(Long scanNetworkId) {
-        this.scanNetworkId = scanNetworkId;
-    }
-
-    public Long getNextNetworkId() {
-        return nextNetworkId;
-    }
-
-    public void setNextNetworkId(Long nextNetworkId) {
-        this.nextNetworkId = nextNetworkId;
-    }
-
-    public Integer getRebackStatus() {
-        return rebackStatus;
-    }
-
-    public void setRebackStatus(Integer rebackStatus) {
-        this.rebackStatus = rebackStatus;
-    }
-
-    public String getNetworkType() {
-        return networkType;
-    }
-
-    public void setNetworkType(String networkType) {
-        this.networkType = networkType;
-    }
-
-    public String getSignByOthersType() {
-        return signByOthersType;
-    }
-
-    public void setSignByOthersType(String signByOthersType) {
-        this.signByOthersType = signByOthersType;
-    }
-
-    public String getSignByOthersName() {
-        return signByOthersName;
-    }
-
-    public void setSignByOthersName(String signByOthersName) {
-        this.signByOthersName = signByOthersName;
-    }
-
-    public String getSignByOthersTel() {
-        return signByOthersTel;
-    }
-
-    public void setSignByOthersTel(String signByOthersTel) {
-        this.signByOthersTel = signByOthersTel;
-    }
-
-    public String getPickCode() {
-        return pickCode;
-    }
-
-    public void setPickCode(String pickCode) {
-        this.pickCode = pickCode;
-    }
 }

@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.jtexpress.controller;
 
 
-import cn.edu.xmu.oomall.jtexpress.controller.vo.OrderVo;
 import cn.edu.xmu.oomall.jtexpress.exception.ReturnError;
 import cn.edu.xmu.oomall.jtexpress.jtexpressApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,9 +80,10 @@ public class JTExpressGetTracesControllerTest {
     @Test
     void testGetTracesGivenExceed30BillCode() throws Exception {
         Set<String> billCodesSet = new HashSet<>();
+        long range = 8999999999999L;
         int count = 35;
         for (int i = 0; i < count; i++) {
-            long randomNumber = 1000000000000L + (long) new Random().nextLong(8999999999999L);
+            long randomNumber = 1000000000000L + new Random().nextLong() % (range + 1);;
             String orderCode = String.format("JT%s", randomNumber);
             billCodesSet.add(orderCode);
         }

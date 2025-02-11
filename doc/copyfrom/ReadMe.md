@@ -10,7 +10,7 @@ cloneObj实际上只是完成po, bo, dto, vo之间的转换，每个类实际上
 
 ## 基本原理
 
-创建注解CopyFrom
+创建注解CopyFrom和CopyTo
 
 ```java
 @Target({ ElementType.TYPE })
@@ -19,10 +19,17 @@ public @interface CopyFrom {
     Class<?>[] value();
 }
 ```
+```java
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.SOURCE)
+public @interface CopyTo {
+   Class<?>[] value();
+}
+```
 
-该注解只能应用于类，参数表示该类的对象可以从哪些类拷贝而来。
+该注解只能应用于类，参数表示该类的对象可以从哪些类拷贝而来,和把类拷贝到哪去
 
-创建注解处理器，在编译时使用javapoet生成CloneFactory。所有添加了CopyFrom注解的类会自动生成copy方法，并保存在CloneFactory中。
+创建注解处理器，在编译时使用javapoet生成CloneFactory。所有添加了CopyFrom和CopyTo注解的类会自动生成copy方法，并保存在CloneFactory中。
 
 cloneObj方法由于需要使用两次反射完成拷贝，造成大量的性能浪费。但本方法完全不需要用到反射，且所有操作都在编译期完成，理论上不会对性能有任何负面影响。
 
@@ -80,6 +87,25 @@ public class TestC {
 }
 ```
 
+```java
+@AllArgsConstructor
+@NoArgsConstructor
+@CopyTo({ TestA.class, TestB.class })
+public class TestC {
+    Integer y;
+    Integer z;
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
+    public void setZ(Integer z) {
+        this.z = z;
+    }
+}
+```
+
+
 生成的CloneFactory:
 
 ```java
@@ -105,7 +131,6 @@ public final class CloneFactory {
     target.setZ(source.getZ());
     return target;
   }
-}
 ```
 
 拷贝对象：
@@ -124,12 +149,12 @@ TestB b = new TestB(1, 2);
 TestC c = CloneFactory.copy(new TestC(), b);  // copy方法会将拷贝后的结果返回
 assert c.getY() == null;
 assert c.getZ() == 2;
+
 ```
 
 ## 目前的问题
 
-1. 与lombok的@Getter与@Setter冲突。Java要求注解processor之间不得相互依赖，不得因为处理顺序不同而得到不同结果。因此在原理上，本注解无法与@Getter, @Setter同时使用。也就是说，所有的getter和setter都需要手动或使用IDEA自动生成。
-2. 操作繁琐。每次添加或修改CopyFrom注解，都需要rebuild一次当前模块。此处需要帮助，能否实现自动rebuild？
+1.操作繁琐。每次添加或修改CopyFrom注解，都需要rebuild一次当前模块。此处需要帮助，能否实现自动rebuild？
 
 ## 其他需要注意的地方
 
@@ -140,17 +165,26 @@ assert c.getZ() == 2;
    如在goods模块中使用该注解，正确的结果应当为
 
    ![image](image2.png)
-## @CopyFrom.Exclude
+## @CopyFrom.Exclude @CopyTo.Exclude
 采用@CopyFrom.Exclude注解写在set方法前面，有此注解的属性不copy
+由于目前已经兼容了lombok注解所以注解也可以写在字段上，有此注解的属性不copy
+
 ```java
+import jdk.jfr.DataAmount;
+
 @NoArgsConstructor
 @ToString(callSuper = true, doNotUseGetters = true)
-@CopyFrom({ ProductDraftVo.class, ProductDraftPo.class })
+@CopyFrom({ProductDraftVo.class, ProductDraftPo.class})
+@CopyTo({ProductDraftVo.class})
 public class ProductDraft extends OOMallObject implements Serializable {
-    @CopyFrom.Exclude({ProductDraftVo.class})
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
+   @CopyFrom.Exclude({ProductDraftVo.class})
+   public void setCategoryId(Long categoryId) {
+      this.categoryId = categoryId;
+   }
+
+   @CopyFrom.Exclude({ProductDraftVo.class})
+   private Long id;
 }
 ```
 在这个例子中，ProductDraftVo的categoryId属性不会被copy到ProductDraft中。
+同时，ProductDraftVo的id属性也不会被copy到ProductDraft中

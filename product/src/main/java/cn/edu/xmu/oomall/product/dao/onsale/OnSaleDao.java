@@ -9,6 +9,7 @@ import cn.edu.xmu.javaee.core.util.CloneFactory;
 import cn.edu.xmu.oomall.product.dao.ProductDao;
 import cn.edu.xmu.oomall.product.dao.activity.ActivityDao;
 import cn.edu.xmu.oomall.product.dao.bo.OnSale;
+import cn.edu.xmu.oomall.product.dao.bo.Product;
 import cn.edu.xmu.oomall.product.dao.openfeign.ShopDao;
 import cn.edu.xmu.oomall.product.mapper.jpa.ActivityOnsalePoMapper;
 import cn.edu.xmu.oomall.product.mapper.jpa.OnsalePoMapper;
@@ -298,5 +299,21 @@ public class OnSaleDao {
         } else {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "销售", onsalePo.getId()));
         }
+    }
+
+    public Boolean hasOverlap(OnSale onsale){
+        PageRequest pageable = PageRequest.of(0,MAX_RETURN, Sort.by(Sort.Direction.ASC, "beginTime"));
+        List<OnsalePo> poList =  this.onsalePoMapper.findOverlap(onsale.getProductId(), onsale.getBeginTime(), onsale.getEndTime(), pageable);
+        if (!poList.isEmpty()){
+            log.debug("hasConflictOnsale: poList Size = {}, onsale's id = {}",poList.size(), onsale.getId());
+            if (!Objects.isNull(onsale.getId())) {
+                //修改的目标onsale不计算在重复范围内
+                poList = poList.stream().filter(o -> !onsale.getId().equals(o.getId())).collect(Collectors.toList());
+            }
+            if (poList.size() > 0 ){
+                return true;
+            }
+        }
+        return false;
     }
 }

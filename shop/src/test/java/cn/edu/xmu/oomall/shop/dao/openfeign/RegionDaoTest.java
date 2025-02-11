@@ -30,7 +30,7 @@ public class RegionDaoTest {
 
     @Test
     public void testFindByIdSuccess() {
-        RegionPo mockRegionPo = new RegionPo(5L, "Test Region");
+        RegionPo mockRegionPo = new RegionPo(5L, "Test Region",  Region.VALID);
         InternalReturnObject<RegionPo> mockReturnObject = new InternalReturnObject<>();
         mockReturnObject.setErrno(ReturnNo.OK.getErrNo()); // 设置成功的 errno
         mockReturnObject.setData(mockRegionPo); // 设置返回的数据
@@ -65,7 +65,7 @@ public class RegionDaoTest {
 
     @Test
     public void testRetrieveParentRegionsByIdSuccess() {
-        List<RegionPo> mockRegionPoList = List.of(new RegionPo(1L, "Parent Region"));
+        List<RegionPo> mockRegionPoList = List.of(new RegionPo(1L, "Parent Region", Region.VALID));
         InternalReturnObject<List<RegionPo>> mockReturnObject = new InternalReturnObject<>();
         mockReturnObject.setErrno(ReturnNo.OK.getErrNo()); // 设置成功的 errno
         mockReturnObject.setData(mockRegionPoList); // 设置返回的数据

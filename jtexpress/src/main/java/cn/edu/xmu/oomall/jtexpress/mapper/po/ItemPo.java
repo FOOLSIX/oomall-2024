@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.jtexpress.mapper.po;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 @Table(name = "jtexpress_item")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class ItemPo {
 
     /*
@@ -83,93 +85,6 @@ public class ItemPo {
      */
     @Column(name = "item_url", length = 100)
     private String itemUrl;
-
-    // 构造函数
-
-    // Getter 和 Setter 方法
-
-    // Getter 方法
-    public Long getId() {
-        return id;
-    }
-
-    public String getItemType() {
-        return itemType;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public String getChineseName() {
-        return chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public String getItemValue() {
-        return itemValue;
-    }
-
-    public String getPriceCurrency() {
-        return priceCurrency;
-    }
-
-    public String getDescription() {
-        return desc;
-    }
-
-    public String getItemUrl() {
-        return itemUrl;
-    }
-
-    // Setter 方法
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public void setItemValue(String itemValue) {
-        this.itemValue = itemValue;
-    }
-
-    public void setPriceCurrency(String priceCurrency) {
-        this.priceCurrency = priceCurrency;
-    }
-
-    public void setDescription(String description) {
-        this.desc = desc;
-    }
-
-    public void setItemUrl(String itemUrl) {
-        this.itemUrl = itemUrl;
-    }
-
 
 }
 

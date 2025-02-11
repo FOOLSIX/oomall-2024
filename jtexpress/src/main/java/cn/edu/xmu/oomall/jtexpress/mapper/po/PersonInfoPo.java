@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.jtexpress.mapper.po;
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.oomall.jtexpress.dao.bo.PersonInfo;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @CopyFrom({PersonInfo.class})
+@Data
 public class PersonInfoPo {
     /*
      * 主键 ID，自增长
@@ -103,119 +105,5 @@ public class PersonInfoPo {
     private String address;
 
 
-    // Getter 方法
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public String getMailBox() {
-        return mailBox;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public String getProv() {
-        return prov;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public String getTown() {
-        return town;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    // Setter 方法
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public void setMailBox(String mailBox) {
-        this.mailBox = mailBox;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public void setProv(String prov) {
-        this.prov = prov;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    }
+}
 

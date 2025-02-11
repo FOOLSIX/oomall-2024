@@ -63,8 +63,6 @@ public class ProductDao {
     private final RedisUtil redisUtil;
 
     private final SearchMapper searchMapper;
-    private final OnsalePoMapper onsalePoMapper;
-
 
     /**
      * 用id查找产品对象，关联有效的onsale对象
@@ -147,8 +145,6 @@ public class ProductDao {
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "产品", productId));
         }
     }
-
-
 
 
     /**
@@ -256,7 +252,6 @@ public class ProductDao {
             bo.setTemplateDao(templateDao);
             bo.setOnsaleDao(onsaleDao);
             bo.setOnsaleExecutor(this.getExecutor());
-            bo.setOnsalePoMapper(onsalePoMapper);
             return bo;
         }
 
@@ -315,49 +310,6 @@ public class ProductDao {
             return new NoOnSaleExecutor();
         }
     }
-
-//    /**
-//     * 根据店铺id、条形码和名称查找商品
-//     * 如果非空则and查询
-//     * @param shopId 商铺id 精确
-//     * @param barCode 条码 忽略大小写
-//     * @param name 商品名称 按照开头模糊查询
-//     * @param page
-//     * @param pageSize
-//     * @return
-//     */
-//    public List<Product> retrieveByShopIdAndBarCodeAndName(Long shopId, String barCode, String name, Integer page, Integer pageSize) {
-//        List<Product> ret = new ArrayList<>();
-//        Pageable pageable = PageRequest.of(page - 1, pageSize);
-//
-//        ProductPo queryExample = new ProductPo();
-//        if (StringUtils.isNoneBlank(name)){
-//            queryExample.setName(name);
-//        }
-//        if (StringUtils.isNoneBlank(barCode)){
-//            queryExample.setBarcode(barCode);
-//        }
-//        if (null != shopId){
-//            queryExample.setShopId(shopId);
-//        }
-//
-//        ExampleMatcher matcher = ExampleMatcher.matching()
-//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.startsWith())
-//                .withMatcher("barcode", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
-//                .withMatcher("shopId", ExampleMatcher.GenericPropertyMatchers.exact());
-//
-//        Example<ProductPo> example = Example.of(queryExample, matcher);
-//
-//        Page<ProductPo> pos = this.productPoMapper.findAll(example, pageable);
-//        ret = pos.stream().map(po -> {
-//            Long id = po.getId();
-//            String key = String.format(KEY, id);
-//            ValidOnSaleProductFactory factory = new ValidOnSaleProductFactory(id);
-//            Product bo = factory.build(po, Optional.empty());
-//            return bo;
-//        }).collect(Collectors.toList());
-//        return ret;
-//    }
 
     /**
      * 根据店铺id、条形码和名称查找商品

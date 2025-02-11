@@ -464,6 +464,34 @@ public class InternalControllerTest {
     }
 
     /**
+     * @author 37720222205040
+     * 对应Amount为INVALID
+     */
+    @Test
+    public void testCreatePaymentAmountIsInvalid() throws Exception {
+        Mockito.when(redisUtil.hasKey(Mockito.anyString())).thenReturn(false);
+        Mockito.when(redisUtil.set(Mockito.anyString(), Mockito.any(), Mockito.anyLong())).thenReturn(true);
+        Mockito.when(wePayMapper.pay(Mockito.any())).thenReturn("{\"prepayId\": \"wx201410272009395522657a690389285100\"}");
+
+        PayTransDto payTransDto = new PayTransDto();
+        payTransDto.setTimeBegin(END_TIME);
+        payTransDto.setTimeExpire(END_TIME.plusHours(2));
+        payTransDto.setAmount(50L);
+        payTransDto.setDivAmount(10L);
+        payTransDto.setOutNo("123456");
+        payTransDto.setDescription("这是支付描述");
+
+        String payVoJson = objectMapper.writeValueAsString(payTransDto);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_CREATE_PAYMENT,547)
+                        .header("authorization", adminToken)
+                        .content(payVoJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(jsonPath("$.errno").value(ReturnNo.PAY_CHANNEL_INVALID.getErrNo()));
+    }
+    /**
      * task 2023-dgn1-004
      * @author ych
      * 微信取消支付 成功

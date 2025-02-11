@@ -1,10 +1,9 @@
 package cn.edu.xmu.oomall.freight.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
-import cn.edu.xmu.oomall.freight.controller.dto.ContractDto;
-import cn.edu.xmu.oomall.freight.controller.dto.ModifyShopLogisticsDto;
 import cn.edu.xmu.oomall.freight.dao.ExpressDao;
 import cn.edu.xmu.oomall.freight.dao.logistics.retObj.PostCreatePackageAdaptorDto;
 import cn.edu.xmu.oomall.freight.dao.logistics.LogisticsAdaptorFactory;
@@ -16,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,8 +28,11 @@ import java.util.Objects;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString(callSuper = true, doNotUseGetters = true)
-@CopyFrom({ContractPo.class, ContractDto.class, ModifyShopLogisticsDto.class})
+@Getter
+@Setter
 @Slf4j
+@CopyFrom({ContractPo.class})
+@CopyTo({ContractPo.class})
 public class Contract extends OOMallObject implements Serializable {
     public static Byte VALID = 0;
     public static Byte INVALID = 1;
@@ -85,24 +88,21 @@ public class Contract extends OOMallObject implements Serializable {
     //假设account为属性
     private String account;
 
-
     private Long shopId;
-
-
 
     private String secret;
 
     private Byte invalid;
 
+    private LocalDateTime beginTime;
+
+    private LocalDateTime endTime;
+
     private Integer priority;
 
-    public Long getId() {
-        return id;
-    }
+    private Integer quota;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Long warehouseId;
 
     public Long getCreatorId() {
         return creatorId;
@@ -152,47 +152,4 @@ public class Contract extends OOMallObject implements Serializable {
         this.gmtModified = gmtModified;
     }
 
-    public Long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public Byte getInvalid() {
-        return invalid;
-    }
-
-    public void setInvalid(Byte invalid) {
-        this.invalid = invalid;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public Long getLogisticsId() {
-        return logisticsId;
-    }
-
-    public void setLogisticsId(Long logisticsId) {
-        this.logisticsId = logisticsId;
-    }
 }

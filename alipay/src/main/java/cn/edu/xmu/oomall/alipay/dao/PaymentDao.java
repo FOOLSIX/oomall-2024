@@ -108,18 +108,6 @@ public class PaymentDao {
     }
 
 
-    public List<RoyaltyEntity> selectRelationByShopAccount(String shopAccount) {
-        AlipayDivReceiverExample alipayDivReceiverExample = new AlipayDivReceiverExample();
-        AlipayDivReceiverExample.Criteria criteria = alipayDivReceiverExample.createCriteria();
-        criteria.andTransOutEqualTo(shopAccount);
-        List<AlipayDivReceiver> alipayDivReceivers = alipayDivReceiverMapper.selectByExample(alipayDivReceiverExample);
-        List<RoyaltyEntity> royaltyEntities = new ArrayList<>();
-        for (AlipayDivReceiver alipayDivReceiver : alipayDivReceivers) {
-            royaltyEntities.add(CloneFactory.copy(new RoyaltyEntity(),alipayDivReceiver));
-        }
-        return royaltyEntities;
-    }
-
     public void updatePayment(Payment payment) {
         alipayPaymentPoMapper.updateByPrimaryKeySelective(CloneFactory.copy(new AlipayPaymentPo(),payment));
     }

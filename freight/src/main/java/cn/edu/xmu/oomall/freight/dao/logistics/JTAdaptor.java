@@ -164,7 +164,7 @@ public class JTAdaptor implements LogisticsAdaptor {
         TraceDetail traceDetail = details.get(details.size() - 1);
         //来一个映射器
         String scanTypeOrProblemType= StringUtils.hasText(traceDetail.getScanType())?traceDetail.getScanType():traceDetail.getProblemType();
-        Express express = expressDao.findByBillCode(contract.getShopId(), billCode);
+        Express express = expressDao.retrieveByBillCode(contract.getShopId(), billCode);
         //todo:由于目前express没有对应的traceDetail的字段,于是只封装了scanType
         Optional<Byte> updateStatusOpt = Optional.ofNullable(stringToStatusCode.get(scanTypeOrProblemType));
         if (updateStatusOpt.isPresent()) {
@@ -205,7 +205,7 @@ public class JTAdaptor implements LogisticsAdaptor {
 
     @Override
     public void sendPackage(Contract contract, String billCode, String orderId) {
-        Express express = expressDao.findByBillCode(contract.getShopId(), billCode);
+        Express express = expressDao.retrieveByBillCode(contract.getShopId(), billCode);
         //在create方法默认传null
         createPackage(contract,express);
     }

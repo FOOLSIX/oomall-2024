@@ -83,9 +83,7 @@ public class PaymentService {
      * @return
      */
     public List<PayTrans> retrievePayments(Long shopId, Long channelId, String transNo, LocalDateTime beginTime, LocalDateTime endTime, Integer status, Integer page, Integer pageSize){
-        if (this.channelDao.findById(channelId) == null){
-            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), "支付渠道", channelId));
-        }
+        channelDao.findById(channelId);
         if (PLATFORM.equals(shopId)){//==改为用equals
             return this.payTransDao.retrieveByChannelId(channelId, transNo, status, beginTime, endTime, page, pageSize);
         } else {

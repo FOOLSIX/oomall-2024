@@ -3,13 +3,10 @@ package cn.edu.xmu.oomall.shop.controller;
 import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.util.JwtHelper;
-import cn.edu.xmu.oomall.shop.ShopApplication;
 import cn.edu.xmu.oomall.shop.ShopTestApplication;
 import cn.edu.xmu.oomall.shop.dao.bo.Shop;
-import org.apache.ibatis.jdbc.Null;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,11 +33,12 @@ import static org.hamcrest.CoreMatchers.is;
 @AutoConfigureMockMvc
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ShopControllerTest {
+    private static String shopToken, UnregisteredShopToken, adminToken, WrongShopToken, inAuditShopToken, impossibleToken;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private RedisUtil redisUtil;
-    private static String shopToken, UnregisteredShopToken, adminToken, WrongShopToken, inAuditShopToken, impossibleToken;
+
     @BeforeAll
     static void setUp() {
         JwtHelper jwtHelper = new JwtHelper();
@@ -105,7 +103,6 @@ public class ShopControllerTest {
     }
 
 
-
     /* get API /shops      描述顾客查询店铺信息 */
     // 带参数的查询
     @Test
@@ -144,7 +141,6 @@ public class ShopControllerTest {
     }
 
 
-
     /* PUT API  /shops/{id}     描述：店家修改店铺信息 */
     // 成功修改（通过redis）
     @Test
@@ -154,7 +150,7 @@ public class ShopControllerTest {
         shop.setName("OOMALL自营商铺");
         shop.setDeposit(5000000L);
         shop.setDepositThreshold(1000000L);
-        shop.setStatus((byte)2);
+        shop.setStatus((byte) 2);
         shop.setCreatorId(1L);
         shop.setCreatorName("admin");
         shop.setGmtCreate(LocalDateTime.parse("2021-11-11T13:24:49"));
@@ -241,11 +237,10 @@ public class ShopControllerTest {
     }
 
 
-
     /* DELETE API: /shops/{id}      描述：平台管理员或店家关闭店铺 */
     // 删除非下线状态的商铺
     @Test
-    void testDeleteShopGivenWrongShop() throws Exception{
+    void testDeleteShopGivenWrongShop() throws Exception {
         Mockito.when(redisUtil.get("S1")).thenReturn(null);
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/shops/{id}", 1)
@@ -254,9 +249,10 @@ public class ShopControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
     }
+
     // 成功删除
     @Test
-    void testDeleteShop() throws Exception{
+    void testDeleteShop() throws Exception {
         Mockito.when(redisUtil.get("S5")).thenReturn(null);
         Mockito.when(redisUtil.set("S5", new Shop(), 3600)).thenReturn(true);
 
@@ -268,11 +264,9 @@ public class ShopControllerTest {
     }
 
 
-
-
     /* GET API: /shops/{id}        描述：商户获取商铺信息 */
     @Test
-    void testFindShopById() throws Exception{
+    void testFindShopById() throws Exception {
         Mockito.when(redisUtil.get("S1")).thenReturn(null);
         Mockito.when(redisUtil.set("S1", new Shop(), 3600)).thenReturn(true);
 
@@ -286,10 +280,9 @@ public class ShopControllerTest {
     }
 
 
-
     /* GET API: /shops/{id}/shops       描述：平台管理员查询店铺信息 */
     @Test
-    void testRetrieveAllShopsGivenAdmin() throws Exception{
+    void testRetrieveAllShopsGivenAdmin() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/shops/{id}/shops", 0)
                         .param("status", Shop.ABANDON.toString())
                         .param("name", "")
@@ -309,7 +302,7 @@ public class ShopControllerTest {
     }
 
     @Test
-    void testRetrieveAllShopsGivenShop() throws Exception{
+    void testRetrieveAllShopsGivenShop() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/shops/{id}/shops", 1)
                         .param("status", Shop.ABANDON.toString())
                         .param("name", "")
@@ -347,10 +340,9 @@ public class ShopControllerTest {
     }
 
 
-
     /* PUT API: /shops/{shopId}/audit       描述：平台管理员审核店铺信息 */
     @Test
-    void testUpdateShopAuditGivenShop() throws Exception{
+    void testUpdateShopAuditGivenShop() throws Exception {
         Mockito.when(redisUtil.get("S8")).thenReturn(null);
         Mockito.when(redisUtil.set("S8", new Shop(), 3600)).thenReturn(true);
 
@@ -365,7 +357,7 @@ public class ShopControllerTest {
     }
 
     @Test
-    void testUpdateShopAuditGivenAdmin() throws Exception{
+    void testUpdateShopAuditGivenAdmin() throws Exception {
         Mockito.when(redisUtil.get("S8")).thenReturn(null);
         Mockito.when(redisUtil.set("S8", new Shop(), 3600)).thenReturn(true);
 
@@ -381,7 +373,7 @@ public class ShopControllerTest {
 
     // 审核非NEW状态的商铺
     @Test
-    void testUpdateShopAuditGivenWrongShopStatus() throws Exception{
+    void testUpdateShopAuditGivenWrongShopStatus() throws Exception {
         Mockito.when(redisUtil.get("S1")).thenReturn(null);
         Mockito.when(redisUtil.set("S1", new Shop(), 3600)).thenReturn(true);
 
@@ -395,12 +387,30 @@ public class ShopControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
     }
 
+    /**
+     * 审核店铺 - 审核不通过
+     *
+     * @author 37220222203678
+     */
+    @Test
+    void testUpdateShopAuditGivenFailure() throws Exception {
+        Mockito.when(redisUtil.get("S8")).thenReturn(null);
+        Mockito.when(redisUtil.set("S8", new Shop(), 3600)).thenReturn(true);
 
+        String body = "{\"conclusion\":\"false\"}";
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/audit", 8)
+                        .header("authorization", adminToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.OK.getErrNo())));
+    }
 
     /* PUT API: /shops/{id}/online      描述：商户上线店铺 */
     // 上线非下线状态的商铺
     @Test
-    void testUpdateShopOnlineWithWrongShopStatus() throws Exception{
+    void testUpdateShopOnlineWithWrongShopStatus() throws Exception {
         Mockito.when(redisUtil.get("S1")).thenReturn(null);
         Mockito.when(redisUtil.set("S1", new Shop(), 3600)).thenReturn(true);
 
@@ -410,9 +420,10 @@ public class ShopControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
     }
+
     // 成功上线
     @Test
-    void testUpdateShopOnline() throws Exception{
+    void testUpdateShopOnline() throws Exception {
         Mockito.when(redisUtil.get("S5")).thenReturn(null);
         Mockito.when(redisUtil.set("S5", new Shop(), 3600)).thenReturn(true);
 
@@ -424,11 +435,10 @@ public class ShopControllerTest {
     }
 
 
-
     /* PUT API: /shops/{id}/offline      描述：商户下线店铺 */
     // 下线非上线状态的商铺
     @Test
-    void testUpdateShopOfflineWithWrongShopStatus() throws Exception{
+    void testUpdateShopOfflineWithWrongShopStatus() throws Exception {
         Mockito.when(redisUtil.get("S5")).thenReturn(null);
         Mockito.when(redisUtil.set("S5", new Shop(), 3600)).thenReturn(true);
 
@@ -438,9 +448,10 @@ public class ShopControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.STATENOTALLOW.getErrNo())));
     }
+
     // 成功上线
     @Test
-    void testUpdateShopOffline() throws Exception{
+    void testUpdateShopOffline() throws Exception {
         Mockito.when(redisUtil.get("S1")).thenReturn(null);
         Mockito.when(redisUtil.set("S1", new Shop(), 3600)).thenReturn(true);
 

@@ -2,12 +2,12 @@ package cn.edu.xmu.oomall.jtexpress.controller;
 
 
 import cn.edu.xmu.javaee.core.util.CloneFactory;
-import cn.edu.xmu.oomall.jtexpress.controller.dto.AddOrderReturnObj;
-import cn.edu.xmu.oomall.jtexpress.controller.dto.CancelOrderReturnObj;
-import cn.edu.xmu.oomall.jtexpress.controller.dto.ReturnResult;
-import cn.edu.xmu.oomall.jtexpress.controller.dto.TracesReturnObj;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.CancelOrderVo;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.OrderVo;
+import cn.edu.xmu.oomall.jtexpress.controller.vo.AddOrderReturnVo;
+import cn.edu.xmu.oomall.jtexpress.controller.vo.CancelOrderReturnVo;
+import cn.edu.xmu.oomall.jtexpress.controller.vo.ReturnResultVo;
+import cn.edu.xmu.oomall.jtexpress.controller.vo.TracesReturnVo;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.CancelOrderDto;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.OrderDto;
 import cn.edu.xmu.oomall.jtexpress.dao.TraceDetailDao;
 import cn.edu.xmu.oomall.jtexpress.dao.bo.Order;
 import cn.edu.xmu.oomall.jtexpress.dao.bo.PersonInfo;
@@ -48,47 +48,47 @@ public class JTExpressController {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping(value = "order/addOrder", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ReturnResult addOrder(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
-        OrderVo orderVo = objectMapper.readValue(bizContent, OrderVo.class);
-        BeanValidator.validate(orderVo);
-        Order order = CloneFactory.copy(new Order(), orderVo);
-        order.setSender(CloneFactory.copy(new PersonInfo(),orderVo.getSender()));
-        order.setReceiver(CloneFactory.copy(new PersonInfo(),orderVo.getReceiver()));
+    public ReturnResultVo addOrder(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
+        OrderDto orderDto = objectMapper.readValue(bizContent, OrderDto.class);
+        BeanValidator.validate(orderDto);
+        Order order = CloneFactory.copy(new Order(), orderDto);
+        order.setSender(CloneFactory.copy(new PersonInfo(), orderDto.getSender()));
+        order.setReceiver(CloneFactory.copy(new PersonInfo(), orderDto.getReceiver()));
         order = orderService.addOrder(order);
-        return new ReturnResult(ReturnError.SUCCESS, AddOrderReturnObj.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
+        return new ReturnResultVo(ReturnError.SUCCESS, AddOrderReturnVo.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
     }
 
     @PostMapping(value = "order/v2/addOrder", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ReturnResult addOrderWithBillCode(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
-        OrderVo orderVoV2 = objectMapper.readValue(bizContent, OrderVo.class);
-        BeanValidator.validate(orderVoV2);
-        Order order = CloneFactory.copy(new Order(), orderVoV2);
-        order.setSender(CloneFactory.copy(new PersonInfo(),orderVoV2.getSender()));
-        order.setReceiver(CloneFactory.copy(new PersonInfo(),orderVoV2.getReceiver()));
+    public ReturnResultVo addOrderWithBillCode(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
+        OrderDto orderDtoV2 = objectMapper.readValue(bizContent, OrderDto.class);
+        BeanValidator.validate(orderDtoV2);
+        Order order = CloneFactory.copy(new Order(), orderDtoV2);
+        order.setSender(CloneFactory.copy(new PersonInfo(), orderDtoV2.getSender()));
+        order.setReceiver(CloneFactory.copy(new PersonInfo(), orderDtoV2.getReceiver()));
         order = orderService.addOrder(order);
-        return new ReturnResult(ReturnError.SUCCESS, AddOrderReturnObj.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
+        return new ReturnResultVo(ReturnError.SUCCESS, AddOrderReturnVo.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
     }
 
     @PostMapping(value = "order/cancelOrder", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ReturnResult cancelOrder(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
+    public ReturnResultVo cancelOrder(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
 
-        CancelOrderVo cancelOrderVo = objectMapper.readValue(bizContent, CancelOrderVo.class);
-        BeanValidator.validate(cancelOrderVo);
-        Order order = orderService.cancelOrder(cancelOrderVo.getCustomerCode(),cancelOrderVo.getTxLogisticId());
-        ReturnResult r = new ReturnResult(ReturnError.SUCCESS, CancelOrderReturnObj.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
-        return new ReturnResult(ReturnError.SUCCESS, CancelOrderReturnObj.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
+        CancelOrderDto cancelOrderDto = objectMapper.readValue(bizContent, CancelOrderDto.class);
+        BeanValidator.validate(cancelOrderDto);
+        Order order = orderService.cancelOrder(cancelOrderDto.getCustomerCode(), cancelOrderDto.getTxLogisticId());
+        ReturnResultVo r = new ReturnResultVo(ReturnError.SUCCESS, CancelOrderReturnVo.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
+        return new ReturnResultVo(ReturnError.SUCCESS, CancelOrderReturnVo.builder().billCode(order.getBillCode()).txlogisticId(order.getTxLogisticId()).build());
     }
 
     @PostMapping(value = "logistics/trace", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ReturnResult getTraces(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
+    public ReturnResultVo getTraces(@RequestHeader("apiAccount") Long account, @RequestHeader(value = "digest",required = false) String digest, @RequestHeader("timestamp") long timestamp, @RequestParam("bizContent") String bizContent) throws JsonProcessingException {
         String[] billCodesStr = objectMapper.readTree(bizContent).get("billCodes").asText().split("[,，]");
         Set<String> billCodes = new HashSet<>(Arrays.asList(billCodesStr));
         if (billCodes.size() > 30) throw new JTException(ReturnError.BILL_CODE_EXCEED_30);
-        List<TracesReturnObj> tracesReturnObjs = billCodes.stream().map(billCode -> {
+        List<TracesReturnVo> tracesReturnVos = billCodes.stream().map(billCode -> {
             ArrayList<TraceDetail> traceDetails = traceDetailDao.getTrace(billCode);
-            return (traceDetails != null) ? new TracesReturnObj(billCode, traceDetails) : null;
+            return (traceDetails != null) ? new TracesReturnVo(billCode, traceDetails) : null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
-        return new ReturnResult(ReturnError.SUCCESS, tracesReturnObjs);
+        return new ReturnResultVo(ReturnError.SUCCESS, tracesReturnVos);
     }
 
 

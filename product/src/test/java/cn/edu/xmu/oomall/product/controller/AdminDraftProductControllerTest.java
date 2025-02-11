@@ -318,7 +318,7 @@ public class AdminDraftProductControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
     /**
-     * POST
+     * PUT
      * TEST  Apply GIVEN shopId=100 id=1550
      * "name":"mmm", "originalPrice":123, "categoryId":12, "originPlace":"England", "unit":"England"
      *   申请修改商品信息成功
@@ -328,7 +328,7 @@ public class AdminDraftProductControllerTest {
         Mockito.when(redisUtil.bfExist(Mockito.anyString(), (Long) Mockito.any())).thenReturn(true);
         Mockito.when(redisUtil.set(Mockito.anyString(), Mockito.any(), Mockito.anyLong())).thenReturn(true);
         String body = "{\"name\":\"mmm\", \"originalPrice\":123, \"categoryId\":12, \"originPlace\":\"England\", \"unit\":\"England\"}";
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/products/{id}",10,1550)
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shops/{shopId}/products/{id}/apply",10,1550)
                         .header("authorization", adminToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(body))
@@ -370,4 +370,39 @@ public class AdminDraftProductControllerTest {
                         .content(body))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    /**
+     * POST
+     * TEST  PublicProduct GIVEN shopId=10 id=700
+     *  "commissionRatio":1
+     *   发布商品失败  - 只有管理员可以发布商品
+     *   @Author 谢传艳
+     */
+    @Test
+    public void testPublicProductGivenFail1() throws Exception {
+        String body = "{\"commissionRatio\":1}";
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/platforms/{shopId}/draftproducts/{id}/publish",10,700)
+                        .header("authorization", shop10)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.RESOURCE_ID_OUTSCOPE.getErrNo())));
+    }
+
+    /**
+     * POST
+     * TEST  PublicProduct GIVEN shopId=10 id=700
+     *  "commissionRatio":-1
+     *   发布商品失败  - commissionRatio不合法
+     *   @Author 谢传艳
+     */
+    @Test
+    public void testPublicProductGivenFail2() throws Exception {
+        String body = "{\"commissionRatio\":-1}";
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/platforms/{shopId}/draftproducts/{id}/publish",10,700)
+                        .header("authorization", shop10)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errno", is(ReturnNo.FIELD_NOTVALID.getErrNo())));
+    }
+
 }

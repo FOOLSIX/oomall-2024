@@ -6,12 +6,12 @@ import cn.edu.xmu.javaee.core.mapper.RedisUtil;
 import cn.edu.xmu.javaee.core.model.ReturnNo;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.shop.dao.TemplateDao;
+import cn.edu.xmu.oomall.shop.dao.bo.Region;
 import cn.edu.xmu.oomall.shop.dao.openfeign.RegionDao;
 import cn.edu.xmu.oomall.shop.dao.bo.template.*;
 import cn.edu.xmu.oomall.shop.dao.template.RegionTemplateDao;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +22,8 @@ import java.util.List;
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
+@Slf4j
 public class RegionTemplateService {
-    private final static Logger logger = LoggerFactory.getLogger(RegionTemplateService.class);
 
     private final TemplateDao templateDao;
     private final RegionDao regionDao;
@@ -53,8 +53,11 @@ public class RegionTemplateService {
      * @param user
      */
     public void insertRegionTemplate(Long shopId, RegionTemplate regionTemplate, UserDto user, Class clazz){
-        logger.debug("insertRegionTemplate: regionTemplate={},user={}",regionTemplate,user);
-        this.regionDao.findById(regionTemplate.getRegionId());
+        log.debug("insertRegionTemplate: regionTemplate={},user={}",regionTemplate,user);
+        Region region = this.regionDao.findById(regionTemplate.getRegionId());
+        if (Region.ABANDONED.equals(region.getStatus())){
+            throw new BusinessException(ReturnNo.REGION_ABANDONE, String.format(ReturnNo.REGION_ABANDONE.getMessage(), region.getId()));
+        }
         Template template = this.templateDao.findById(shopId, regionTemplate.getTemplateId());
         template.createRegionTemplate(clazz, regionTemplate, user);
     }
@@ -68,7 +71,7 @@ public class RegionTemplateService {
 
     public void deleteRegionTemplate(Long shopId,Long id,Long rid){
         Template template = templateDao.findById(shopId,id);
-        logger.debug("deleteRegionTemplate-template:{}",template);
+        log.debug("deleteRegionTemplate-template:{}",template);
         regionTemplateDao.delRegionByTemplateIdAndRegionId(template,rid);
     }
 
@@ -113,10 +116,10 @@ public class RegionTemplateService {
     public void cloneRegionTemplate(Long shopId, Long id, Long sourceRegionId, Long targetRegionId, UserDto user) {
         Template template = this.templateDao.findById(shopId,id);
         RegionTemplate regionTemplate = this.regionTemplateDao.findById(template,sourceRegionId);
-        logger.debug("sourceRegionTemplate:{}",regionTemplate);
+        log.debug("sourceRegionTemplate:{}",regionTemplate);
         regionTemplate.setRegionId(targetRegionId);
         regionTemplate.setObjectId(null);
         RegionTemplate regionTemplate1 = regionTemplateDao.insert(template,regionTemplate,user);
-        logger.debug("targetRegionTemplate:{}",regionTemplate1);
+        log.debug("targetRegionTemplate:{}",regionTemplate1);
     }
 }

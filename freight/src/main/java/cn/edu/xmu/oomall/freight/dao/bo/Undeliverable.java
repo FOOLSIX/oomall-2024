@@ -17,8 +17,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * @author fan ninghan
- * 2023-dng3-008
+ * 2024-dsg-112
+ *
+ * @author Hao Chen
+ * 不可送达地区bo对象
  */
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,27 +28,32 @@ import java.util.Objects;
 @CopyFrom({UndeliverablePo.class, UndeliverableDto.class})
 public class Undeliverable extends OOMallObject implements Serializable {
 
-    @ToString.Exclude
-    @JsonIgnore
     @Setter
+    @JsonIgnore
+    @ToString.Exclude
     private RegionDao regionDao;
 
-    @ToString.Exclude
+    private Long regionId;
+
     @JsonIgnore
+    @ToString.Exclude
     private Region region;
 
-    public Region getRegion(){
-        if(Objects.isNull(this.region) && Objects.nonNull(this.regionDao)) {
+    public Region getRegion() {
+        if (Objects.isNull(this.region) && Objects.nonNull(this.regionDao)) {
             this.region = this.regionDao.findById(this.regionId);
         }
         return this.region;
     }
 
-    private Long regionId;
-
     private LocalDateTime beginTime;
 
     private LocalDateTime endTime;
+
+    @Setter
+    @JsonIgnore
+    @ToString.Exclude
+    private LogisticsDao logisticsDao;
 
     private Long logisticsId;
 
@@ -54,13 +61,8 @@ public class Undeliverable extends OOMallObject implements Serializable {
     @JsonIgnore
     private Logistics logistics;
 
-    @ToString.Exclude
-    @JsonIgnore
-    @Setter
-    private LogisticsDao logisticsDao;
-
-    public Logistics getLogistics(){
-        if (Objects.isNull(this.logistics) && Objects.nonNull(this.logisticsDao)){
+    public Logistics getLogistics() {
+        if (Objects.isNull(this.logistics) && Objects.nonNull(this.logisticsDao)) {
             this.logistics = this.logisticsDao.findById(this.logisticsId);
         }
         return this.logistics;

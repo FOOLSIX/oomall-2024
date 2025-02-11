@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -32,7 +34,11 @@ import static cn.edu.xmu.javaee.core.model.Constants.SYSTEM;
 @AllArgsConstructor
 @CopyFrom(ExpressPo.class)
 @Slf4j
+@Document(collection = "express")
 public class Express extends OOMallObject implements Serializable {
+
+    @MongoId
+    private Long id;
 
     private String billCode;
 
@@ -67,6 +73,8 @@ public class Express extends OOMallObject implements Serializable {
     private String goodsType;
 
     private Long weight;
+
+    private Integer payMethod;
 
     /*暂定sendId为Express中的属性*/
     private Long sendId;
@@ -556,5 +564,13 @@ public class Express extends OOMallObject implements Serializable {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(Integer payMethod) {
+        this.payMethod = payMethod;
     }
 }

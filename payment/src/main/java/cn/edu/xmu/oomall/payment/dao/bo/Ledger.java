@@ -2,6 +2,7 @@
 package cn.edu.xmu.oomall.payment.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
 import cn.edu.xmu.oomall.payment.dao.*;
 import cn.edu.xmu.oomall.payment.mapper.generator.po.LedgerPo;
@@ -21,6 +22,7 @@ import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @CopyFrom({LedgerPo.class})
+@CopyTo({LedgerPo.class})
 public class Ledger extends OOMallObject {
 
     /**

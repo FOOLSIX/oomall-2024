@@ -124,7 +124,7 @@ public class PlatformController {
     @PutMapping("/products/{id}/commissionratio")
     @Audit(departName = "platforms")
     public ReturnObject putProductCommissionRatio(@PathVariable Long shopId, @PathVariable Long id, @LoginUser UserDto user,
-                                                  @RequestBody @Validated CommissionRatioDto dto){
+                                                      @RequestBody @Validated(NewGroup.class) CommissionRatioDto dto){
         if (!shopId.equals(PLATFORM)) {
             throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "商品", id, shopId));
         }
@@ -177,14 +177,11 @@ public class PlatformController {
      */
     @PutMapping("/draftproducts/{id}/publish")
     @Audit(departName = "platforms")
-    public ReturnObject publishProduct(@PathVariable Long shopId, @PathVariable Long id, @RequestBody CommissionRatioDto vo, @LoginUser UserDto user){
+    public ReturnObject publishProduct(@PathVariable Long shopId, @PathVariable Long id, @Validated(NewGroup.class)@RequestBody CommissionRatioDto vo, @LoginUser UserDto user){
 
         if(PLATFORM != shopId){
             //只有平台管理员能发布商品
             throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), "上架商品", id, shopId));
-        }
-        if(vo.getCommissionRatio()>100 || vo.getCommissionRatio()<0){
-            throw new BusinessException(ReturnNo.FIELD_NOTVALID,String.format(ReturnNo.FIELD_NOTVALID.getMessage(),"CommissionRatio"));
         }
         Integer commissionRatio = vo.getCommissionRatio();
         Product product = this.productDraftService.publishProduct(shopId, id, commissionRatio, user);

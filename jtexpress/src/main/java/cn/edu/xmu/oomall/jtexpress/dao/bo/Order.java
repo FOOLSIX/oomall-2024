@@ -4,8 +4,7 @@ package cn.edu.xmu.oomall.jtexpress.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
 import cn.edu.xmu.javaee.core.util.CloneFactory;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.CancelOrderVo;
-import cn.edu.xmu.oomall.jtexpress.controller.vo.OrderVo;
+import cn.edu.xmu.oomall.jtexpress.controller.dto.OrderDto;
 import cn.edu.xmu.oomall.jtexpress.dao.OrderDao;
 import cn.edu.xmu.oomall.jtexpress.exception.JTException;
 import cn.edu.xmu.oomall.jtexpress.exception.ReturnError;
@@ -25,7 +24,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@CopyFrom({OrderVo.class, OrderPo.class})
+@CopyFrom({OrderDto.class, OrderPo.class})
 public class Order {
 
     @Setter
@@ -156,22 +155,22 @@ public class Order {
         this.payType = payType;
     }
 
-    @CopyFrom.Exclude({OrderPo.class, OrderVo.class})
+    @CopyFrom.Exclude({OrderPo.class, OrderDto.class})
     public PersonInfo getSender() {
         return sender;
     }
 
-    @CopyFrom.Exclude({OrderVo.class, OrderPo.class})
+    @CopyFrom.Exclude({OrderDto.class, OrderPo.class})
     public void setSender(PersonInfo sender) {
         this.sender = sender;
     }
 
-    @CopyFrom.Exclude({OrderPo.class, OrderVo.class})
+    @CopyFrom.Exclude({OrderPo.class, OrderDto.class})
     public PersonInfo getReceiver() {
         return receiver;
     }
 
-    @CopyFrom.Exclude({OrderVo.class, OrderPo.class})
+    @CopyFrom.Exclude({OrderDto.class, OrderPo.class})
     public void setReceiver(PersonInfo receiver) {
         this.receiver = receiver;
     }

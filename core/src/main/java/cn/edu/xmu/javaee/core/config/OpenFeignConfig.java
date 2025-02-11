@@ -58,7 +58,7 @@ class OpenFeignHeaderInterceptor implements RequestInterceptor {
         }
 
         Enumeration<String> headerNames = request.getHeaderNames();
-        if (null == headerNames) {
+        if (Objects.isNull(headerNames)) {
             return;
         }
         log.info("apply: feign interceptor.....");

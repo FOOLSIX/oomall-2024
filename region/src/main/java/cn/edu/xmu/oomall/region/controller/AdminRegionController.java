@@ -16,6 +16,7 @@ import cn.edu.xmu.oomall.region.controller.dto.RegionDto;
 import cn.edu.xmu.oomall.region.dao.bo.Region;
 import cn.edu.xmu.oomall.region.service.RegionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,8 @@ import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
 @RequestMapping(value = "/platforms/{did}", produces = "application/json;charset=UTF-8")
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AdminRegionController {
-    private final static Logger logger = LoggerFactory.getLogger(AdminRegionController.class);
     private final RegionService regionService;
 
     /**
@@ -98,7 +99,7 @@ public class AdminRegionController {
         }
         Region region = CloneFactory.copy(new Region(), dto);
         region.setId(id);
-        logger.debug("updateRegionById: region = {}", region);
+        log.debug("updateRegionById: region = {}", region);
         this.regionService.updateById(region, user);
         return new ReturnObject(ReturnNo.OK);
     }

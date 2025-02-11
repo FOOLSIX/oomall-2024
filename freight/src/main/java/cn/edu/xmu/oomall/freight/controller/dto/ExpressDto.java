@@ -1,8 +1,12 @@
 package cn.edu.xmu.oomall.freight.controller.dto;
 
+import cn.edu.xmu.javaee.core.aop.CopyTo;
+import cn.edu.xmu.oomall.freight.dao.bo.Contract;
+import cn.edu.xmu.oomall.freight.dao.bo.Express;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 /**
  * 2023-dgn3-009
@@ -10,6 +14,8 @@ import lombok.NoArgsConstructor;
  * @author huangzian
  */
 @NoArgsConstructor
+@Data
+@CopyTo(Express.class)
 public class ExpressDto {
 
     @NotNull(message = "商铺渠道Id不能为空")
@@ -34,6 +40,8 @@ public class ExpressDto {
     private String goodsType;
 
     private Long weight;
+
+    private Integer payMethod;
 
     public Long getShopLogisticId() {
         return shopLogisticId;
@@ -106,6 +114,14 @@ public class ExpressDto {
 
     public void setDelivery(ContactsInfo delivery) {
         this.delivery = delivery;
+    }
+
+    public Integer getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(Integer payMethod) {
+        this.payMethod = payMethod;
     }
 
     @JsonProperty(value = "sender")

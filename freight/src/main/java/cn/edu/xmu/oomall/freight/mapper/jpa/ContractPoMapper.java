@@ -13,8 +13,12 @@ import java.util.List;
 public interface ContractPoMapper extends JpaRepository<ContractPo, Long> {
     public ContractPo findByIdAndInvalidEquals(Long id, Byte invalid);
 
-    public List<ContractPo> findAllByShopIdOrderByPriorityAsc(Long shopId, Pageable pageable);
+    public List<ContractPo> findAllByWarehouseId(Long warehouseId);
 
-    public ContractPo findByShopIdAndLogisticsId(Long shopId, Long logisticsId);
-
+    /**
+     * 2024-dsg-115
+     * 按优先级升序获得与仓库id，shopid对应的所有物流合同
+     * @author liboyang
+     */
+    public List<ContractPo> findAllByShopIdAndWarehouseIdOrderByPriorityAsc(Long shopId, Long warehouseId, Pageable pageable);
 }

@@ -1,7 +1,5 @@
 package cn.edu.xmu.oomall.region.mapper.po;
 
-import cn.edu.xmu.javaee.core.aop.CopyFrom;
-import cn.edu.xmu.oomall.region.dao.bo.Region;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

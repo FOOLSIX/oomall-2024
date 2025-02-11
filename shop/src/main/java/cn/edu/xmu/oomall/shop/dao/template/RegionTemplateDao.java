@@ -100,9 +100,11 @@ public class RegionTemplateDao {
      * @author Ming Qiu
      * <p>
      * date: 2022-11-22 12:22
+     * 更新key格式
+     * @Author 37220222203851
      */
     public RegionTemplate findById(Template template, Long id) throws RuntimeException {
-        String key = String.format(KEY, id);
+        String key = String.format(KEY, id, template.getId());
         RegionTemplate bo = (RegionTemplate) redisUtil.get(key);
         if(!Objects.isNull(bo)){
             this.build(bo);

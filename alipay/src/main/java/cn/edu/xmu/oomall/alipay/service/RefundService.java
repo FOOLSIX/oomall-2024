@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.alipay.service;
 
 
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
-import cn.edu.xmu.oomall.alipay.controller.vodto.PostRefundVo;
+import cn.edu.xmu.oomall.alipay.controller.vo.PostRefundVo;
 import cn.edu.xmu.oomall.alipay.dao.*;
 import cn.edu.xmu.oomall.alipay.exception.AlipayBusinessException;
 import cn.edu.xmu.oomall.alipay.service.bo.Payment;

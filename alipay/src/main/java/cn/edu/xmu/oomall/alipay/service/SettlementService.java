@@ -2,7 +2,8 @@ package cn.edu.xmu.oomall.alipay.service;
 
 import cn.edu.xmu.javaee.core.util.JacksonUtil;
 import cn.edu.xmu.javaee.core.util.SnowFlakeIdWorker;
-import cn.edu.xmu.oomall.alipay.controller.vodto.*;
+import cn.edu.xmu.oomall.alipay.controller.vo.*;
+import cn.edu.xmu.oomall.alipay.controller.dto.*;
 import cn.edu.xmu.oomall.alipay.service.bo.*;
 import cn.edu.xmu.oomall.alipay.dao.SettlementDao;
 import cn.edu.xmu.oomall.alipay.exception.AlipayBusinessException;

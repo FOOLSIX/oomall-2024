@@ -80,15 +80,15 @@ public class AuditAspect {
         //检验/shop的api中传入token是否和departId一致
         String pathInfo = request.getRequestURI();
         log.debug("checkDepartId : the api path is {}", pathInfo);
-        if(null ==pathInfo) {
+        if(Objects.isNull(pathInfo)) {
             log.info("checkDepartId : the api path is null");
             throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
 
         String departName=null;
-        Audit AuditAnnotation = method.getAnnotation(Audit.class);
-        if(AuditAnnotation!=null){
-            departName = ((Audit) AuditAnnotation).departName();
+        Audit auditAnnotation = method.getAnnotation(Audit.class);
+        if(Objects.nonNull(auditAnnotation)){
+            departName = ((Audit) auditAnnotation).departName();
         }
 
         boolean flag=false;
@@ -120,7 +120,7 @@ public class AuditAspect {
                     }
                 }
             }
-            if (flag == false) {
+            if (!flag) {
                 log.info("checkDepartId : 不匹配departId = {}", decryptToken.getDepartId());
                 throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE);
             }
@@ -153,6 +153,7 @@ public class AuditAspect {
                     user.setUserLevel(token.getUserLevel());
                     user.setDepartId(token.getDepartId());
                     args[i] = user;
+                    log.debug("putMethodParameter: token = {}, user = {}",token,user);
                 } else if (annotation.annotationType().equals(UserLevel.class)) {
                     args[i] = token.getUserLevel();
                 }

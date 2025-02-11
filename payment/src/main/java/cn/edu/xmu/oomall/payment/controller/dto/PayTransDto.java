@@ -2,6 +2,8 @@
 
 package cn.edu.xmu.oomall.payment.controller.dto;
 
+import cn.edu.xmu.javaee.core.aop.CopyTo;
+import cn.edu.xmu.oomall.payment.dao.bo.PayTrans;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +17,7 @@ import static cn.edu.xmu.javaee.core.model.Constants.*;
  * 支付的vo
  */
 @NoArgsConstructor
+@CopyTo(PayTrans.class)
 public class PayTransDto {
 
     @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)

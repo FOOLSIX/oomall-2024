@@ -3,6 +3,7 @@
 package cn.edu.xmu.oomall.payment.dao.bo;
 
 import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.aop.CopyTo;
 import cn.edu.xmu.javaee.core.exception.BusinessException;
 import cn.edu.xmu.javaee.core.model.dto.UserDto;
 import cn.edu.xmu.oomall.payment.dao.DivPayTransDao;
@@ -21,6 +22,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @CopyFrom({DivRefundTransPo.class})
+@CopyTo(DivRefundTransPo.class)
 public final class DivRefundTrans extends Transaction{
 
     /**
